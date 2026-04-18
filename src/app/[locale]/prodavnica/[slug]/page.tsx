@@ -32,13 +32,24 @@ export default async function ProductPage({
 }) {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: "shop" });
-  const product = await getProduct(locale, slug);
+
+  let product;
+  try {
+    product = await getProduct(locale, slug);
+  } catch {
+    product = null;
+  }
 
   if (!product) notFound();
 
-  const relatedProducts = product.oftenBoughtWith
-    ? await getRelatedProducts(locale, product.oftenBoughtWith)
-    : [];
+  let relatedProducts;
+  try {
+    relatedProducts = product.oftenBoughtWith
+      ? await getRelatedProducts(locale, product.oftenBoughtWith)
+      : [];
+  } catch {
+    relatedProducts = [];
+  }
 
   return (
     <section className="py-20 md:py-28">
