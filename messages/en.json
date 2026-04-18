@@ -1,0 +1,879 @@
+{
+  "metadata": {
+    "title": "Sport Care Med | Sports Medicine Šabac",
+    "description": "Center for sports medicine, physical therapy and rehabilitation in Šabac. Diagnostics, kinesitherapy, massage, recovery therapies."
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "location": "Location",
+    "contact": "Contact",
+    "b2b": "B2B Solutions",
+    "blog": "Blog",
+    "shop": "Shop",
+    "tools": "Tools"
+  },
+  "hero": {
+    "title": "Your path to recovery starts here",
+    "subtitle": "Specialized center for sports medicine, rehabilitation and physical therapy in Šabac",
+    "cta": "Book Appointment",
+    "learnMore": "Learn More"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Complete sports medicine care in one place",
+    "label": "Services",
+    "viewAll": "View all services",
+    "learnMore": "Learn More",
+    "duration": "Duration",
+    "benefits": "Benefits",
+    "process": "Process",
+    "relatedServices": "Related Services",
+    "bookNow": "Book Appointment",
+    "faq": "Frequently Asked Questions",
+    "items": {
+      "fizikalna-terapija": {
+        "title": "Physical Therapy",
+        "shortDescription": "Modern physical therapy methods for faster recovery and pain relief.",
+        "description": "Physical therapy uses physical agents such as heat, cold, ultrasound, electrotherapy and laser for treating injuries and chronic conditions. Our team uses state-of-the-art equipment for optimal results.",
+        "benefits": ["Pain reduction", "Accelerated recovery", "Improved mobility", "Reduced swelling and inflammation"],
+        "duration": "30-60 min",
+        "process": "Initial assessment \u2192 Treatment plan \u2192 Sessions \u2192 Progress evaluation",
+        "faq": [
+          { "question": "How many physical therapy sessions are needed?", "answer": "The number of sessions depends on the diagnosis. Typically 10-15 sessions are needed for optimal results, but the plan is tailored to individual needs." },
+          { "question": "Is physical therapy painful?", "answer": "Most treatments are painless or minimally uncomfortable. Our therapists always adjust the intensity to your comfort level." },
+          { "question": "When can I expect improvement?", "answer": "Many patients notice improvement after 3-5 sessions, but full effects are achieved after completing the treatment cycle." }
+        ]
+      },
+      "manuelna-terapija": {
+        "title": "Manual Therapy",
+        "shortDescription": "Hands-on techniques for joint, soft tissue and spinal mobilization.",
+        "description": "Manual therapy encompasses specialized hands-on techniques for mobilization and manipulation of joints, soft tissues and the spine. Effective in treating back, neck and joint pain.",
+        "benefits": ["Improved range of motion", "Reduced muscle spasm", "Posture correction", "Pain reduction"],
+        "duration": "30-45 min",
+        "process": "Functional assessment \u2192 Diagnosis \u2192 Manual treatment \u2192 Home exercises",
+        "faq": [
+          { "question": "Is manual therapy safe?", "answer": "Yes, manual therapy is completely safe when performed by a qualified therapist. We use proven techniques adapted to your condition." },
+          { "question": "Who can benefit from manual therapy?", "answer": "Manual therapy is effective for anyone with back, neck, or joint pain, or mobility issues." },
+          { "question": "How long does the effect of one session last?", "answer": "The effect of a single session can last several days to a week. A series of sessions provides longer-lasting results." }
+        ]
+      },
+      "kineziterapija": {
+        "title": "Kinesitherapy",
+        "shortDescription": "Movement therapy — individualized exercise programs for recovery and prevention.",
+        "description": "Kinesitherapy is movement therapy using specific exercises tailored to your condition. Programs are individually designed for injury rehabilitation, strength improvement and re-injury prevention.",
+        "benefits": ["Muscle strengthening", "Improved coordination", "Injury prevention", "Functional recovery"],
+        "duration": "45-60 min",
+        "process": "Functional status assessment \u2192 Individual program \u2192 Guided exercises \u2192 Progression",
+        "faq": [
+          { "question": "Can I do the exercises at home too?", "answer": "Yes, part of the kinesitherapy program includes home exercises that your therapist will explain and demonstrate in detail." },
+          { "question": "How often should I attend kinesitherapy?", "answer": "We recommend 2-3 times per week for optimal results, but frequency is adjusted to your condition and progress." },
+          { "question": "Is kinesitherapy suitable for older adults?", "answer": "Absolutely. Programs are adapted to age and fitness level. Kinesitherapy is extremely beneficial for maintaining mobility in older adults." }
+        ]
+      },
+      "dijagnostika": {
+        "title": "Diagnostics",
+        "shortDescription": "Detailed sports medicine diagnostics for precise condition assessment.",
+        "description": "Sports medicine diagnostics includes complete evaluation of your condition using modern diagnostic methods. Accurate diagnosis is the foundation for an effective treatment plan.",
+        "benefits": ["Accurate diagnosis", "Early injury screening", "Prevention plan", "Progress monitoring"],
+        "duration": "60-90 min",
+        "process": "Medical history \u2192 Clinical exam \u2192 Functional testing \u2192 Report and plan",
+        "faq": [
+          { "question": "What does sports medicine diagnostics include?", "answer": "Diagnostics includes detailed medical history, clinical examination, functional testing, and additional diagnostic methods as needed for precise assessment." },
+          { "question": "Do I need a referral for diagnostics?", "answer": "No, you can come directly without a referral. We recommend bringing any previous medical documentation you may have." },
+          { "question": "How long does the diagnostic exam take?", "answer": "A complete diagnostic assessment takes 60-90 minutes, depending on the complexity of the case and tests required." }
+        ]
+      },
+      "sportska-rehabilitacija": {
+        "title": "Sports Rehabilitation",
+        "shortDescription": "Complete sports injury rehabilitation — from injury to return to play.",
+        "description": "Sports rehabilitation is a comprehensive recovery program from sports injuries. We combine physical therapy, kinesitherapy and functional training for safe return to sport.",
+        "benefits": ["Faster return to sport", "Reduced re-injury risk", "Performance optimization", "Individual approach"],
+        "duration": "60 min",
+        "process": "Injury evaluation \u2192 Recovery phase \u2192 Functional training \u2192 Return-to-play protocol",
+        "faq": [
+          { "question": "How long does sports injury rehabilitation take?", "answer": "Duration depends on the type and severity of injury. Minor injuries require 4-6 weeks, while major injuries (e.g., ACL) may require 6-12 months for full recovery." },
+          { "question": "When can I return to training?", "answer": "Return to training is determined based on a return-to-play protocol. Our team monitors your progress and gives the green light only when you're physically ready." },
+          { "question": "Do you cover all types of sports injuries?", "answer": "Yes, we work with all types of sports injuries \u2014 from muscle strains and ligament injuries to post-operative rehabilitation." }
+        ]
+      },
+      "masaza": {
+        "title": "Massage",
+        "shortDescription": "Sports and therapeutic massage for recovery, relaxation and prevention.",
+        "description": "We offer sports massage, deep tissue massage and therapeutic massage tailored to your needs. Ideal for post-training recovery, tension relief and injury prevention.",
+        "benefits": ["Muscle relaxation", "Improved circulation", "Stress reduction", "Faster recovery"],
+        "duration": "30-60 min",
+        "process": "Consultation \u2192 Technique selection \u2192 Treatment \u2192 Maintenance advice",
+        "faq": [
+          { "question": "What is the difference between sports and therapeutic massage?", "answer": "Sports massage focuses on muscle groups active in sports using more intense techniques, while therapeutic massage treats specific pain conditions with gentler approaches." },
+          { "question": "How often should I get a massage?", "answer": "For athletes we recommend 1-2 times per week. For general maintenance, once every 2-4 weeks is sufficient." },
+          { "question": "Is any preparation needed before a massage?", "answer": "We recommend coming hydrated and not eating a large meal immediately before treatment. Comfortable clothing is preferred." }
+        ]
+      },
+      "recovery-terapije": {
+        "title": "Recovery Therapies",
+        "shortDescription": "Advanced recovery methods: cryotherapy, compression therapy, and more.",
+        "description": "Recovery therapies use the most advanced methods to accelerate recovery. Including cryotherapy, compression therapy, infrared sauna and other advanced techniques.",
+        "benefits": ["Accelerated recovery", "Reduced inflammation", "Improved sleep", "Immune boost"],
+        "duration": "20-45 min",
+        "process": "Needs assessment \u2192 Modality selection \u2192 Treatment \u2192 Recovery protocol",
+        "faq": [
+          { "question": "What is cryotherapy and is it safe?", "answer": "Cryotherapy uses controlled cooling to reduce inflammation and accelerate recovery. It is completely safe under the supervision of our specialists." },
+          { "question": "Can I combine multiple recovery methods?", "answer": "Yes, we often combine methods for optimal results. For example, cryotherapy after training and compression therapy for muscle recovery." },
+          { "question": "Do recovery therapies help recreational athletes too?", "answer": "Absolutely. Recovery therapies are beneficial for anyone seeking faster recovery, whether you're a professional athlete or recreational exerciser." }
+        ]
+      },
+      "testiranje-merenja": {
+        "title": "Testing & Measurements",
+        "shortDescription": "Functional testing and measurements for athletes — performance analysis and prevention.",
+        "description": "Complete functional testing and measurements for athletes and recreational exercisers. Analysis of strength, endurance, mobility and biomechanics for training optimization.",
+        "benefits": ["Strength and weakness analysis", "Injury prevention", "Training optimization", "Progress tracking"],
+        "duration": "60-90 min",
+        "process": "Testing protocol \u2192 Measurements \u2192 Results analysis \u2192 Training recommendations",
+        "faq": [
+          { "question": "What is tested during functional testing?", "answer": "We test strength, endurance, mobility, balance, movement biomechanics, and sport-specific abilities relevant to your sport." },
+          { "question": "How often should testing be repeated?", "answer": "We recommend testing every 3-6 months to track progress, or before and after a training period/season." },
+          { "question": "Can testing prevent injuries?", "answer": "Yes, functional testing identifies muscle imbalances and weaknesses that can lead to injuries, enabling preventive work." }
+        ]
+      }
+    }
+  },
+  "whyUs": {
+    "title": "Why Sport Care Med?",
+    "subtitle": "Dedicated to your health and performance",
+    "items": {
+      "expertise": {
+        "title": "Expert Team",
+        "description": "Experienced therapists specialized in sports medicine"
+      },
+      "equipment": {
+        "title": "Modern Equipment",
+        "description": "Latest medical and diagnostic equipment"
+      },
+      "individual": {
+        "title": "Individual Approach",
+        "description": "Personalized treatment and rehabilitation plans"
+      },
+      "results": {
+        "title": "Proven Results",
+        "description": "Hundreds of athletes successfully returned to play"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "What Our Patients Say",
+    "subtitle": "Experiences from athletes and patients who trusted us"
+  },
+  "partners": {
+    "title": "Our Partners",
+    "subtitle": "Collaborating with leading sports organizations"
+  },
+  "newsletter": {
+    "title": "Stay Updated",
+    "subtitle": "Subscribe to our newsletter for health and prevention tips",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "success": "Successfully subscribed!",
+    "error": "An error occurred. Please try again."
+  },
+  "caseStudies": {
+    "title": "Success Stories",
+    "subtitle": "Results that speak for themselves",
+    "label": "Results",
+    "readMore": "Read more",
+    "cta": "Start your recovery",
+    "items": [
+      {
+        "name": "Nikola M.",
+        "sport": "Football",
+        "injury": "ACL (anterior cruciate ligament) rupture",
+        "result": "Return to the field in 8 months",
+        "story": "After ACL surgery, Nikola started rehabilitation at Sport Care Med. Through an individual kinesitherapy and sports rehabilitation program, he returned to training in 8 months \u2014 one month ahead of schedule.",
+        "duration": "8 months",
+        "services": ["Sports Rehabilitation", "Kinesitherapy", "Diagnostics"]
+      },
+      {
+        "name": "Jelena S.",
+        "sport": "Tennis",
+        "injury": "Chronic shoulder pain",
+        "result": "Completely pain-free playing",
+        "story": "Jelena suffered from shoulder pain for months that prevented her from playing at a professional level. Through a combination of manual therapy, physical therapy, and targeted exercise program, the pain was completely eliminated in 6 weeks.",
+        "duration": "6 weeks",
+        "services": ["Manual Therapy", "Physical Therapy", "Kinesitherapy"]
+      },
+      {
+        "name": "FK \u0160abac U19",
+        "sport": "Football",
+        "injury": "Team prevention program",
+        "result": "60% fewer injuries in the season",
+        "story": "FK \u0160abac\u2019s youth team started working with Sport Care Med for injury prevention. Through regular functional testing and individual corrective programs, the team recorded 60% fewer injuries during the season.",
+        "duration": "12 months",
+        "services": ["Testing & Measurements", "Kinesitherapy", "Sports Rehabilitation"]
+      }
+    ]
+  },
+  "leadCapture": {
+    "title": "Free Assessment",
+    "subtitle": "Schedule a free initial assessment and find out how we can help",
+    "name": "Your name",
+    "phone": "Phone number",
+    "service": "Service you're interested in",
+    "selectService": "Select a service",
+    "submit": "Book for free",
+    "sending": "Sending...",
+    "success": "Success! We'll contact you within 24h.",
+    "error": "Error. Please try again.",
+    "guarantee": "No obligations \u2022 100% free",
+    "exitTitle": "Wait! Have a question?",
+    "exitSubtitle": "Leave your phone number and we'll call you within 24h",
+    "stickyTitle": "Book Appointment",
+    "urgency": "{count} slots available today",
+    "condition": "Describe your problem",
+    "conditionPlaceholder": "E.g. knee pain, injury recovery..."
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Sport Care Med — sports medicine center in Šabac",
+    "story": {
+      "title": "Our Story",
+      "description": "Sport Care Med was founded with a vision to provide athletes and recreational exercisers access to top-tier sports medicine care. Our team of experienced therapists and doctors is dedicated to your recovery and performance."
+    },
+    "mission": {
+      "title": "Mission",
+      "description": "We provide comprehensive sports medicine care using the most advanced methods and equipment, with a focus on individual approach to each patient."
+    },
+    "vision": {
+      "title": "Vision",
+      "description": "To be the leading center for sports medicine in the region, recognized for service quality, team expertise and patient satisfaction."
+    },
+    "team": {
+      "title": "Our Team",
+      "subtitle": "Meet the experts who care for your health"
+    },
+    "gallery": {
+      "title": "Our Facility",
+      "subtitle": "Modern facility equipped for all your needs"
+    }
+  },
+  "location": {
+    "title": "Location",
+    "subtitle": "Visit us in Šabac",
+    "address": "Address",
+    "workingHours": "Working Hours",
+    "weekdays": "Monday - Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "closed": "Closed",
+    "directions": "Directions",
+    "parking": "Parking"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch — we're here for you",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "treatment": "Interested in service",
+      "selectTreatment": "Select a service",
+      "condition": "Describe your condition",
+      "conditionPlaceholder": "E.g. knee pain after training, limited shoulder movement, post-surgery recovery...",
+      "message": "Additional notes (optional)",
+      "messagePlaceholder": "Special notes, questions or requests...",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We'll contact you soon.",
+      "error": "An error occurred. Please try again.",
+      "step1Title": "What's bothering you?",
+      "step1Subtitle": "Describe your problem and select a service",
+      "step2Title": "Your details",
+      "step2Subtitle": "How should we contact you",
+      "step3Title": "Additional information",
+      "step3Subtitle": "Anything else we should know?",
+      "next": "Next",
+      "back": "Back",
+      "stepOf": "Step {current} of {total}"
+    },
+    "info": {
+      "phone": "Phone",
+      "email": "Email",
+      "social": "Follow Us"
+    }
+  },
+  "b2b": {
+    "title": "B2B Solutions",
+    "subtitle": "Partnering with teams and organizations",
+    "heroText": "One contract. Complete team coverage. Up to 50 individual patient equivalents in one package.",
+    "heroSubtext": "Specialized sports medicine services for sports teams, clubs and organizations",
+    "packages": {
+      "title": "Service Packages",
+      "subtitle": "Choose the package that fits your team's needs",
+      "rehabilitation": {
+        "title": "Team Rehabilitation",
+        "description": "Complete rehabilitation programs tailored to the needs of your sports team"
+      },
+      "onsite": {
+        "title": "On-Site Physiotherapy",
+        "description": "Our therapists come to your training sessions and matches"
+      },
+      "prevention": {
+        "title": "Injury Prevention Programs",
+        "description": "Proactive approach to reducing injury risk in your team"
+      },
+      "testing": {
+        "title": "Team Performance Testing",
+        "description": "Complete functional testing for all team members"
+      }
+    },
+    "learnMore": "Learn More",
+    "viewAll": "View all B2B services",
+    "forTeams": "For Teams",
+    "services": {
+      "timska-rehabilitacija": {
+        "title": "Team Rehabilitation",
+        "shortDescription": "Complete rehabilitation programs tailored to the needs of your sports team",
+        "description": "Our team rehabilitation program provides a comprehensive approach to athlete recovery. Each team member receives an individual rehabilitation plan, while our team coordinates with coaches and club medical staff. We monitor each player's progress and adjust protocols in real time, ensuring a faster and safer return to play.",
+        "includes": [
+          "Individual rehabilitation plans for each player",
+          "Regular check-ups and progress monitoring",
+          "Coordination with coaching staff",
+          "Return-to-play protocols",
+          "Injured player status reports",
+          "Access to all therapeutic modalities"
+        ],
+        "process": "Initial team assessment → Individual plans → Daily rehabilitation → Readiness testing → Return to play",
+        "benefits": [
+          "Faster return to play for athletes",
+          "Lower risk of re-injury",
+          "Coordinated approach with coaches",
+          "Transparent progress reports",
+          "Cost savings compared to individual treatments"
+        ],
+        "idealFor": ["Football clubs", "Basketball clubs", "Handball teams", "Volleyball teams"],
+        "stats": [
+          { "value": "85%", "label": "of players return to play faster" },
+          { "value": "40%", "label": "fewer injury recurrences" },
+          { "value": "3 wks", "label": "shorter average recovery" }
+        ],
+        "faq": [
+          { "question": "How many players can be included in the program?", "answer": "The program is scalable for teams of 15 to 50+ members. Pricing is adjusted based on team size." },
+          { "question": "Do therapists come to the club or do players come to you?", "answer": "We combine both approaches. Rehabilitation takes place at our center, but for acute cases and monitoring we can come to your facility." },
+          { "question": "How does coordination with coaching staff work?", "answer": "Regular weekly reports, joint meetings, and direct communication with coaches and fitness trainers." }
+        ]
+      },
+      "fizioterapija-na-terenu": {
+        "title": "On-Site Physiotherapy",
+        "shortDescription": "Our therapists come to your training sessions and matches",
+        "description": "Our on-site physiotherapy service ensures a qualified therapist is present at all your training sessions and matches. Immediate injury response, professional taping and bandaging, and injury prevention during activities — all on-site. Your athletes receive instant medical support without having to visit the clinic.",
+        "includes": [
+          "Therapist present at training sessions",
+          "Immediate injury response during matches",
+          "Taping and bandaging",
+          "Injury prevention during training",
+          "Warm-up and cool-down guidance",
+          "On-field first aid equipment"
+        ],
+        "process": "Schedule coordination → Therapist on location → Intervention as needed → Post-session report → Treatment recommendations",
+        "benefits": [
+          "Immediate injury response",
+          "Professional taping on-site",
+          "Reduced risk of complications",
+          "Psychological security for athletes",
+          "Optimized warm-up process"
+        ],
+        "idealFor": ["Football clubs", "Athletic clubs", "Combat sports", "Team sports"],
+        "stats": [
+          { "value": "60%", "label": "faster injury response" },
+          { "value": "100%", "label": "training and match coverage" },
+          { "value": "25%", "label": "fewer serious injuries" }
+        ],
+        "faq": [
+          { "question": "How many training sessions per week do you cover?", "answer": "We adapt to your schedule. Standard packages cover 3-5 training sessions per week plus matches." },
+          { "question": "What equipment does the on-site therapist bring?", "answer": "A complete therapeutic bag: tapes, bandages, ice, portable ultrasound, electrostimulation, and a first aid kit." },
+          { "question": "Is the therapist present only during training?", "answer": "The therapist arrives 30 minutes before training (for warm-up and prevention) and stays 15-30 minutes after to handle any injuries." }
+        ]
+      },
+      "prevencija-povreda": {
+        "title": "Injury Prevention Programs",
+        "shortDescription": "Proactive approach to reducing injury risk in your team",
+        "description": "Prevention is the most effective and cost-efficient strategy in sports medicine. Our program includes complete screening of all team members at the start of the season, individual prevention programs, coach and player education, and regular monthly risk reports. We use proven protocols like FIFA 11+ for dramatic injury reduction.",
+        "includes": [
+          "Screening of all players at season start",
+          "Individual prevention programs",
+          "Coach and player education",
+          "Monthly risk reports",
+          "FIFA 11+ and similar proven programs",
+          "Customized warm-up protocols"
+        ],
+        "process": "Team screening → Risk analysis → Individual programs → Implementation → Monthly evaluation → Program correction",
+        "benefits": [
+          "Dramatic reduction in injury count",
+          "Savings on treatment costs",
+          "Greater player availability for competition",
+          "Educated coaching staff",
+          "Data for long-term tracking"
+        ],
+        "idealFor": ["Professional clubs", "Youth academies", "National teams", "School sports programs"],
+        "stats": [
+          { "value": "50%", "label": "fewer injuries in first season" },
+          { "value": "30%", "label": "reduction in ACL injuries" },
+          { "value": "5:1", "label": "ROI in treatment cost savings" }
+        ],
+        "faq": [
+          { "question": "How long does the initial screening take?", "answer": "For a team of 25 players, the complete screening takes 1-2 days. It includes FMS, strength tests, flexibility, and previous injury assessment." },
+          { "question": "Does the program include training for coaches?", "answer": "Yes. We educate the coaching staff on risk signs, proper warm-up, and implementation of preventive exercises into daily training." },
+          { "question": "How does prevention cost compare to treatment?", "answer": "Our experience shows that every dollar invested in prevention saves 5 dollars in treatment and rehabilitation costs. Plus, players miss fewer training sessions and matches." }
+        ]
+      },
+      "testiranje-performansi": {
+        "title": "Team Performance Testing",
+        "shortDescription": "Complete functional testing for all team members",
+        "description": "Our performance testing program provides a complete picture of each team member's physical abilities. We use FMS screening, strength and explosiveness measurements, cardio-respiratory testing, and movement analysis. Each athlete receives an individual report with recommendations, and the coaching team receives a summary overview for training planning.",
+        "includes": [
+          "FMS screening (Functional Movement Screen)",
+          "Strength and explosiveness measurement",
+          "Cardio-respiratory testing",
+          "Movement and biomechanics analysis",
+          "Individual reports and recommendations",
+          "Summary report for coaching team"
+        ],
+        "process": "Schedule appointment → Team testing (1-2 days) → Data analysis → Individual reports → Coach presentation → Retesting after 3-6 months",
+        "benefits": [
+          "Objective assessment of each athlete",
+          "Identification of weaknesses and risks",
+          "Baseline data for progress tracking",
+          "Helping coaches plan training",
+          "Early detection of potential injuries"
+        ],
+        "idealFor": ["Professional teams", "Sports academies", "National selections", "Fitness centers"],
+        "stats": [
+          { "value": "1 day", "label": "to test 25+ players completely" },
+          { "value": "800+", "label": "athletes tested" },
+          { "value": "15+", "label": "different tests in the battery" }
+        ],
+        "faq": [
+          { "question": "What tests are included in the battery?", "answer": "FMS, vertical jump, 10m/30m sprint, Yo-Yo test, isokinetic tests, movement analysis, flexibility, and sport-specific tests." },
+          { "question": "Can testing be done at our facility?", "answer": "Most tests are portable and can be done in your gym or on the field. For specialized lab tests, we invite you to our center." },
+          { "question": "How often should testing be repeated?", "answer": "We recommend testing 2-3 times per year: pre-season, mid-season, and post-season. This gives a picture of progress and training effects." }
+        ]
+      }
+    },
+    "roi": {
+      "title": "Cost Savings Calculator",
+      "subtitle": "Compare individual visit costs with a B2B contract",
+      "teamSize": "Team Size",
+      "avgInjuries": "Average injuries per season",
+      "sessionsPerInjury": "Average sessions per injury",
+      "individualCost": "Individual visit cost",
+      "b2bCost": "B2B contract (monthly)",
+      "annualSavings": "Annual savings",
+      "savingsPercent": "Savings",
+      "perSession": "per session",
+      "perMonth": "monthly",
+      "perYear": "annually",
+      "plusValue": "Plus included prevention and on-site coverage worth",
+      "cta": "Save {savings} — Request a Quote",
+      "players": "players",
+      "injuries": "injuries",
+      "sessions": "sessions"
+    },
+    "outcomes": {
+      "title": "Results That Speak",
+      "subtitle": "Proven results from our B2B partnerships",
+      "stats": [
+        { "value": "50+", "label": "teams using our services" },
+        { "value": "800+", "label": "athletes under our care" },
+        { "value": "92%", "label": "successful return-to-play rate" },
+        { "value": "30%", "label": "fewer team injuries" }
+      ],
+      "caseStudies": {
+        "title": "Case Studies",
+        "items": [
+          {
+            "team": "FK Šabac Youth",
+            "sport": "Football",
+            "challenge": "High number of injuries during the season and long recovery periods",
+            "solution": "Implemented complete prevention program + team rehabilitation",
+            "result": "40% fewer injuries in the season, average 2 weeks shorter recovery"
+          },
+          {
+            "team": "KK Šabac",
+            "sport": "Basketball",
+            "challenge": "Lack of continuous physiotherapy support",
+            "solution": "On-site physiotherapy + complete recovery program for 12 players",
+            "result": "All injured players returned ahead of schedule"
+          },
+          {
+            "team": "Athletic Club Šabac",
+            "sport": "Athletics",
+            "challenge": "Need for comprehensive testing of young athletes",
+            "solution": "Screening of 35 athletes, 8 high-risk cases identified",
+            "result": "Preventive program prevented 5 potential injuries"
+          }
+        ]
+      }
+    },
+    "proposal": {
+      "title": "Build Your Team's Proposal",
+      "subtitle": "Select services, enter team details, and get a cost estimate",
+      "step1Title": "Select Services",
+      "step1Subtitle": "Choose the packages you're interested in",
+      "step2Title": "Team Details",
+      "step2Subtitle": "Help us tailor the proposal",
+      "step3Title": "Proposal Review",
+      "step3Subtitle": "Your personalized estimate",
+      "step4Title": "Contact Details",
+      "step4Subtitle": "Submit your inquiry and receive a detailed proposal",
+      "selectServices": "Selected services",
+      "fromPrice": "from {price} RSD/month",
+      "sportType": "Sport / Organization type",
+      "teamSize": "Team size",
+      "seasonDuration": "Season duration (months)",
+      "competitionLevel": "Competition level",
+      "levels": {
+        "recreational": "Recreational",
+        "amateur": "Amateur",
+        "semipro": "Semi-professional",
+        "professional": "Professional"
+      },
+      "estimatedMonthly": "Estimated monthly cost",
+      "estimatedAnnual": "Estimated annual value",
+      "estimatedRoi": "Estimated annual savings",
+      "seasonCoverage": "Season coverage",
+      "months": "months",
+      "proposalSummary": "Proposal summary",
+      "selectedPackages": "Selected packages",
+      "organization": "Organization name",
+      "contactPerson": "Contact person",
+      "email": "Email address",
+      "phone": "Phone number",
+      "notes": "Additional notes",
+      "submit": "Submit proposal inquiry",
+      "sending": "Sending...",
+      "success": "Inquiry sent successfully! Our team will send you a detailed proposal within 24 hours.",
+      "error": "An error occurred. Please try again.",
+      "next": "Next",
+      "back": "Back",
+      "stepOf": "Step {current} of {total}"
+    },
+    "quote": {
+      "title": "Request a Quote",
+      "organization": "Organization Name",
+      "contactPerson": "Contact Person",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "sportType": "Sport / Organization Type",
+      "teamSize": "Team Size",
+      "message": "Describe your needs",
+      "submit": "Submit Inquiry",
+      "sending": "Sending...",
+      "success": "Inquiry sent successfully! We'll contact you soon.",
+      "error": "An error occurred. Please try again."
+    },
+    "clients": {
+      "title": "Our Clients",
+      "subtitle": "Teams and organizations that trust us"
+    }
+  },
+  "footer": {
+    "description": "Center for sports medicine, physical therapy and rehabilitation in Šabac.",
+    "quickLinks": "Quick Links",
+    "workingHours": "Working Hours",
+    "weekdays": "Mon - Fri: 08:00 - 20:00",
+    "saturday": "Sat: 09:00 - 14:00",
+    "sunday": "Sun: Closed",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "common": {
+    "readMore": "Read More",
+    "backToHome": "Back to Home",
+    "loading": "Loading...",
+    "error": "Error",
+    "close": "Close",
+    "menu": "Menu",
+    "language": "Language"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Tips, news and expert articles from the world of sports medicine",
+    "allCategories": "All Categories",
+    "search": "Search articles...",
+    "readMore": "Read More",
+    "readingTime": "{minutes} min read",
+    "by": "By",
+    "publishedOn": "Published on",
+    "share": "Share",
+    "shareOn": "Share on {platform}",
+    "relatedPosts": "Related Articles",
+    "noPosts": "No articles published yet.",
+    "noPostsInCategory": "No articles in this category.",
+    "backToBlog": "Back to Blog",
+    "categories": {
+      "injuries": "Injuries",
+      "recovery": "Recovery",
+      "training": "Training",
+      "nutrition": "Nutrition",
+      "news": "News"
+    }
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Supplements, equipment and recovery aids for sports and training",
+    "pageTitle": "Shop | Sport Care Med",
+    "pageDescription": "Buy supplements, equipment, braces, tapes and other sports and recovery aids.",
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock ({count})",
+    "allCategories": "All Categories",
+    "sortFeatured": "Featured",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "sortName": "Name",
+    "noProducts": "No products match your filters.",
+    "backToShop": "Back to Shop",
+    "cartTitle": "Cart",
+    "cartItems": "Items ({count})",
+    "emptyCart": "Your cart is empty",
+    "emptyCartDescription": "Add products to your cart to continue shopping.",
+    "continueShopping": "Continue Shopping",
+    "clearCart": "Clear Cart",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "freeShipping": "Free Shipping",
+    "freeShippingThreshold": "Free shipping on orders over {amount} RSD",
+    "total": "Total",
+    "proceedToCheckout": "Proceed to Checkout",
+    "checkoutTitle": "Checkout",
+    "shippingInfo": "Shipping Information",
+    "fullName": "Full Name",
+    "emailLabel": "Email Address",
+    "phoneLabel": "Phone",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "paymentMethod": "Payment Method",
+    "cashOnDelivery": "Cash on Delivery",
+    "codDescription": "Pay when you receive your order",
+    "cardPayment": "Card Payment",
+    "cardDescription": "Secure card payment via RaiAccept",
+    "processing": "Processing...",
+    "payNow": "Pay Now",
+    "placeOrder": "Place Order",
+    "orderConfirmed": "Order Confirmed!",
+    "orderNumber": "Order Number",
+    "orderConfirmedDescription": "Thank you for your purchase! We'll send you an email with order details.",
+    "backToHome": "Back to Home",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "removeItem": "Remove item",
+    "cart": "Cart",
+    "freeDownload": "Free Download",
+    "freeBadge": "FREE",
+    "pdfComingSoon": "PDF coming soon — leave your email and we'll send it to you!",
+    "oftenBoughtTogether": "Often Bought Together",
+    "addAllToCart": "Add All to Cart",
+    "totalBundle": "Bundle Total",
+    "discountApplied": "Discount {code} applied — {percent}% off!",
+    "discountLabel": "Discount ({percent}%)",
+    "freeGuides": "Free Guides"
+  },
+  "tools": {
+    "title": "Interactive Tools",
+    "subtitle": "Free tools for recovery assessment and sport readiness",
+    "recoveryEstimator": {
+      "title": "Recovery Timeline Estimator",
+      "shortDescription": "Find out how long it takes to recover from your sports injury",
+      "description": "An interactive tool that estimates recovery time based on injury type, severity and your personal factors, and shows a phased rehabilitation plan.",
+      "metaTitle": "Sports Injury Recovery Timeline Estimator | Sport Care Med",
+      "metaDescription": "Free tool to estimate recovery time from sports injuries. Find out how long rehabilitation takes and what the recovery phases are.",
+      "step1Title": "Select injury type",
+      "step1Subtitle": "Choose the injury type closest to your condition",
+      "step2Title": "Severity & personal info",
+      "step2Subtitle": "These factors affect recovery speed",
+      "step3Title": "Your recovery plan",
+      "step3Subtitle": "Estimated timeline and rehabilitation plan",
+      "selectInjury": "Select an injury",
+      "severity": "Injury severity",
+      "ageRange": "Age group",
+      "fitnessLevel": "Fitness level",
+      "previousInjury": "Have you previously injured the same area?",
+      "yes": "Yes",
+      "no": "No",
+      "next": "Next",
+      "back": "Back",
+      "startOver": "Start over",
+      "estimatedRecovery": "Estimated recovery time",
+      "weeks": "weeks",
+      "recoveryTimeline": "Recovery plan by phases",
+      "keyActivities": "Key activities",
+      "recommendedServices": "Recommended services",
+      "bookAssessment": "Book a free assessment",
+      "disclaimer": "This estimate is for informational purposes only and does not replace a professional medical examination. For an accurate diagnosis and treatment plan, schedule an appointment with our specialists.",
+      "stepOf": "Step {current} of {total}",
+      "injuries": {
+        "acl": "ACL (Anterior Cruciate Ligament) Tear",
+        "meniscus": "Meniscus Tear",
+        "ankleSprain": "Ankle Sprain",
+        "rotatorCuff": "Rotator Cuff Injury",
+        "hamstring": "Hamstring Strain",
+        "achilles": "Achilles Tendinitis",
+        "stressFracture": "Stress Fracture",
+        "muscleContusion": "Muscle Contusion",
+        "tennisElbow": "Tennis Elbow",
+        "plantarFasciitis": "Plantar Fasciitis"
+      },
+      "severityLevels": {
+        "mild": "Grade I (Mild)",
+        "moderate": "Grade II (Moderate)",
+        "severe": "Grade III (Severe)"
+      },
+      "ageRanges": {
+        "16-25": "16-25 years",
+        "26-35": "26-35 years",
+        "36-45": "36-45 years",
+        "46+": "46+ years"
+      },
+      "fitnessLevels": {
+        "recreational": "Recreational",
+        "amateur": "Amateur",
+        "professional": "Professional"
+      },
+      "phases": {
+        "acute": {
+          "title": "Acute Phase / Protection",
+          "description": "Pain and swelling control, protecting injured tissue"
+        },
+        "earlyRehab": {
+          "title": "Early Rehabilitation",
+          "description": "Gradual return to mobility and gentle exercises"
+        },
+        "strengthening": {
+          "title": "Strengthening",
+          "description": "Progressive muscle strengthening and stability improvement"
+        },
+        "sportSpecific": {
+          "title": "Sport-Specific Training",
+          "description": "Sport-specific exercises and gradual intensity increase"
+        },
+        "returnToPlay": {
+          "title": "Return to Play",
+          "description": "Full return to training and competition"
+        }
+      },
+      "faq": [
+        {
+          "question": "How accurate is this recovery estimate?",
+          "answer": "This estimate is based on average recovery times from medical literature. Actual recovery time may vary depending on many factors. For an accurate assessment, we recommend a professional examination."
+        },
+        {
+          "question": "What factors affect recovery speed?",
+          "answer": "Key factors include: injury severity, age, overall health, pre-injury fitness level, quality of rehabilitation, and adherence to the recovery plan."
+        },
+        {
+          "question": "Can I speed up my recovery?",
+          "answer": "Yes, regular and professionally guided rehabilitation, proper nutrition, adequate rest, and gradual activity increase can significantly speed up recovery."
+        }
+      ]
+    },
+    "readinessChecklist": {
+      "title": "Return-to-Sport Readiness Checklist",
+      "shortDescription": "Check if you're ready for a safe return to sports activities",
+      "description": "An interactive checklist that evaluates your readiness for a safe return to sport based on pain, mobility, strength, function and psychological readiness.",
+      "metaTitle": "Return-to-Sport Readiness Checklist | Sport Care Med",
+      "metaDescription": "Free interactive checklist to evaluate whether you're ready for a safe return to sports activities after injury.",
+      "overallReadiness": "Overall Readiness",
+      "categoryBreakdown": "Results by Category",
+      "notReady": "Not Ready Yet",
+      "notReadyText": "Your results indicate you need additional rehabilitation before returning to sport.",
+      "almostReady": "Almost Ready",
+      "almostReadyText": "You're on the right track, but some areas need more work before a full return.",
+      "ready": "Ready for Sport",
+      "readyText": "Your results indicate you're ready for a safe return to sports activities!",
+      "bookSession": "Book a session with our specialists",
+      "resetChecklist": "Reset checklist",
+      "showResults": "Show results",
+      "disclaimer": "This checklist is for informational purposes only and does not replace a professional medical assessment. For final clearance to return to sport, consult with your doctor.",
+      "itemsChecked": "{checked} of {total} checked",
+      "categories": {
+        "painSwelling": {
+          "title": "Pain & Swelling",
+          "description": "Assessment of pain and swelling levels",
+          "items": {
+            "noPainRest": "No pain at rest",
+            "noPainDaily": "No pain during daily activities",
+            "noPainSport": "No pain during sport-specific movements",
+            "noSwelling": "No swelling after activity",
+            "painLevel": "Pain level ≤ 2/10 during exercise"
+          }
+        },
+        "rangeOfMotion": {
+          "title": "Range of Motion",
+          "description": "Assessment of mobility and flexibility",
+          "items": {
+            "fullRange": "Full range of motion compared to uninjured side",
+            "noStiffness": "No stiffness after inactivity",
+            "fullSquat": "Can perform full squat without restriction",
+            "allPositions": "Comfortable in all sport-specific positions"
+          }
+        },
+        "strengthPower": {
+          "title": "Strength & Power",
+          "description": "Assessment of muscle strength and explosiveness",
+          "items": {
+            "strength90": "Strength within 90% of uninjured side",
+            "singleLeg": "Can perform single-leg exercises without difficulty",
+            "jumpLand": "Can jump and land symmetrically",
+            "sprintFull": "Can sprint at full speed without hesitation",
+            "functionalTests": "Passed functional strength tests"
+          }
+        },
+        "sportFunction": {
+          "title": "Sport-Specific Function",
+          "description": "Assessment of sport-specific capabilities",
+          "items": {
+            "fullIntensity": "Can perform sport-specific drills at full intensity",
+            "cuttingConfidence": "Confidence in cutting/pivoting movements",
+            "graduatedProtocol": "Completed graduated return-to-sport protocol",
+            "noCompensation": "No compensatory movement patterns"
+          }
+        },
+        "psychologicalReadiness": {
+          "title": "Psychological Readiness",
+          "description": "Assessment of mental state and readiness",
+          "items": {
+            "noFear": "No fear of re-injury during training",
+            "mentallyPrepared": "Mentally prepared for competition",
+            "confidence8": "Confidence in injured area at 8+/10"
+          }
+        }
+      },
+      "recommendations": {
+        "painSwelling": "Focus on pain and swelling management. Consider physical therapy and cryotherapy.",
+        "rangeOfMotion": "Work on improving mobility through stretching and mobilization exercises.",
+        "strengthPower": "Additional muscle strengthening is needed. Consult a physiotherapist for an exercise program.",
+        "sportFunction": "Gradually introduce sport-specific exercises. Work with a coach on movement technique.",
+        "psychologicalReadiness": "Consider speaking with a sports psychologist. Gradual exposure to sport situations can help."
+      },
+      "faq": [
+        {
+          "question": "When is the right time to return to sport after injury?",
+          "answer": "The right time to return depends on many factors, including injury type, quality of rehabilitation and individual response to recovery. This checklist helps you objectively assess your readiness."
+        },
+        {
+          "question": "What if I'm not ready according to the checklist?",
+          "answer": "If the checklist shows you're not fully ready, that's not a cause for concern. Focus on the weakest areas and continue rehabilitation. Returning to sport too early can lead to re-injury."
+        },
+        {
+          "question": "Does this checklist replace a medical assessment?",
+          "answer": "No. This checklist is a self-assessment tool and does not replace a professional medical examination. We recommend sharing your results with your doctor or physiotherapist."
+        }
+      ]
+    }
+  }
+}

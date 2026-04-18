@@ -1,0 +1,879 @@
+{
+  "metadata": {
+    "title": "Sport Care Med | Sportska medicina Šabac",
+    "description": "Centar za sportsku medicinu, fizikalnu terapiju i rehabilitaciju u Šapcu. Dijagnostika, kineziterapija, masaža, recovery terapije."
+  },
+  "nav": {
+    "home": "Početna",
+    "services": "Usluge",
+    "about": "O nama",
+    "location": "Lokacija",
+    "contact": "Kontakt",
+    "b2b": "B2B Rešenja",
+    "blog": "Blog",
+    "shop": "Prodavnica",
+    "tools": "Alati"
+  },
+  "hero": {
+    "title": "Vaš put ka oporavku počinje ovde",
+    "subtitle": "Specijalizovani centar za sportsku medicinu, rehabilitaciju i fizikalnu terapiju u Šapcu",
+    "cta": "Zakažite termin",
+    "learnMore": "Saznajte više"
+  },
+  "services": {
+    "title": "Naše usluge",
+    "subtitle": "Kompletna sportsko-medicinska nega na jednom mestu",
+    "label": "Usluge",
+    "viewAll": "Pogledajte sve usluge",
+    "learnMore": "Saznajte više",
+    "duration": "Trajanje",
+    "benefits": "Prednosti",
+    "process": "Proces",
+    "relatedServices": "Povezane usluge",
+    "bookNow": "Zakažite termin",
+    "faq": "Često postavljana pitanja",
+    "items": {
+      "fizikalna-terapija": {
+        "title": "Fizikalna terapija",
+        "shortDescription": "Savremene metode fizikalne terapije za brži oporavak i smanjenje bola.",
+        "description": "Fizikalna terapija koristi fizičke agense kao što su toplota, hladnoća, ultrazvuk, elektroterapija i laser za lečenje povreda i hroničnih stanja. Naš tim koristi najsavremeniju opremu za postizanje optimalnih rezultata.",
+        "benefits": ["Smanjenje bola", "Ubrzanje oporavka", "Poboljšanje pokretljivosti", "Smanjenje otoka i upale"],
+        "duration": "30-60 min",
+        "process": "Inicijalna procena → Plan terapije → Tretmani → Evaluacija napretka",
+        "faq": [
+          { "question": "Koliko tretmana fizikalne terapije je potrebno?", "answer": "Broj tretmana zavisi od dijagnoze. Obično je potrebno 10-15 tretmana za optimalne rezultate, ali plan se prilagođava individualnim potrebama." },
+          { "question": "Da li je fizikalna terapija bolna?", "answer": "Većina tretmana je bezbolna ili minimalno nelagodna. Naši terapeuti uvek prilagođavaju intenzitet vašem komforu." },
+          { "question": "Kada mogu očekivati poboljšanje?", "answer": "Mnogi pacijenti osete poboljšanje već nakon 3-5 tretmana, ali pun efekat se postiže nakon kompletnog ciklusa terapije." }
+        ]
+      },
+      "manuelna-terapija": {
+        "title": "Manuelna terapija",
+        "shortDescription": "Ručne tehnike za mobilizaciju zglobova, mekih tkiva i kičmenog stuba.",
+        "description": "Manuelna terapija obuhvata specijalizovane ručne tehnike mobilizacije i manipulacije zglobova, mekih tkiva i kičmenog stuba. Efikasna u tretmanu bolova u leđima, vratu i zglobovima.",
+        "benefits": ["Poboljšanje opsega pokreta", "Smanjenje mišićnog spazma", "Korekcija držanja", "Smanjenje bolova"],
+        "duration": "30-45 min",
+        "process": "Funkcionalana procena → Dijagnostika → Manuelni tretman → Vežbe za kuću",
+        "faq": [
+          { "question": "Da li je manuelna terapija bezbedna?", "answer": "Da, manuelna terapija je potpuno bezbedna kada je sprovodi kvalifikovan terapeut. Koristimo proverene tehnike prilagođene vašem stanju." },
+          { "question": "Ko može imati koristi od manuelne terapije?", "answer": "Manuelna terapija je efikasna za sve koji imaju bolove u leđima, vratu, zglobovima, ili probleme sa pokretljivošću." },
+          { "question": "Koliko traje efekat jednog tretmana?", "answer": "Efekat jednog tretmana može trajati nekoliko dana do nedelju dana. Serija tretmana daje dugotrajnije rezultate." }
+        ]
+      },
+      "kineziterapija": {
+        "title": "Kineziterapija",
+        "shortDescription": "Terapija pokretom — individualni programi vežbi za oporavak i prevenciju.",
+        "description": "Kineziterapija je terapija pokretom koja koristi specifične vežbe prilagođene vašem stanju. Programi su individualno dizajnirani za rehabilitaciju povreda, poboljšanje snage i prevenciju ponovnih povreda.",
+        "benefits": ["Jačanje mišića", "Poboljšanje koordinacije", "Prevencija povreda", "Funkcionalni oporavak"],
+        "duration": "45-60 min",
+        "process": "Procena funkcionalnog statusa → Individualni program → Vođene vežbe → Progresija",
+        "faq": [
+          { "question": "Da li mogu raditi vežbe i kod kuće?", "answer": "Da, deo programa kineziterapije uključuje vežbe za kućno izvođenje koje vam terapeut detaljno objasni i prikaže." },
+          { "question": "Koliko često treba dolaziti na kineziterapiju?", "answer": "Preporučujemo 2-3 puta nedeljno za optimalne rezultate, ali učestalost se prilagođava vašem stanju i napretku." },
+          { "question": "Da li je kineziterapija pogodna za starije osobe?", "answer": "Apsolutno. Programi se prilagođavaju uzrastu i fizičkoj kondiciji. Kineziterapija je izuzetno korisna za očuvanje pokretljivosti kod starijih osoba." }
+        ]
+      },
+      "dijagnostika": {
+        "title": "Dijagnostika",
+        "shortDescription": "Detaljna sportsko-medicinska dijagnostika za precizno utvrđivanje stanja.",
+        "description": "Sportsko-medicinska dijagnostika obuhvata kompletnu evaluaciju vašeg stanja koristeći savremene dijagnostičke metode. Precizna dijagnoza je osnov za efikasan plan lečenja.",
+        "benefits": ["Precizna dijagnoza", "Rani screening povreda", "Plan prevencije", "Praćenje napretka"],
+        "duration": "60-90 min",
+        "process": "Anamneza → Klinički pregled → Funkcionalno testiranje → Izveštaj i plan",
+        "faq": [
+          { "question": "Šta obuhvata sportsko-medicinska dijagnostika?", "answer": "Dijagnostika uključuje detaljnu anamnezu, klinički pregled, funkcionalno testiranje i po potrebi dodatne dijagnostičke metode za preciznu procenu vašeg stanja." },
+          { "question": "Da li je potreban uput za dijagnostiku?", "answer": "Ne, možete se javiti direktno bez uputa. Preporučujemo da ponesete eventualnu raniju medicinsku dokumentaciju." },
+          { "question": "Koliko traje dijagnostički pregled?", "answer": "Kompletna dijagnostika traje 60-90 minuta, u zavisnosti od složenosti slučaja i potrebnih testova." }
+        ]
+      },
+      "sportska-rehabilitacija": {
+        "title": "Sportska rehabilitacija",
+        "shortDescription": "Kompletna rehabilitacija sportskih povreda — od povrede do povratka na teren.",
+        "description": "Sportska rehabilitacija je sveobuhvatan program oporavka od sportskih povreda. Kombinujemo fizikalnu terapiju, kineziterapiju i funkcionalni trening za bezbedan povratak sportu.",
+        "benefits": ["Brži povratak sportu", "Smanjenje rizika od ponovne povrede", "Optimizacija performansi", "Individualni pristup"],
+        "duration": "60 min",
+        "process": "Evaluacija povrede → Faza oporavka → Funkcionalni trening → Return-to-play protokol",
+        "faq": [
+          { "question": "Koliko traje rehabilitacija sportske povrede?", "answer": "Trajanje zavisi od vrste i težine povrede. Lakše povrede zahtevaju 4-6 nedelja, dok teže povrede (npr. ACL) mogu zahtevati 6-12 meseci do potpunog oporavka." },
+          { "question": "Kada mogu da se vratim treningu?", "answer": "Povratak treningu se određuje na osnovu return-to-play protokola. Naš tim prati vaš napredak i daje zeleno svetlo tek kada ste fizički spremni." },
+          { "question": "Da li pokrivate sve vrste sportskih povreda?", "answer": "Da, radimo sa svim vrstama sportskih povreda — od mišićnih istegnuća i ligamentarnih povreda do postoperativne rehabilitacije." }
+        ]
+      },
+      "masaza": {
+        "title": "Masaža",
+        "shortDescription": "Sportska i terapeutska masaža za oporavak, relaksaciju i prevenciju.",
+        "description": "Nudimo sportsku masažu, deep tissue masažu i terapeutsku masažu prilagođenu vašim potrebama. Idealna za oporavak nakon treninga, smanjenje napetosti i prevenciju povreda.",
+        "benefits": ["Opuštanje mišića", "Poboljšanje cirkulacije", "Smanjenje stresa", "Brži oporavak"],
+        "duration": "30-60 min",
+        "process": "Konsultacija → Izbor tehnike → Tretman → Saveti za održavanje",
+        "faq": [
+          { "question": "Koja je razlika između sportske i terapeutske masaže?", "answer": "Sportska masaža je fokusirana na mišićne grupe aktivne u sportu i koristi intenzivnije tehnike, dok terapeutska masaža tretira specifična bolna stanja i koristi nežnije pristupe." },
+          { "question": "Koliko često treba raditi masažu?", "answer": "Za sportiste preporučujemo 1-2 puta nedeljno. Za opšte održavanje, jednom u 2-4 nedelje je dovoljno." },
+          { "question": "Da li je potrebna priprema pre masaže?", "answer": "Preporučujemo da dođete hidrirani i da ne jedete veliki obrok neposredno pre tretmana. Udobna odeća je poželjna." }
+        ]
+      },
+      "recovery-terapije": {
+        "title": "Recovery terapije",
+        "shortDescription": "Napredne metode oporavka: krioterapija, kompresivna terapija, i više.",
+        "description": "Recovery terapije koriste najsavremenije metode za ubrzanje oporavka. Uključuju krioterapiju, kompresivnu terapiju, infracrvenu saunu i druge napredne tehnike.",
+        "benefits": ["Ubrzani oporavak", "Smanjenje inflamacije", "Poboljšanje sna", "Boost imuniteta"],
+        "duration": "20-45 min",
+        "process": "Procena potreba → Izbor modaliteta → Tretman → Protokol oporavka",
+        "faq": [
+          { "question": "Šta je krioterapija i da li je bezbedna?", "answer": "Krioterapija koristi kontrolisano hlađenje za smanjenje upale i ubrzanje oporavka. Potpuno je bezbedna pod nadzorom naših stručnjaka." },
+          { "question": "Mogu li kombinovati više recovery metoda?", "answer": "Da, često kombinujemo metode za optimalne rezultate. Na primer, krioterapiju nakon treninga i kompresivnu terapiju za oporavak mišića." },
+          { "question": "Da li recovery terapije pomažu i rekreativcima?", "answer": "Apsolutno. Recovery terapije su korisne za svakoga ko želi brži oporavak, bilo da ste profesionalni sportista ili rekreativac." }
+        ]
+      },
+      "testiranje-merenja": {
+        "title": "Testiranje i merenja",
+        "shortDescription": "Funkcionalno testiranje i merenja za sportiste — analiza performansi i prevencija.",
+        "description": "Kompletno funkcionalno testiranje i merenja za sportiste i rekreativce. Analiza snage, izdržljivosti, pokretljivosti i biomehanike za optimizaciju treninga.",
+        "benefits": ["Analiza snage i slabosti", "Prevencija povreda", "Optimizacija treninga", "Praćenje napretka"],
+        "duration": "60-90 min",
+        "process": "Protokol testiranja → Merenja → Analiza rezultata → Preporuke za trening",
+        "faq": [
+          { "question": "Šta se testira na funkcionalnom testiranju?", "answer": "Testiramo snagu, izdržljivost, pokretljivost, ravnotežu, biomehaniku pokreta i specifične sportske sposobnosti relevantne za vaš sport." },
+          { "question": "Koliko često treba ponavljati testiranje?", "answer": "Preporučujemo testiranje na svaka 3-6 meseci za praćenje napretka, ili pre i posle trenažnog perioda/sezone." },
+          { "question": "Da li testiranje može sprečiti povrede?", "answer": "Da, funkcionalno testiranje identifikuje mišićne disbalanse i slabosti koje mogu dovesti do povreda, omogućavajući preventivni rad." }
+        ]
+      }
+    }
+  },
+  "whyUs": {
+    "title": "Zašto Sport Care Med?",
+    "subtitle": "Posvećeni vašem zdravlju i performansama",
+    "items": {
+      "expertise": {
+        "title": "Stručni tim",
+        "description": "Iskusni terapeuti specijalizovani za sportsku medicinu"
+      },
+      "equipment": {
+        "title": "Savremena oprema",
+        "description": "Najnovija medicinska i dijagnostička oprema"
+      },
+      "individual": {
+        "title": "Individualni pristup",
+        "description": "Personalizovani planovi lečenja i rehabilitacije"
+      },
+      "results": {
+        "title": "Dokazani rezultati",
+        "description": "Uspešan povratak stotina sportista na teren"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Šta kažu naši pacijenti",
+    "subtitle": "Iskustva sportista i pacijenata koji su nam ukazali poverenje"
+  },
+  "partners": {
+    "title": "Naši partneri",
+    "subtitle": "Saradnja sa vodećim sportskim organizacijama"
+  },
+  "newsletter": {
+    "title": "Budite u toku",
+    "subtitle": "Prijavite se za naš newsletter i primajte savete o zdravlju i prevenciji",
+    "placeholder": "Vaša email adresa",
+    "button": "Prijavite se",
+    "success": "Uspešno ste se prijavili!",
+    "error": "Došlo je do greške. Pokušajte ponovo."
+  },
+  "caseStudies": {
+    "title": "Priče uspeha",
+    "subtitle": "Rezultati koji govore sami za sebe",
+    "label": "Rezultati",
+    "readMore": "Pročitajte više",
+    "cta": "Započnite vaš oporavak",
+    "items": [
+      {
+        "name": "Nikola M.",
+        "sport": "Fudbal",
+        "injury": "Ruptura prednjeg ukrštenog ligamenta (ACL)",
+        "result": "Povratak na teren za 8 meseci",
+        "story": "Nakon operacije ACL-a, Nikola je započeo rehabilitaciju u Sport Care Med-u. Kroz individualni program kineziterapije i sportske rehabilitacije, vratio se treninzima za 8 meseci — mesec dana pre očekivanog roka.",
+        "duration": "8 meseci",
+        "services": ["Sportska rehabilitacija", "Kineziterapija", "Dijagnostika"]
+      },
+      {
+        "name": "Jelena S.",
+        "sport": "Tenis",
+        "injury": "Hronične bolove u ramenu",
+        "result": "Potpuno bezbolno igranje",
+        "story": "Jelena je mesecima trpela bol u ramenu koji joj je sprečavao da igra na profesionalnom nivou. Kombinacijom manuelne terapije, fizikalne terapije i ciljanog programa vežbi, bol je potpuno eliminisan za 6 nedelja.",
+        "duration": "6 nedelja",
+        "services": ["Manuelna terapija", "Fizikalna terapija", "Kineziterapija"]
+      },
+      {
+        "name": "FK Šabac U19",
+        "sport": "Fudbal",
+        "injury": "Timski program prevencije",
+        "result": "60% manje povreda u sezoni",
+        "story": "Omladinski tim FK Šabac je započeo saradnju sa Sport Care Med-om za prevenciju povreda. Kroz redovno funkcionalno testiranje i individualne korektivne programe, tim je zabeležio 60% manje povreda u toku sezone.",
+        "duration": "12 meseci",
+        "services": ["Testiranje i merenja", "Kineziterapija", "Sportska rehabilitacija"]
+      }
+    ]
+  },
+  "leadCapture": {
+    "title": "Besplatna procena",
+    "subtitle": "Zakažite besplatnu inicijalnu procenu i saznajte kako vam možemo pomoći",
+    "name": "Vaše ime",
+    "phone": "Broj telefona",
+    "service": "Usluga koja vas zanima",
+    "selectService": "Izaberite uslugu",
+    "submit": "Zakažite besplatno",
+    "sending": "Slanje...",
+    "success": "Uspešno! Kontaktiraćemo vas u roku od 24h.",
+    "error": "Greška. Pokušajte ponovo.",
+    "guarantee": "Bez obaveza • 100% besplatno",
+    "exitTitle": "Sačekajte! Imate pitanje?",
+    "exitSubtitle": "Ostavite broj telefona i javićemo vam se u roku od 24h",
+    "stickyTitle": "Zakažite termin",
+    "urgency": "Danas slobodnih {count} termina",
+    "condition": "Opišite vaš problem",
+    "conditionPlaceholder": "Npr. bol u kolenu, oporavak od povrede..."
+  },
+  "about": {
+    "title": "O nama",
+    "subtitle": "Sport Care Med — centar za sportsku medicinu u Šapcu",
+    "story": {
+      "title": "Naša priča",
+      "description": "Sport Care Med je osnovan sa vizijom da pruži sportistima i rekreativcima pristup vrhunskoj sportsko-medicinskoj nezi. Naš tim iskusnih terapeuta i lekara posvećen je vašem oporavku i performansama."
+    },
+    "mission": {
+      "title": "Misija",
+      "description": "Pružamo sveobuhvatnu sportsko-medicinsku negu koristeći najsavremenije metode i opremu, sa fokusom na individualni pristup svakom pacijentu."
+    },
+    "vision": {
+      "title": "Vizija",
+      "description": "Biti vodeći centar za sportsku medicinu u regionu, poznat po kvalitetu usluga, stručnosti tima i zadovoljstvu pacijenata."
+    },
+    "team": {
+      "title": "Naš tim",
+      "subtitle": "Upoznajte stručnjake koji brinu o vašem zdravlju"
+    },
+    "gallery": {
+      "title": "Naš prostor",
+      "subtitle": "Savremen prostor opremljen za sve vaše potrebe"
+    }
+  },
+  "location": {
+    "title": "Lokacija",
+    "subtitle": "Posetite nas u Šapcu",
+    "address": "Adresa",
+    "workingHours": "Radno vreme",
+    "weekdays": "Ponedeljak - Petak",
+    "saturday": "Subota",
+    "sunday": "Nedelja",
+    "closed": "Zatvoreno",
+    "directions": "Kako do nas",
+    "parking": "Parking"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Javite nam se — tu smo za vas",
+    "form": {
+      "name": "Ime i prezime",
+      "email": "Email adresa",
+      "phone": "Broj telefona",
+      "treatment": "Zainteresovani za uslugu",
+      "selectTreatment": "Izaberite uslugu",
+      "condition": "Opišite vaše stanje",
+      "conditionPlaceholder": "Npr. bol u kolenu nakon treninga, otežano pokretanje ramena, oporavak nakon operacije...",
+      "message": "Dodatne napomene (opciono)",
+      "messagePlaceholder": "Posebne napomene, pitanja ili želje...",
+      "submit": "Pošaljite poruku",
+      "sending": "Slanje...",
+      "success": "Poruka je uspešno poslata! Kontaktiraćemo vas uskoro.",
+      "error": "Došlo je do greške. Pokušajte ponovo.",
+      "step1Title": "Šta vas muči?",
+      "step1Subtitle": "Opišite vaš problem i izaberite uslugu",
+      "step2Title": "Vaši podaci",
+      "step2Subtitle": "Kako da vas kontaktiramo",
+      "step3Title": "Dodatne informacije",
+      "step3Subtitle": "Još nešto što treba da znamo?",
+      "next": "Dalje",
+      "back": "Nazad",
+      "stepOf": "Korak {current} od {total}"
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "Email",
+      "social": "Pratite nas"
+    }
+  },
+  "b2b": {
+    "title": "B2B Rešenja",
+    "subtitle": "Partnerstva sa timovima i organizacijama",
+    "heroText": "Jedan ugovor. Kompletan tim. Do 50 individualnih pacijenata u jednom paketu.",
+    "heroSubtext": "Specijalizovane usluge sportske medicine za sportske timove, klubove i organizacije",
+    "packages": {
+      "title": "Paketi usluga",
+      "subtitle": "Izaberite paket koji odgovara potrebama vašeg tima",
+      "rehabilitation": {
+        "title": "Timska rehabilitacija",
+        "description": "Kompletni rehabilitacioni programi prilagođeni potrebama sportskog tima"
+      },
+      "onsite": {
+        "title": "Fizioterapija na terenu",
+        "description": "Naši terapeuti dolaze na vaše treninge i utakmice"
+      },
+      "prevention": {
+        "title": "Programi prevencije povreda",
+        "description": "Proaktivni pristup smanjenju rizika od povreda u vašem timu"
+      },
+      "testing": {
+        "title": "Testiranje performansi za timove",
+        "description": "Kompletno funkcionalno testiranje za sve članove tima"
+      }
+    },
+    "learnMore": "Saznajte više",
+    "viewAll": "Pogledajte sve B2B usluge",
+    "forTeams": "Za timove",
+    "services": {
+      "timska-rehabilitacija": {
+        "title": "Timska rehabilitacija",
+        "shortDescription": "Kompletni rehabilitacioni programi prilagođeni potrebama sportskog tima",
+        "description": "Naš program timske rehabilitacije pruža sveobuhvatan pristup oporavku sportista. Svaki član tima dobija individualni plan rehabilitacije, dok naš tim koordinira sa trenerima i medicinskim osobljem kluba. Pratimo napredak svakog igrača i prilagođavamo protokole u realnom vremenu, obezbeđujući brži i sigurniji povratak na teren.",
+        "includes": [
+          "Individualni planovi rehabilitacije za svakog igrača",
+          "Redovni pregledi i praćenje napretka",
+          "Koordinacija sa trenerskim timom",
+          "Protokoli za povratak na teren",
+          "Izveštaji o statusu povređenih igrača",
+          "Pristup svim terapijskim modalitetima"
+        ],
+        "process": "Inicijalna procena tima → Individualni planovi → Dnevna rehabilitacija → Testiranje spremnosti → Povratak na teren",
+        "benefits": [
+          "Brži povratak igrača na teren",
+          "Manji rizik od ponovne povrede",
+          "Koordinisan pristup sa trenerima",
+          "Transparentni izveštaji o napretku",
+          "Ušteda u poređenju sa individualnim tretmanima"
+        ],
+        "idealFor": ["Fudbalski klubovi", "Košarkaški klubovi", "Rukometni timovi", "Odbojkaški timovi"],
+        "stats": [
+          { "value": "85%", "label": "igrača se vrati brže na teren" },
+          { "value": "40%", "label": "manje recidiva povreda" },
+          { "value": "3 ned.", "label": "kraći prosečni oporavak" }
+        ],
+        "faq": [
+          { "question": "Koliko igrača može biti uključeno u program?", "answer": "Program je prilagodljiv za timove od 15 do 50+ članova. Cena se prilagođava veličini tima." },
+          { "question": "Da li terapeuti dolaze u klub ili igrači dolaze kod vas?", "answer": "Kombinujemo oba pristupa. Rehabilitacija se odvija u našem centru, ali za akutne slučajeve i praćenje možemo doći u vaš objekat." },
+          { "question": "Kako izgleda koordinacija sa trenerskim timom?", "answer": "Redovni nedeljni izveštaji, zajednički sastanci i direktna komunikacija sa trenerima i kondicijskim trenerima." }
+        ]
+      },
+      "fizioterapija-na-terenu": {
+        "title": "Fizioterapija na terenu",
+        "shortDescription": "Naši terapeuti dolaze na vaše treninge i utakmice",
+        "description": "Naš servis fizioterapije na terenu obezbeđuje prisustvo kvalifikovanog terapeuta na svim vašim treninzima i utakmicama. Hitna reakcija na povrede, profesionalno taping i bandažiranje, te prevencija povreda tokom aktivnosti — sve na licu mesta. Vaši sportisti dobijaju trenutnu medicinsku podršku bez odlaska u kliniku.",
+        "includes": [
+          "Terapeut prisutan na treninzima",
+          "Hitna reakcija na povrede tokom utakmica",
+          "Taping i bandažiranje",
+          "Prevencija povreda tokom treninga",
+          "Saveti za zagrevanje i hlađenje",
+          "Oprema za prvu pomoć na terenu"
+        ],
+        "process": "Dogovor rasporeda → Terapeut na lokaciji → Intervencija po potrebi → Izveštaj posle treninga/utakmice → Preporuke za dalji tretman",
+        "benefits": [
+          "Trenutna reakcija na povrede",
+          "Profesionalno taping na licu mesta",
+          "Smanjenje rizika od komplikacija",
+          "Psihološka sigurnost za sportiste",
+          "Optimizacija procesa zagrevanja"
+        ],
+        "idealFor": ["Fudbalski klubovi", "Atletski klubovi", "Borilački sportovi", "Timski sportovi"],
+        "stats": [
+          { "value": "60%", "label": "brža reakcija na povrede" },
+          { "value": "100%", "label": "pokrivenost treninga i utakmica" },
+          { "value": "25%", "label": "manje ozbiljnih povreda" }
+        ],
+        "faq": [
+          { "question": "Koliko treninga nedeljno pokrivate?", "answer": "Prilagođavamo se vašem rasporedu. Standardni paketi pokrivaju 3-5 treninga nedeljno plus utakmice." },
+          { "question": "Šta uključuje oprema na terenu?", "answer": "Terapeutska torba sa kompletnim priborom: trake, zavoji, led, ultrazvuk portabl, elektrostimulacija, te komplet za prvu pomoć." },
+          { "question": "Da li je terapeut prisutan samo tokom treninga?", "answer": "Terapeut dolazi 30 minuta pre treninga (za zagrevanje i prevenciju) i ostaje 15-30 minuta posle za obradu eventualnih povreda." }
+        ]
+      },
+      "prevencija-povreda": {
+        "title": "Programi prevencije povreda",
+        "shortDescription": "Proaktivni pristup smanjenju rizika od povreda u vašem timu",
+        "description": "Prevencija je najefikasnija i najjeftinija strategija u sportskoj medicini. Naš program obuhvata kompletni screening svih članova tima na početku sezone, izradu individualnih programa prevencije, edukaciju trenera i igrača, i redovne mesečne izveštaje o rizicima. Koristimo dokazane protokole poput FIFA 11+ za dramatično smanjenje povreda.",
+        "includes": [
+          "Screening svih igrača na početku sezone",
+          "Individualni programi prevencije",
+          "Edukacija trenera i igrača",
+          "Mesečni izveštaji o rizicima",
+          "FIFA 11+ i slični dokazani programi",
+          "Prilagođeni protokoli zagrevanja"
+        ],
+        "process": "Screening tima → Analiza rizika → Individualni programi → Implementacija → Mesečna evaluacija → Korekcija programa",
+        "benefits": [
+          "Drastično smanjenje broja povreda",
+          "Ušteda na troškovima lečenja",
+          "Veća dostupnost igrača za takmičenje",
+          "Edukovan trenerski kadar",
+          "Podatci za dugoročno praćenje"
+        ],
+        "idealFor": ["Profesionalni klubovi", "Omladinske akademije", "Nacionalni timovi", "Školski sportski programi"],
+        "stats": [
+          { "value": "50%", "label": "manje povreda u prvoj sezoni" },
+          { "value": "30%", "label": "smanjenje ACL povreda" },
+          { "value": "5:1", "label": "ROI u uštedi troškova lečenja" }
+        ],
+        "faq": [
+          { "question": "Koliko traje inicijalni screening?", "answer": "Za tim od 25 igrača, kompletni screening traje 1-2 dana. Uključuje FMS, testove snage, fleksibilnosti, i procenu ranijih povreda." },
+          { "question": "Da li program uključuje i program za trenere?", "answer": "Da. Edukujemo trenerski tim o znacima rizika, pravilnom zagrevanju, i implementaciji preventivnih vežbi u svakodnevni trening." },
+          { "question": "Koliko košta prevencija u poređenju sa lečenjem?", "answer": "Naše iskustvo pokazuje da svaki dinar uložen u prevenciju štedi 5 dinara na troškove lečenja i rehabilitacije. Plus, igrači propuštaju manje treninga i utakmica." }
+        ]
+      },
+      "testiranje-performansi": {
+        "title": "Testiranje performansi za timove",
+        "shortDescription": "Kompletno funkcionalno testiranje za sve članove tima",
+        "description": "Naš program testiranja performansi pruža kompletnu sliku fizičkih sposobnosti svakog člana tima. Koristimo FMS screening, merenje snage i eksplozivnosti, kardio-respiratorno testiranje i analizu pokreta. Svaki sportista dobija individualni izveštaj sa preporukama, a trenerski tim dobija zbirni prikaz za planiranje treninga.",
+        "includes": [
+          "FMS screening (Functional Movement Screen)",
+          "Merenje snage i eksplozivnosti",
+          "Kardio-respiratorno testiranje",
+          "Analiza pokreta i biomehanike",
+          "Individualni izveštaji i preporuke",
+          "Zbirni izveštaj za trenerski tim"
+        ],
+        "process": "Zakazivanje termina → Testiranje tima (1-2 dana) → Analiza podataka → Individualni izveštaji → Prezentacija trenerima → Retestiranje posle 3-6 meseci",
+        "benefits": [
+          "Objektivna procena svakog sportiste",
+          "Identifikacija slabosti i rizika",
+          "Bazni podaci za praćenje napretka",
+          "Pomoć trenerima u planiranju treninga",
+          "Rana detekcija potencijalnih povreda"
+        ],
+        "idealFor": ["Profesionalni timovi", "Sportske akademije", "Nacionalne selekcije", "Fitnes centri"],
+        "stats": [
+          { "value": "1 dan", "label": "za kompletno testiranje 25+ igrača" },
+          { "value": "800+", "label": "testiranih sportista" },
+          { "value": "15+", "label": "različitih testova u bateriji" }
+        ],
+        "faq": [
+          { "question": "Koje testove uključuje baterija?", "answer": "FMS, vertikalni skok, sprint 10m/30m, Yo-Yo test, izokinetički testovi, analiza pokreta, fleksibilnost, i specifični testovi prema sportu." },
+          { "question": "Da li testiranje može da se obavi u našem objektu?", "answer": "Većina testova je portabilna i može se obaviti u vašoj sali ili na terenu. Za specijalizovane laboratorijske testove pozivamo vas u naš centar." },
+          { "question": "Koliko često treba ponavljati testiranje?", "answer": "Preporučujemo testiranje 2-3 puta godišnje: pred-sezona, sredina sezone, i post-sezona. Ovo daje sliku napretka i efekata trenažnog procesa." }
+        ]
+      }
+    },
+    "roi": {
+      "title": "Kalkulator uštede",
+      "subtitle": "Uporedite troškove individualnih poseta sa B2B ugovorom",
+      "teamSize": "Broj članova tima",
+      "avgInjuries": "Prosečan broj povreda po sezoni",
+      "sessionsPerInjury": "Prosečan broj tretmana po povredi",
+      "individualCost": "Trošak individualnih poseta",
+      "b2bCost": "B2B ugovor (mesečno)",
+      "annualSavings": "Godišnja ušteda",
+      "savingsPercent": "Ušteda",
+      "perSession": "po tretmanu",
+      "perMonth": "mesečno",
+      "perYear": "godišnje",
+      "plusValue": "Plus uključena prevencija i pokrivanje na terenu u vrednosti od",
+      "cta": "Uštedite {savings} — Zatražite ponudu",
+      "players": "igrača",
+      "injuries": "povreda",
+      "sessions": "tretmana"
+    },
+    "outcomes": {
+      "title": "Rezultati koji govore",
+      "subtitle": "Dokazani rezultati naših B2B partnerstava",
+      "stats": [
+        { "value": "50+", "label": "timova koristi naše usluge" },
+        { "value": "800+", "label": "sportista pod našom brigom" },
+        { "value": "92%", "label": "stopa uspešnog povratka" },
+        { "value": "30%", "label": "manje povreda u timu" }
+      ],
+      "caseStudies": {
+        "title": "Studije slučaja",
+        "items": [
+          {
+            "team": "FK Šabac Omladinci",
+            "sport": "Fudbal",
+            "challenge": "Veliki broj povreda tokom sezone i dugi periodi oporavka igrača",
+            "solution": "Implementiran kompletni program prevencije + timska rehabilitacija",
+            "result": "40% manje povreda u sezoni, prosečno 2 nedelje kraći oporavak"
+          },
+          {
+            "team": "KK Šabac",
+            "sport": "Košarka",
+            "challenge": "Nedostatak kontinuirane fizioterapeutske podrške",
+            "solution": "Fizioterapija na terenu + kompletni recovery program za 12 igrača",
+            "result": "Svi povređeni igrači vratili se pre planiranog roka"
+          },
+          {
+            "team": "Atletski klub Šabac",
+            "sport": "Atletika",
+            "challenge": "Potreba za sveobuhvatnim testiranjem mladih sportista",
+            "solution": "Screening 35 sportista, identifikovano 8 visokih rizika",
+            "result": "Preventivnim programom sprečeno 5 potencijalnih povreda"
+          }
+        ]
+      }
+    },
+    "proposal": {
+      "title": "Kreirajte ponudu za vaš tim",
+      "subtitle": "Izaberite usluge, unesite podatke o timu i dobijte procenu troškova",
+      "step1Title": "Izaberite usluge",
+      "step1Subtitle": "Označite pakete koji vas interesuju",
+      "step2Title": "Podaci o timu",
+      "step2Subtitle": "Pomozite nam da prilagodimo ponudu",
+      "step3Title": "Pregled ponude",
+      "step3Subtitle": "Vaša personalizovana procena",
+      "step4Title": "Kontakt podaci",
+      "step4Subtitle": "Pošaljite upit i dobijte detaljnu ponudu",
+      "selectServices": "Izabrane usluge",
+      "fromPrice": "od {price} RSD/mesec",
+      "sportType": "Sport / Vrsta organizacije",
+      "teamSize": "Broj članova tima",
+      "seasonDuration": "Trajanje sezone (meseci)",
+      "competitionLevel": "Nivo takmičenja",
+      "levels": {
+        "recreational": "Rekreativni",
+        "amateur": "Amaterski",
+        "semipro": "Polu-profesionalni",
+        "professional": "Profesionalni"
+      },
+      "estimatedMonthly": "Procenjena mesečna cena",
+      "estimatedAnnual": "Procenjena godišnja vrednost",
+      "estimatedRoi": "Procenjena godišnja ušteda",
+      "seasonCoverage": "Pokrivanje sezone",
+      "months": "meseci",
+      "proposalSummary": "Rezime ponude",
+      "selectedPackages": "Izabrani paketi",
+      "organization": "Naziv organizacije",
+      "contactPerson": "Kontakt osoba",
+      "email": "Email adresa",
+      "phone": "Broj telefona",
+      "notes": "Dodatne napomene",
+      "submit": "Pošaljite upit za ponudu",
+      "sending": "Slanje...",
+      "success": "Upit je uspešno poslat! Naš tim će vam poslati detaljnu ponudu u roku od 24h.",
+      "error": "Došlo je do greške. Pokušajte ponovo.",
+      "next": "Dalje",
+      "back": "Nazad",
+      "stepOf": "Korak {current} od {total}"
+    },
+    "quote": {
+      "title": "Zatražite ponudu",
+      "organization": "Naziv organizacije",
+      "contactPerson": "Kontakt osoba",
+      "email": "Email adresa",
+      "phone": "Broj telefona",
+      "sportType": "Sport / Vrsta organizacije",
+      "teamSize": "Broj članova tima",
+      "message": "Opišite vaše potrebe",
+      "submit": "Pošaljite upit",
+      "sending": "Slanje...",
+      "success": "Upit je uspešno poslat! Kontaktiraćemo vas uskoro.",
+      "error": "Došlo je do greške. Pokušajte ponovo."
+    },
+    "clients": {
+      "title": "Naši klijenti",
+      "subtitle": "Timovi i organizacije koji nam veruju"
+    }
+  },
+  "footer": {
+    "description": "Centar za sportsku medicinu, fizikalnu terapiju i rehabilitaciju u Šapcu.",
+    "quickLinks": "Brzi linkovi",
+    "workingHours": "Radno vreme",
+    "weekdays": "Pon - Pet: 08:00 - 20:00",
+    "saturday": "Sub: 09:00 - 14:00",
+    "sunday": "Ned: Zatvoreno",
+    "rights": "Sva prava zadržana.",
+    "privacy": "Politika privatnosti",
+    "terms": "Uslovi korišćenja"
+  },
+  "common": {
+    "readMore": "Saznajte više",
+    "backToHome": "Nazad na početnu",
+    "loading": "Učitavanje...",
+    "error": "Greška",
+    "close": "Zatvori",
+    "menu": "Meni",
+    "language": "Jezik"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Saveti, vesti i stručni članci iz sveta sportske medicine",
+    "allCategories": "Sve kategorije",
+    "search": "Pretraži članke...",
+    "readMore": "Pročitajte više",
+    "readingTime": "{minutes} min čitanja",
+    "by": "Autor",
+    "publishedOn": "Objavljeno",
+    "share": "Podelite",
+    "shareOn": "Podelite na {platform}",
+    "relatedPosts": "Povezani članci",
+    "noPosts": "Trenutno nema objavljenih članaka.",
+    "noPostsInCategory": "Nema članaka u ovoj kategoriji.",
+    "backToBlog": "Nazad na blog",
+    "categories": {
+      "injuries": "Povrede",
+      "recovery": "Oporavak",
+      "training": "Trening",
+      "nutrition": "Ishrana",
+      "news": "Vesti"
+    }
+  },
+  "shop": {
+    "title": "Prodavnica",
+    "subtitle": "Suplementi, oprema i pomagala za oporavak i trening",
+    "pageTitle": "Prodavnica | Sport Care Med",
+    "pageDescription": "Kupite suplemente, opremu, orteze, trake i ostala pomagala za sport i oporavak.",
+    "addToCart": "Dodaj u korpu",
+    "outOfStock": "Nema na stanju",
+    "inStock": "Na stanju ({count})",
+    "allCategories": "Sve kategorije",
+    "sortFeatured": "Preporučeno",
+    "sortPriceAsc": "Cena: od najniže",
+    "sortPriceDesc": "Cena: od najviše",
+    "sortName": "Naziv",
+    "noProducts": "Nema proizvoda koji odgovaraju filtrima.",
+    "backToShop": "Nazad u prodavnicu",
+    "cartTitle": "Korpa",
+    "cartItems": "Proizvodi ({count})",
+    "emptyCart": "Vaša korpa je prazna",
+    "emptyCartDescription": "Dodajte proizvode u korpu da biste nastavili sa kupovinom.",
+    "continueShopping": "Nastavi kupovinu",
+    "clearCart": "Isprazni korpu",
+    "orderSummary": "Pregled porudžbine",
+    "subtotal": "Međuzbir",
+    "shipping": "Dostava",
+    "freeShipping": "Besplatna dostava",
+    "freeShippingThreshold": "Besplatna dostava za porudžbine preko {amount} RSD",
+    "total": "Ukupno",
+    "proceedToCheckout": "Nastavi ka plaćanju",
+    "checkoutTitle": "Plaćanje",
+    "shippingInfo": "Podaci za dostavu",
+    "fullName": "Ime i prezime",
+    "emailLabel": "Email adresa",
+    "phoneLabel": "Telefon",
+    "address": "Adresa",
+    "city": "Grad",
+    "postalCode": "Poštanski broj",
+    "required": "Ovo polje je obavezno",
+    "invalidEmail": "Unesite validnu email adresu",
+    "paymentMethod": "Način plaćanja",
+    "cashOnDelivery": "Plaćanje pouzećem",
+    "codDescription": "Platite prilikom preuzimanja",
+    "cardPayment": "Plaćanje karticom",
+    "cardDescription": "Sigurno plaćanje karticom preko RaiAccept",
+    "processing": "Obrada...",
+    "payNow": "Plati sada",
+    "placeOrder": "Poruči",
+    "orderConfirmed": "Porudžbina je potvrđena!",
+    "orderNumber": "Broj porudžbine",
+    "orderConfirmedDescription": "Hvala vam na kupovini! Poslaćemo vam email sa detaljima porudžbine.",
+    "backToHome": "Nazad na početnu",
+    "decreaseQuantity": "Smanji količinu",
+    "increaseQuantity": "Povećaj količinu",
+    "removeItem": "Ukloni proizvod",
+    "cart": "Korpa",
+    "freeDownload": "Besplatno preuzmi",
+    "freeBadge": "BESPLATNO",
+    "pdfComingSoon": "PDF uskoro — ostavite email i poslaćemo vam!",
+    "oftenBoughtTogether": "Često kupljeno zajedno",
+    "addAllToCart": "Dodaj sve u korpu",
+    "totalBundle": "Ukupno za paket",
+    "discountApplied": "Kod {code} primenjen — {percent}% popusta!",
+    "discountLabel": "Popust ({percent}%)",
+    "freeGuides": "Besplatni vodiči"
+  },
+  "tools": {
+    "title": "Interaktivni alati",
+    "subtitle": "Besplatni alati za procenu oporavka i spremnosti za sport",
+    "recoveryEstimator": {
+      "title": "Procena vremena oporavka",
+      "shortDescription": "Saznajte koliko vremena je potrebno za oporavak od vaše sportske povrede",
+      "description": "Interaktivni alat koji na osnovu vrste povrede, težine i vaših ličnih faktora procenjuje vreme oporavka i prikazuje plan rehabilitacije po fazama.",
+      "metaTitle": "Procena vremena oporavka od sportske povrede | Sport Care Med",
+      "metaDescription": "Besplatan alat za procenu vremena oporavka od sportskih povreda. Saznajte koliko traje rehabilitacija i koje su faze oporavka.",
+      "step1Title": "Izaberite vrstu povrede",
+      "step1Subtitle": "Izaberite tip povrede koji najbliže odgovara vašem stanju",
+      "step2Title": "Težina i lični podaci",
+      "step2Subtitle": "Ovi faktori utiču na brzinu oporavka",
+      "step3Title": "Vaš plan oporavka",
+      "step3Subtitle": "Procenjeni vremenski okvir i plan rehabilitacije",
+      "selectInjury": "Izaberite povredu",
+      "severity": "Težina povrede",
+      "ageRange": "Starostna grupa",
+      "fitnessLevel": "Nivo fizičke aktivnosti",
+      "previousInjury": "Da li ste ranije imali povredu istog dela tela?",
+      "yes": "Da",
+      "no": "Ne",
+      "next": "Dalje",
+      "back": "Nazad",
+      "startOver": "Počni ispočetka",
+      "estimatedRecovery": "Procenjeno vreme oporavka",
+      "weeks": "nedelja",
+      "recoveryTimeline": "Plan oporavka po fazama",
+      "keyActivities": "Ključne aktivnosti",
+      "recommendedServices": "Preporučene usluge",
+      "bookAssessment": "Zakažite besplatnu procenu",
+      "disclaimer": "Ova procena je informativnog karaktera i ne zamenjuje stručni medicinski pregled. Za tačnu dijagnozu i plan lečenja, zakažite pregled kod naših stručnjaka.",
+      "stepOf": "Korak {current} od {total}",
+      "injuries": {
+        "acl": "Ruptura prednjeg ukrštenog ligamenta (ACL)",
+        "meniscus": "Povreda meniskusa",
+        "ankleSprain": "Uganuće skočnog zgloba",
+        "rotatorCuff": "Povreda rotatorne manžetne",
+        "hamstring": "Istegnuće zadnje lože",
+        "achilles": "Ahilov tendinitis",
+        "stressFracture": "Stres fraktura",
+        "muscleContusion": "Kontuzija mišića",
+        "tennisElbow": "Teniski lakat",
+        "plantarFasciitis": "Plantarni fasciitis"
+      },
+      "severityLevels": {
+        "mild": "Stepen I (Blaga)",
+        "moderate": "Stepen II (Umerena)",
+        "severe": "Stepen III (Teška)"
+      },
+      "ageRanges": {
+        "16-25": "16-25 godina",
+        "26-35": "26-35 godina",
+        "36-45": "36-45 godina",
+        "46+": "46+ godina"
+      },
+      "fitnessLevels": {
+        "recreational": "Rekreativac",
+        "amateur": "Amater",
+        "professional": "Profesionalac"
+      },
+      "phases": {
+        "acute": {
+          "title": "Akutna faza / Zaštita",
+          "description": "Kontrola bola, otoka i zaštita povređenog tkiva"
+        },
+        "earlyRehab": {
+          "title": "Rana rehabilitacija",
+          "description": "Postepeni povratak pokretljivosti i početak nežnih vežbi"
+        },
+        "strengthening": {
+          "title": "Jačanje",
+          "description": "Progresivno jačanje mišića i poboljšanje stabilnosti"
+        },
+        "sportSpecific": {
+          "title": "Sportski specifičan trening",
+          "description": "Vežbe specifične za vaš sport i postepeno povećanje intenziteta"
+        },
+        "returnToPlay": {
+          "title": "Povratak sportu",
+          "description": "Potpuni povratak treningu i takmičenju"
+        }
+      },
+      "faq": [
+        {
+          "question": "Koliko je tačna ova procena oporavka?",
+          "answer": "Ova procena je zasnovana na prosečnim vremenima oporavka iz medicinske literature. Stvarno vreme oporavka može varirati u zavisnosti od mnogih faktora. Za tačnu procenu, preporučujemo stručni pregled."
+        },
+        {
+          "question": "Šta utiče na brzinu oporavka?",
+          "answer": "Ključni faktori su: težina povrede, starost, opšte zdravstveno stanje, nivo fizičke aktivnosti pre povrede, kvalitet rehabilitacije i pridržavanje plana oporavka."
+        },
+        {
+          "question": "Da li mogu ubrzati oporavak?",
+          "answer": "Da, redovna i stručno vođena rehabilitacija, pravilna ishrana, dovoljan odmor i postepeno povećanje aktivnosti mogu značajno ubrzati oporavak."
+        }
+      ]
+    },
+    "readinessChecklist": {
+      "title": "Test spremnosti za povratak sportu",
+      "shortDescription": "Proverite da li ste spremni za bezbedan povratak sportskim aktivnostima",
+      "description": "Interaktivna kontrolna lista koja procenjuje vašu spremnost za bezbedan povratak sportu na osnovu bola, pokretljivosti, snage, funkcije i psihološke spremnosti.",
+      "metaTitle": "Test spremnosti za povratak sportu | Sport Care Med",
+      "metaDescription": "Besplatan interaktivni test koji procenjuje da li ste spremni za bezbedan povratak sportskim aktivnostima nakon povrede.",
+      "overallReadiness": "Ukupna spremnost",
+      "categoryBreakdown": "Rezultati po kategorijama",
+      "notReady": "Još niste spremni",
+      "notReadyText": "Vaši rezultati pokazuju da vam je potrebna dodatna rehabilitacija pre povratka sportu.",
+      "almostReady": "Skoro spremni",
+      "almostReadyText": "Na dobrom ste putu, ali neke oblasti zahtevaju dodatni rad pre potpunog povratka.",
+      "ready": "Spremni za sport",
+      "readyText": "Vaši rezultati pokazuju da ste spremni za bezbedan povratak sportskim aktivnostima!",
+      "bookSession": "Zakažite konsultaciju sa našim specijalistima",
+      "resetChecklist": "Ponovi test",
+      "showResults": "Prikaži rezultate",
+      "disclaimer": "Ovaj test je informativnog karaktera i ne zamenjuje stručnu medicinsku procenu. Za konačnu potvrdu spremnosti za povratak sportu, konsultujte se sa vašim lekarom.",
+      "itemsChecked": "Označeno {checked} od {total}",
+      "categories": {
+        "painSwelling": {
+          "title": "Bol i otok",
+          "description": "Procena nivoa bola i otoka",
+          "items": {
+            "noPainRest": "Nema bola u mirovanju",
+            "noPainDaily": "Nema bola tokom svakodnevnih aktivnosti",
+            "noPainSport": "Nema bola tokom sportski specifičnih pokreta",
+            "noSwelling": "Nema otoka nakon aktivnosti",
+            "painLevel": "Nivo bola ≤ 2/10 tokom vežbanja"
+          }
+        },
+        "rangeOfMotion": {
+          "title": "Obim pokreta",
+          "description": "Procena pokretljivosti i fleksibilnosti",
+          "items": {
+            "fullRange": "Pun obim pokreta u poređenju sa zdravom stranom",
+            "noStiffness": "Nema ukočenosti nakon neaktivnosti",
+            "fullSquat": "Može izvesti pun čučanj bez ograničenja",
+            "allPositions": "Udobnost u svim sportski specifičnim pozicijama"
+          }
+        },
+        "strengthPower": {
+          "title": "Snaga i eksplozivnost",
+          "description": "Procena mišićne snage i eksplozivnosti",
+          "items": {
+            "strength90": "Snaga unutar 90% zdrave strane",
+            "singleLeg": "Može izvesti vežbe na jednoj nozi bez poteškoća",
+            "jumpLand": "Može skočiti i doskočiti simetrično",
+            "sprintFull": "Može sprintati punom brzinom bez oklevanja",
+            "functionalTests": "Položeni funkcionalni testovi snage"
+          }
+        },
+        "sportFunction": {
+          "title": "Sportski specifična funkcija",
+          "description": "Procena sposobnosti za sportske aktivnosti",
+          "items": {
+            "fullIntensity": "Može izvoditi sportski specifične vežbe punim intenzitetom",
+            "cuttingConfidence": "Samopouzdanost u pokretima promene pravca",
+            "graduatedProtocol": "Završen postepeni protokol povratka sportu",
+            "noCompensation": "Nema kompenzatornih obrazaca pokreta"
+          }
+        },
+        "psychologicalReadiness": {
+          "title": "Psihološka spremnost",
+          "description": "Procena mentalnog stanja i spremnosti",
+          "items": {
+            "noFear": "Nema straha od ponovne povrede tokom treninga",
+            "mentallyPrepared": "Mentalno spreman/na za takmičenje",
+            "confidence8": "Poverenje u povređeni deo tela na nivou 8+/10"
+          }
+        }
+      },
+      "recommendations": {
+        "painSwelling": "Fokusirajte se na kontrolu bola i otoka. Razmotrite fizikalnu terapiju i krioterapiju.",
+        "rangeOfMotion": "Radite na poboljšanju pokretljivosti kroz istezanje i mobilizacijske vežbe.",
+        "strengthPower": "Potrebno je dodatno jačanje mišića. Konsultujte se sa fizioterapeutom za program vežbi.",
+        "sportFunction": "Postepeno uvodite sportski specifične vežbe. Radite sa trenerom na tehnici pokreta.",
+        "psychologicalReadiness": "Razmotrite razgovor sa sportskim psihologom. Postepeno izlaganje sportskim situacijama može pomoći."
+      },
+      "faq": [
+        {
+          "question": "Kada je pravo vreme za povratak sportu nakon povrede?",
+          "answer": "Pravo vreme za povratak zavisi od mnogo faktora, uključujući vrstu povrede, kvalitet rehabilitacije i individualnu reakciju na oporavak. Ovaj test vam pomaže da objektivno procenite vašu spremnost."
+        },
+        {
+          "question": "Šta ako nisam spreman/na prema testu?",
+          "answer": "Ako test pokazuje da niste potpuno spremni, to ne mora biti razlog za brigu. Fokusirajte se na oblasti koje su najslabije i nastavite sa rehabilitacijom. Prerano vraćanje sportu može dovesti do ponovne povrede."
+        },
+        {
+          "question": "Da li ovaj test zamenjuje lekarsku procenu?",
+          "answer": "Ne. Ovaj test je alat za samoprоcenu i ne zamenjuje stručni medicinski pregled. Preporučujemo da rezultate podelite sa vašim lekarom ili fizioterapeutom."
+        }
+      ]
+    }
+  }
+}

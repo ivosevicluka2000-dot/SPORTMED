@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Navy — deepened for richness */
+  --color-navy: #070F1E;
+  --color-navy-light: #0F1A2E;
+  --color-navy-dark: #040A14;
+  --color-navy-50: #F0F2F7;
+
+  /* Teal — refined, less neon */
+  --color-teal: #0098B4;
+  --color-teal-light: #3AB4CC;
+  --color-teal-dark: #007A92;
+  --color-teal-50: #E6F7FA;
+
+  /* Accents */
+  --color-accent: #00E5A0;
+  --color-gold: #C9A96E;
+  --color-ivory: #FAFAF7;
+
+  /* Neutral scale */
+  --color-gray-50: #F8FAFC;
+  --color-gray-100: #F1F5F9;
+  --color-gray-200: #E2E8F0;
+  --color-gray-300: #CBD5E1;
+  --color-gray-400: #94A3B8;
+  --color-gray-500: #64748B;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1E293B;
+  --color-gray-900: #0F172A;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-heading: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 15px -3px rgba(7, 15, 30, 0.06), 0 1px 6px -1px rgba(7, 15, 30, 0.04);
+  --shadow-elevated: 0 10px 40px -10px rgba(7, 15, 30, 0.1), 0 4px 15px -3px rgba(7, 15, 30, 0.05);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::selection {
+    background-color: rgba(0, 152, 180, 0.15);
+    color: #070F1E;
+  }
+
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-heading);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Dot grid pattern for dark sections */
+@layer utilities {
+  .bg-dot-pattern {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Refined animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes line-grow {
+  from {
+    width: 0;
+  }
+  to {
+    width: 48px;
+  }
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 152, 180, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 152, 180, 0);
+  }
 }
