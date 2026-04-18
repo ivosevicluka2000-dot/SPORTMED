@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { ArrowLeft } from "lucide-react";
 import ProductDetail from "@/components/shop/ProductDetail";
 import OftenBoughtTogether from "@/components/shop/OftenBoughtTogether";
+import type { Product } from "@/types";
 
 export async function generateStaticParams() {
   const slugs = await getAllProductSlugs();
@@ -42,11 +43,11 @@ export default async function ProductPage({
 
   if (!product) notFound();
 
-  let relatedProducts;
+  let relatedProducts: Product[] = [];
   try {
-    relatedProducts = product.oftenBoughtWith
-      ? await getRelatedProducts(locale, product.oftenBoughtWith)
-      : [];
+    if (product.oftenBoughtWith) {
+      relatedProducts = await getRelatedProducts(locale, product.oftenBoughtWith);
+    }
   } catch {
     relatedProducts = [];
   }
