@@ -8,10 +8,27 @@ import {
   getMockRelatedProducts,
 } from "./mock-products";
 
+const BLOG_REVALIDATE = 3600; // 1 hour
+const PRODUCT_REVALIDATE = 900; // 15 min
+
+const blogCache = { next: { revalidate: BLOG_REVALIDATE, tags: ["blog"] } };
+const productCache = { next: { revalidate: PRODUCT_REVALIDATE, tags: ["products"] } };
+
+async function safeFetch<T>(promise: Promise<T>, fallback: T): Promise<T> {
+  try {
+    const result = await promise;
+    return (result ?? fallback) as T;
+  } catch (err) {
+    console.error("[sanity] fetch failed:", err);
+    return fallback;
+  }
+}
+
 export async function getBlogPosts(locale: string): Promise<BlogPost[]> {
   if (!client) return [];
-  return client.fetch(
-    `*[_type == "blogPost" && language == $locale] | order(publishedAt desc) {
+  return safeFetch(
+    client.fetch(
+      `*[_type == "blogPost" && language == $locale] | order(publishedAt desc) {
       _id,
       title,
       slug,
@@ -29,7 +46,10 @@ export async function getBlogPosts(locale: string): Promise<BlogPost[]> {
       },
       "categories": categories[]->{ _id, title, slug }
     }`,
-    { locale }
+      { locale },
+      blogCache
+    ),
+    [] as BlogPost[]
   );
 }
 
@@ -38,8 +58,9 @@ export async function getBlogPostsByCategory(
   categorySlug: string
 ): Promise<BlogPost[]> {
   if (!client) return [];
-  return client.fetch(
-    `*[_type == "blogPost" && language == $locale && $categorySlug in categories[]->slug.current] | order(publishedAt desc) {
+  return safeFetch(
+    client.fetch(
+      `*[_type == "blogPost" && language == $locale && $categorySlug in categories[]->slug.current] | order(publishedAt desc) {
       _id,
       title,
       slug,
@@ -57,7 +78,10 @@ export async function getBlogPostsByCategory(
       },
       "categories": categories[]->{ _id, title, slug }
     }`,
-    { locale, categorySlug }
+      { locale, categorySlug },
+      blogCache
+    ),
+    [] as BlogPost[]
   );
 }
 
@@ -66,8 +90,9 @@ export async function getBlogPost(
   slug: string
 ): Promise<BlogPost | null> {
   if (!client) return null;
-  return client.fetch(
-    `*[_type == "blogPost" && language == $locale && slug.current == $slug][0] {
+  return safeFetch(
+    client.fetch(
+      `*[_type == "blogPost" && language == $locale && slug.current == $slug][0] {
       _id,
       title,
       slug,
@@ -96,7 +121,10 @@ export async function getBlogPost(
         "categories": categories[]->{ _id, title, slug }
       }
     }`,
-    { locale, slug }
+      { locale, slug },
+      blogCache
+    ),
+    null as BlogPost | null
   );
 }
 
@@ -104,26 +132,35 @@ export async function getBlogCategories(
   locale: string
 ): Promise<BlogCategory[]> {
   if (!client) return [];
-  return client.fetch(
-    `*[_type == "blogCategory" && language == $locale] | order(title asc) {
+  return safeFetch(
+    client.fetch(
+      `*[_type == "blogCategory" && language == $locale] | order(title asc) {
       _id,
       title,
       "slug": slug.current
     }`,
-    { locale }
+      { locale },
+      blogCache
+    ),
+    [] as BlogCategory[]
   );
 }
 
 export async function getAuthors(): Promise<Author[]> {
   if (!client) return [];
-  return client.fetch(
-    `*[_type == "author"] | order(name asc) {
+  return safeFetch(
+    client.fetch(
+      `*[_type == "author"] | order(name asc) {
       _id,
       name,
       role,
       "image": image.asset->url,
       bio
-    }`
+    }`,
+      {},
+      blogCache
+    ),
+    [] as Author[]
   );
 }
 
@@ -131,11 +168,15 @@ export async function getAllBlogSlugs(
   locale: string
 ): Promise<{ slug: string }[]> {
   if (!client) return [];
-  return client.fetch(
-    `*[_type == "blogPost" && language == $locale] {
+  return safeFetch(
+    client.fetch(
+      `*[_type == "blogPost" && language == $locale] {
       "slug": slug.current
     }`,
-    { locale }
+      { locale },
+      blogCache
+    ),
+    [] as { slug: string }[]
   );
 }
 
@@ -143,8 +184,9 @@ export async function getAllBlogSlugs(
 
 export async function getProducts(locale: string): Promise<Product[]> {
   if (!client) return getMockProducts(locale);
-  const products = await client.fetch(
-    `*[_type == "product" && active == true] | order(featured desc, _createdAt desc) {
+  const products = await safeFetch(
+    client.fetch(
+      `*[_type == "product" && active == true] | order(featured desc, _createdAt desc) {
       _id,
       "name": name[$locale],
       "slug": slug.current,
@@ -157,7 +199,10 @@ export async function getProducts(locale: string): Promise<Product[]> {
       featured,
       active
     }`,
-    { locale }
+      { locale },
+      productCache
+    ),
+    [] as Product[]
   );
   if (products && products.length > 0) return products;
   return getMockProducts(locale);
@@ -168,8 +213,9 @@ export async function getProduct(
   slug: string
 ): Promise<Product | null> {
   if (!client) return getMockProduct(locale, slug);
-  const product = await client.fetch(
-    `*[_type == "product" && slug.current == $slug && active == true][0] {
+  const product = await safeFetch(
+    client.fetch(
+      `*[_type == "product" && slug.current == $slug && active == true][0] {
       _id,
       "name": name[$locale],
       "slug": slug.current,
@@ -182,7 +228,10 @@ export async function getProduct(
       featured,
       active
     }`,
-    { locale, slug }
+      { locale, slug },
+      productCache
+    ),
+    null as Product | null
   );
   if (product) return product;
   return getMockProduct(locale, slug);
@@ -192,15 +241,19 @@ export async function getProductCategories(
   locale: string
 ): Promise<ProductCategory[]> {
   if (!client) return getMockCategories(locale);
-  const categories = await client.fetch(
-    `*[_type == "productCategory"] | order(title[$locale] asc) {
+  const categories = await safeFetch(
+    client.fetch(
+      `*[_type == "productCategory"] | order(title[$locale] asc) {
       _id,
       "title": title[$locale],
       "slug": slug.current,
       "description": description[$locale],
       "image": image.asset->url
     }`,
-    { locale }
+      { locale },
+      productCache
+    ),
+    [] as ProductCategory[]
   );
   if (categories && categories.length > 0) return categories;
   return getMockCategories(locale);
@@ -208,10 +261,15 @@ export async function getProductCategories(
 
 export async function getAllProductSlugs(): Promise<{ slug: string }[]> {
   if (!client) return getMockProductSlugs();
-  const slugs = await client.fetch(
-    `*[_type == "product" && active == true] {
+  const slugs = await safeFetch(
+    client.fetch(
+      `*[_type == "product" && active == true] {
       "slug": slug.current
-    }`
+    }`,
+      {},
+      productCache
+    ),
+    [] as { slug: string }[]
   );
   if (slugs && slugs.length > 0) return slugs;
   return getMockProductSlugs();
@@ -223,8 +281,9 @@ export async function getRelatedProducts(
 ): Promise<Product[]> {
   if (!slugs || slugs.length === 0) return [];
   if (!client) return getMockRelatedProducts(locale, slugs);
-  const products = await client.fetch(
-    `*[_type == "product" && slug.current in $slugs && active == true] {
+  const products = await safeFetch(
+    client.fetch(
+      `*[_type == "product" && slug.current in $slugs && active == true] {
       _id,
       "name": name[$locale],
       "slug": slug.current,
@@ -237,7 +296,10 @@ export async function getRelatedProducts(
       featured,
       active
     }`,
-    { locale, slugs }
+      { locale, slugs },
+      productCache
+    ),
+    [] as Product[]
   );
   if (products && products.length > 0) return products;
   return getMockRelatedProducts(locale, slugs);

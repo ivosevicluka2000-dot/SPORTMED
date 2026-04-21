@@ -19,6 +19,15 @@ interface CustomerInput {
 }
 
 export async function POST(req: NextRequest) {
+  if (
+    !process.env.RAIACCEPT_API_USERNAME ||
+    !process.env.RAIACCEPT_API_PASSWORD
+  ) {
+    return NextResponse.json(
+      { error: "Payment service not configured" },
+      { status: 503 }
+    );
+  }
   try {
     const body = await req.json();
     const {

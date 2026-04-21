@@ -4,7 +4,10 @@ import { b2bServices } from "@/lib/utils";
 import B2BServiceDetail from "@/components/sections/B2BServiceDetail";
 
 export async function generateStaticParams() {
-  return b2bServices.map((s) => ({ slug: s.slug }));
+  return [
+    ...b2bServices.map((s) => ({ locale: "sr", slug: s.slug })),
+    ...b2bServices.map((s) => ({ locale: "en", slug: s.slug })),
+  ];
 }
 
 export async function generateMetadata({

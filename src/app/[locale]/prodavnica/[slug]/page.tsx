@@ -9,7 +9,10 @@ import type { Product } from "@/types";
 
 export async function generateStaticParams() {
   const slugs = await getAllProductSlugs();
-  return slugs.map(({ slug }) => ({ slug }));
+  return [
+    ...slugs.map(({ slug }) => ({ locale: "sr", slug })),
+    ...slugs.map(({ slug }) => ({ locale: "en", slug })),
+  ];
 }
 
 export async function generateMetadata({

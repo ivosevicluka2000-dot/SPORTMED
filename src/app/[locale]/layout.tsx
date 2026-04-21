@@ -1,15 +1,29 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { Inter, Playfair_Display } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FloatingContact from "@/components/layout/FloatingContact";
 import PageTransition from "@/components/layout/PageTransition";
-import LeadCapturePopup from "@/components/sections/LeadCapturePopup";
-import ExitIntentPopup from "@/components/sections/ExitIntentPopup";
+import Popups from "@/components/layout/Popups";
 import { CartProvider } from "@/lib/cart-context";
 import { DiscountProvider } from "@/lib/discount-context";
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-heading",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -42,6 +56,10 @@ const jsonLd = {
   medicalSpecialty: "Sports Medicine",
 };
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -55,10 +73,12 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  setRequestLocale(locale);
+
   const messages = (await import(`../../../messages/${locale}.json`)).default;
 
   return (
-    <html lang={locale} className="h-full">
+    <html lang={locale} className={`h-full ${inter.variable} ${playfair.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -76,8 +96,7 @@ export default async function LocaleLayout({
                 </main>
                 <Footer />
                 <FloatingContact />
-                <LeadCapturePopup />
-                <ExitIntentPopup />
+                <Popups />
               </DiscountProvider>
             </Suspense>
           </CartProvider>

@@ -4,18 +4,23 @@ import {
   PortableText,
   type PortableTextReactComponents,
 } from "@portabletext/react";
+import Image from "next/image";
 import { urlFor } from "@/lib/sanity";
 
 const components: Partial<PortableTextReactComponents> = {
   types: {
     image: ({ value }) => {
       if (!value?.asset) return null;
+      const src = urlFor(value).width(1600).auto("format").url();
       return (
         <figure className="my-8">
-          <img
-            src={urlFor(value).width(800).auto("format").url()}
+          <Image
+            src={src}
             alt={value.alt || ""}
-            className="w-full rounded-xl"
+            width={1600}
+            height={900}
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="w-full h-auto rounded-xl"
           />
           {value.caption && (
             <figcaption className="text-center text-sm text-gray-500 mt-3">

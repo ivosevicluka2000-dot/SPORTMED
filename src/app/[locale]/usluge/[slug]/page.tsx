@@ -4,7 +4,10 @@ import { treatments } from "@/lib/utils";
 import TreatmentDetail from "@/components/sections/TreatmentDetail";
 
 export async function generateStaticParams() {
-  return treatments.map((t) => ({ slug: t.slug }));
+  return [
+    ...treatments.map((t) => ({ locale: "sr", slug: t.slug })),
+    ...treatments.map((t) => ({ locale: "en", slug: t.slug })),
+  ];
 }
 
 export async function generateMetadata({
