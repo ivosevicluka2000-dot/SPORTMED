@@ -11,13 +11,31 @@ import { Send, CheckCircle } from "lucide-react";
 export default function Newsletter() {
   const t = useTranslations("newsletter");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [website, setWebsite] = useState(""); // honeypot
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("success");
-    setEmail("");
-    setTimeout(() => setStatus("idle"), 3000);
+    if (!email.trim() || status === "sending") return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, website }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setEmail("");
+        setTimeout(() => setStatus("idle"), 3500);
+      } else {
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 3500);
+      }
+    } catch {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3500);
+    }
   };
 
   return (
@@ -38,6 +56,17 @@ export default function Newsletter() {
         <p className="text-gray-400 text-sm md:text-base mb-10 leading-relaxed">{t("subtitle")}</p>
 
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          {/* Honeypot - hidden from real users */}
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            aria-hidden="true"
+            className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
+          />
           <Input
             type="email"
             placeholder={t("placeholder")}
@@ -46,7 +75,7 @@ export default function Newsletter() {
             required
             className="flex-1 bg-navy-light border-white/10 text-white placeholder:text-gray-500 focus:border-teal"
           />
-          <Button type="submit" className="whitespace-nowrap">
+          <Button type="submit" className="whitespace-nowrap" disabled={status === "sending"}>
             {status === "success" ? (
               <>
                 <CheckCircle className="w-4 h-4 mr-2" />
@@ -55,11 +84,14 @@ export default function Newsletter() {
             ) : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                {t("button")}
+                {status === "sending" ? "..." : t("button")}
               </>
             )}
           </Button>
         </form>
+        {status === "error" && (
+          <p className="mt-3 text-sm text-red-300">{t("error")}</p>
+        )}
       </motion.div>
     </Section>
   );

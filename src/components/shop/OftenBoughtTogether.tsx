@@ -18,10 +18,11 @@ export default function OftenBoughtTogether({
   const { addItem } = useCart();
 
   const allProducts = [currentProduct, ...relatedProducts];
-  const bundleTotal = allProducts.reduce((sum, p) => sum + p.price, 0);
+  const bundleTotal = relatedProducts.reduce((sum, p) => sum + p.price, 0);
 
   const handleAddAll = () => {
-    allProducts.forEach((product) => {
+    // Add only related products — current product is shown for context only
+    relatedProducts.forEach((product) => {
       if (product.stock > 0 && product.price > 0) {
         addItem({
           productId: product._id,

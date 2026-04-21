@@ -73,6 +73,21 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/lokacija" className="text-gray-400 hover:text-white transition-colors text-sm">
+                  {tNav("location")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="text-gray-400 hover:text-white transition-colors text-sm">
+                  {tNav("blog")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/prodavnica" className="text-gray-400 hover:text-white transition-colors text-sm">
+                  {tNav("shop")}
+                </Link>
+              </li>
+              <li>
                 <Link href="/b2b" className="text-gray-400 hover:text-white transition-colors text-sm">
                   {tNav("b2b")}
                 </Link>
@@ -144,12 +159,12 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Sport Care Med. {t("rights")}
           </p>
           <div className="flex gap-6 text-xs text-gray-500">
-            <span className="hover:text-gray-300 transition-colors cursor-pointer">
+            <Link href="/privatnost" className="hover:text-gray-300 transition-colors">
               {t("privacy")}
-            </span>
-            <span className="hover:text-gray-300 transition-colors cursor-pointer">
+            </Link>
+            <Link href="/uslovi" className="hover:text-gray-300 transition-colors">
               {t("terms")}
-            </span>
+            </Link>
           </div>
         </div>
       </div>

@@ -20,6 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/alati",
     "/alati/procena-oporavka",
     "/alati/spremnost-za-sport",
+    "/privatnost",
+    "/uslovi",
   ];
 
   const entries: MetadataRoute.Sitemap = [];

@@ -1,4 +1,19 @@
 {
+  "a11y": {
+    "skipToContent": "Pređi na sadržaj"
+  },
+  "notFound": {
+    "title": "Stranica nije pronađena",
+    "description": "Tražena stranica ne postoji ili je premeštena.",
+    "backHome": "Vrati se na početnu"
+  },
+  "errorPage": {
+    "eyebrow": "Greška",
+    "title": "Nešto je pošlo po zlu",
+    "description": "Došlo je do greške. Pokušajte ponovo ili se vratite na početnu stranu.",
+    "retry": "Pokušaj ponovo",
+    "home": "Početna"
+  },
   "metadata": {
     "title": "Sport Care Med | Sportska medicina Šabac",
     "description": "Centar za sportsku medicinu, fizikalnu terapiju i rehabilitaciju u Šapcu. Dijagnostika, kineziterapija, masaža, recovery terapije."
@@ -681,7 +696,19 @@
     "totalBundle": "Ukupno za paket",
     "discountApplied": "Kod {code} primenjen — {percent}% popusta!",
     "discountLabel": "Popust ({percent}%)",
-    "freeGuides": "Besplatni vodiči"
+    "freeGuides": "Besplatni vodiči",
+    "addedToCart": "Dodato u korpu",
+    "viewCart": "Pogledaj korpu",
+    "dismiss": "Zatvori",
+    "discountCodeLabel": "Imate kod za popust?",
+    "discountCodePlaceholder": "Unesite kod",
+    "apply": "Primeni",
+    "discountInvalid": "Kod za popust nije važeći",
+    "removeDiscount": "Ukloni popust",
+    "orderPending": "Vaša plaćanje se obrađuje",
+    "orderPendingDescription": "Plaćanje je u obradi. Bićete obavešteni čim transakcija bude potvrđena.",
+    "orderNotFound": "Narudžbina nije pronađena",
+    "orderNotFoundDescription": "Nismo uspeli da pronađemo vašu narudžbinu. Ako mislite da je došlo do greške, kontaktirajte nas."
   },
   "tools": {
     "title": "Interaktivni alati",
@@ -874,6 +901,62 @@
           "answer": "Ne. Ovaj test je alat za samoprоcenu i ne zamenjuje stručni medicinski pregled. Preporučujemo da rezultate podelite sa vašim lekarom ili fizioterapeutom."
         }
       ]
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Politika privatnosti",
+      "lastUpdated": "Poslednje ažuriranje: april 2026.",
+      "intro": "Sport Care Med poštuje vašu privatnost i obavezuje se da štiti vaše lične podatke u skladu sa Zakonom o zaštiti podataka o ličnosti Republike Srbije i GDPR regulativom.",
+      "sections": {
+        "dataCollected": {
+          "title": "Podaci koje prikupljamo",
+          "body": "Prikupljamo podatke koje sami pružate (ime, prezime, e-mail, broj telefona, adresa) prilikom zakazivanja, popunjavanja kontakt formi, prijave na newsletter ili kupovine u prodavnici. Tehnički prikupljamo i osnovne podatke o uređaju i posetama radi unapređenja sajta."
+        },
+        "dataUse": {
+          "title": "Kako koristimo podatke",
+          "body": "Vaše podatke koristimo isključivo za pružanje usluga, obradu narudžbina, odgovaranje na upite, slanje newsletter-a (uz vašu saglasnost) i ispunjavanje zakonskih obaveza. Ne prodajemo vaše podatke trećim licima."
+        },
+        "cookies": {
+          "title": "Kolačići (cookies)",
+          "body": "Sajt koristi neophodne kolačiće za rad korpe i sesija, kao i analitičke kolačiće za merenje posećenosti. Možete ih onemogućiti u podešavanjima vašeg pregledača."
+        },
+        "rights": {
+          "title": "Vaša prava",
+          "body": "Imate pravo na pristup, ispravku, brisanje, ograničenje obrade i prenos vaših podataka, kao i pravo na prigovor. Zahtev možete poslati na info@sportcaremed.rs."
+        },
+        "contact": {
+          "title": "Kontakt",
+          "body": "Za pitanja u vezi sa zaštitom podataka kontaktirajte nas na info@sportcaremed.rs ili poštom na adresu klinike u Šapcu."
+        }
+      }
+    },
+    "terms": {
+      "title": "Uslovi korišćenja",
+      "lastUpdated": "Poslednje ažuriranje: april 2026.",
+      "intro": "Korišćenjem sajta sportcaremed.rs prihvatate sledeće uslove. Molimo vas da ih pažljivo pročitate.",
+      "sections": {
+        "use": {
+          "title": "Korišćenje sajta",
+          "body": "Sadržaj sajta služi u informativne svrhe i ne zamenjuje stručni medicinski savet, dijagnozu ili tretman. Za sve zdravstvene odluke konsultujte kvalifikovanog lekara."
+        },
+        "orders": {
+          "title": "Narudžbine i plaćanje",
+          "body": "Sve cene su izražene u dinarima (RSD) sa uračunatim PDV-om. Plaćanje je moguće karticom (RaiAccept) ili pouzećem. Narudžbina je potvrđena nakon prijema potvrdnog e-maila."
+        },
+        "returns": {
+          "title": "Povrat i reklamacije",
+          "body": "Imate pravo na povrat robe u roku od 14 dana od prijema, u skladu sa Zakonom o zaštiti potrošača. Roba mora biti neoštećena i u originalnom pakovanju."
+        },
+        "liability": {
+          "title": "Ograničenje odgovornosti",
+          "body": "Sport Care Med ne odgovara za štetu nastalu nepravilnim korišćenjem informacija, alata ili proizvoda sa sajta. Korisnik snosi odgovornost za sopstvene odluke."
+        },
+        "contact": {
+          "title": "Kontakt",
+          "body": "Za sva pitanja u vezi sa uslovima korišćenja, obratite se na info@sportcaremed.rs."
+        }
+      }
     }
   }
 }

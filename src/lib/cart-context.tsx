@@ -6,6 +6,8 @@ import {
   useReducer,
   useEffect,
   useCallback,
+  useState,
+  useRef,
   type ReactNode,
 } from "react";
 import type { CartItem } from "@/types";
@@ -43,7 +45,12 @@ function cartReducer(state: CartState, action: CartAction): CartState {
           ),
         };
       }
-      return { ...state, items: [...state.items, action.payload] };
+      // Cap initial quantity to stock
+      const cappedQty = Math.min(action.payload.quantity, action.payload.stock);
+      return {
+        ...state,
+        items: [...state.items, { ...action.payload, quantity: cappedQty }],
+      };
     }
     case "REMOVE_ITEM":
       return {
@@ -84,11 +91,13 @@ interface CartContextType {
   itemCount: number;
   total: number;
   isOpen: boolean;
+  lastAdded: { item: CartItem; key: number } | null;
   addItem: (item: CartItem) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
+  dismissLastAdded: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -100,6 +109,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     items: [],
     isOpen: false,
   });
+  const [lastAdded, setLastAdded] = useState<{ item: CartItem; key: number } | null>(null);
+  const hasHydrated = useRef(false);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -111,11 +122,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     } catch {
       // ignore parse errors
+    } finally {
+      hasHydrated.current = true;
     }
   }, []);
 
-  // Persist cart to localStorage on change
+  // Persist cart to localStorage on change (only after hydration to avoid wiping)
   useEffect(() => {
+    if (!hasHydrated.current) return;
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
     } catch {
@@ -125,6 +139,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback((item: CartItem) => {
     dispatch({ type: "ADD_ITEM", payload: item });
+    setLastAdded({ item, key: Date.now() });
   }, []);
 
   const removeItem = useCallback((productId: string) => {
@@ -146,6 +161,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "TOGGLE_CART" });
   }, []);
 
+  const dismissLastAdded = useCallback(() => {
+    setLastAdded(null);
+  }, []);
+
   const itemCount = state.items.reduce((sum, item) => sum + item.quantity, 0);
   const total = state.items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -159,11 +178,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
         itemCount,
         total,
         isOpen: state.isOpen,
+        lastAdded,
         addItem,
         removeItem,
         updateQuantity,
         clearCart,
         toggleCart,
+        dismissLastAdded,
       }}
     >
       {children}

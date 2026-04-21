@@ -56,7 +56,7 @@ export default function Header() {
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const [mobileB2BOpen, setMobileB2BOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { itemCount } = useCart();
 
@@ -78,13 +78,32 @@ export default function Header() {
   // Close desktop dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (!openDropdown) return;
+      const activeRef = dropdownRefs.current.get(openDropdown);
+      if (activeRef && !activeRef.contains(e.target as Node)) {
         setOpenDropdown(null);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openDropdown]);
+
+  // Close dropdown on Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenDropdown(null);
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, []);
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setOpenDropdown(null);
+  }, [pathname]);
 
   const handleDropdownEnter = (key: string) => {
     if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
@@ -139,37 +158,63 @@ export default function Header() {
                   return (
                     <div
                       key={item.href}
-                      ref={dropdownRef}
+                      ref={(el) => {
+                        dropdownRefs.current.set(dropdownKey, el);
+                      }}
                       className="relative"
                       onMouseEnter={() => handleDropdownEnter(dropdownKey)}
                       onMouseLeave={handleDropdownLeave}
                     >
-                      <Link
-                        href={item.href as "/"}
-                        className={cn(
-                          "relative px-3 py-2 text-sm font-medium transition-colors duration-200 inline-flex items-center gap-1",
-                          isActive
-                            ? activeColor
-                            : cn(textColor, "hover:text-teal")
-                        )}
-                      >
-                        {t(item.label)}
-                        <ChevronDown className={cn(
-                          "w-3.5 h-3.5 transition-transform duration-200",
-                          isOpen && "rotate-180"
-                        )} />
-                        {isActive && (
-                          <span className="absolute bottom-0 left-3 right-3 h-px bg-teal" />
-                        )}
-                      </Link>
+                      <div className="flex items-center">
+                        <Link
+                          href={item.href as "/"}
+                          className={cn(
+                            "relative pl-3 pr-1 py-2 text-sm font-medium transition-colors duration-200",
+                            isActive
+                              ? activeColor
+                              : cn(textColor, "hover:text-teal")
+                          )}
+                          onClick={() => setOpenDropdown(null)}
+                        >
+                          {t(item.label)}
+                          {isActive && (
+                            <span className="absolute bottom-0 left-3 right-1 h-px bg-teal" />
+                          )}
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenDropdown(isOpen ? null : dropdownKey)
+                          }
+                          aria-haspopup="menu"
+                          aria-expanded={isOpen}
+                          aria-label={`${t(item.label)} submenu`}
+                          className={cn(
+                            "px-2 py-2 cursor-pointer transition-colors",
+                            isActive
+                              ? activeColor
+                              : cn(textColor, "hover:text-teal")
+                          )}
+                        >
+                          <ChevronDown
+                            className={cn(
+                              "w-3.5 h-3.5 transition-transform duration-200",
+                              isOpen && "rotate-180"
+                            )}
+                          />
+                        </button>
+                      </div>
 
                       {/* Dropdown menu */}
-                      <div className={cn(
-                        "absolute top-full left-1/2 -translate-x-1/2 pt-2 transition-all duration-200",
-                        isOpen
-                          ? "opacity-100 translate-y-0 pointer-events-auto"
-                          : "opacity-0 -translate-y-2 pointer-events-none"
-                      )}>
+                      <div
+                        role="menu"
+                        className={cn(
+                          "absolute top-full left-1/2 -translate-x-1/2 pt-2 transition-all duration-200",
+                          isOpen
+                            ? "opacity-100 translate-y-0 pointer-events-auto"
+                            : "opacity-0 -translate-y-2 pointer-events-none"
+                        )}
+                      >
                         <div className="bg-white rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] border border-gray-100/80 p-2 min-w-[280px]">
                           {dropdownKey === "services" && (
                             <>
@@ -178,7 +223,7 @@ export default function Header() {
                                 return (
                                   <Link
                                     key={slug}
-                                    href={`/usluge/${slug}` as "/"}
+                                    href={{ pathname: "/usluge/[slug]", params: { slug } }}
                                     className={cn(
                                       "block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
                                       serviceActive
@@ -240,7 +285,7 @@ export default function Header() {
                                 return (
                                   <Link
                                     key={slug}
-                                    href={`/b2b/${slug}` as "/"}
+                                    href={{ pathname: "/b2b/[slug]", params: { slug } }}
                                     className={cn(
                                       "block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
                                       b2bActive
@@ -299,8 +344,11 @@ export default function Header() {
               >
                 <ShoppingCart className="w-5 h-5" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-teal text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {itemCount > 9 ? "9+" : itemCount}
+                  <span
+                    key={itemCount}
+                    className="absolute -top-0.5 -right-0.5 bg-teal text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center animate-cart-bump"
+                  >
+                    {itemCount > 99 ? "99+" : itemCount}
                   </span>
                 )}
               </Link>
@@ -381,7 +429,7 @@ export default function Header() {
                         return (
                           <Link
                             key={slug}
-                            href={`/usluge/${slug}` as "/"}
+                            href={{ pathname: "/usluge/[slug]", params: { slug } }}
                             className={cn(
                               "block px-4 py-2 rounded-md text-sm font-medium transition-colors",
                               serviceActive
@@ -489,7 +537,7 @@ export default function Header() {
                         return (
                           <Link
                             key={slug}
-                            href={`/b2b/${slug}` as "/"}
+                            href={{ pathname: "/b2b/[slug]", params: { slug } }}
                             className={cn(
                               "block px-4 py-2 rounded-md text-sm font-medium transition-colors",
                               b2bActive

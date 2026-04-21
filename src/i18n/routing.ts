@@ -62,6 +62,14 @@ export const routing = defineRouting({
       sr: "/alati/spremnost-za-sport",
       en: "/tools/sport-readiness",
     },
+    "/privatnost": {
+      sr: "/privatnost",
+      en: "/privacy",
+    },
+    "/uslovi": {
+      sr: "/uslovi",
+      en: "/terms",
+    },
   },
 });
 

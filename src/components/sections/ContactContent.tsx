@@ -56,6 +56,7 @@ export default function ContactContent() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
+  const [hp, setHp] = useState(""); // honeypot
 
   const {
     register,
@@ -95,6 +96,7 @@ export default function ContactContent() {
         body: JSON.stringify({
           ...data,
           message: `[Stanje: ${data.condition}]${data.message ? `\n\n${data.message}` : ""}`,
+          website: hp,
         }),
       });
       if (res.ok) {
@@ -182,6 +184,16 @@ export default function ContactContent() {
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={hp}
+                        onChange={(e) => setHp(e.target.value)}
+                        aria-hidden="true"
+                        className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
+                      />
                       <div className="min-h-[320px]">
                         <AnimatePresence mode="wait" custom={direction}>
                           {/* Step 1: What's bothering you */}

@@ -1,4 +1,19 @@
 {
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The requested page does not exist or has been moved.",
+    "backHome": "Back to home"
+  },
+  "errorPage": {
+    "eyebrow": "Error",
+    "title": "Something went wrong",
+    "description": "An error occurred. Please try again or return to the home page.",
+    "retry": "Try again",
+    "home": "Home"
+  },
   "metadata": {
     "title": "Sport Care Med | Sports Medicine Šabac",
     "description": "Center for sports medicine, physical therapy and rehabilitation in Šabac. Diagnostics, kinesitherapy, massage, recovery therapies."
@@ -681,7 +696,19 @@
     "totalBundle": "Bundle Total",
     "discountApplied": "Discount {code} applied — {percent}% off!",
     "discountLabel": "Discount ({percent}%)",
-    "freeGuides": "Free Guides"
+    "freeGuides": "Free Guides",
+    "addedToCart": "Added to cart",
+    "viewCart": "View cart",
+    "dismiss": "Dismiss",
+    "discountCodeLabel": "Have a discount code?",
+    "discountCodePlaceholder": "Enter code",
+    "apply": "Apply",
+    "discountInvalid": "Invalid discount code",
+    "removeDiscount": "Remove discount",
+    "orderPending": "Your payment is being processed",
+    "orderPendingDescription": "Your payment is being processed. You will be notified once the transaction is confirmed.",
+    "orderNotFound": "Order not found",
+    "orderNotFoundDescription": "We couldn't find your order. If you believe this is an error, please contact us."
   },
   "tools": {
     "title": "Interactive Tools",
@@ -874,6 +901,62 @@
           "answer": "No. This checklist is a self-assessment tool and does not replace a professional medical examination. We recommend sharing your results with your doctor or physiotherapist."
         }
       ]
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: April 2026",
+      "intro": "Sport Care Med respects your privacy and is committed to protecting your personal data in accordance with the Personal Data Protection Act of Serbia and the GDPR.",
+      "sections": {
+        "dataCollected": {
+          "title": "Data we collect",
+          "body": "We collect information you provide directly (name, email, phone number, address) when booking, submitting contact forms, subscribing to the newsletter or shopping. We also collect basic technical data about your device and visits to improve the site."
+        },
+        "dataUse": {
+          "title": "How we use your data",
+          "body": "We use your data solely to deliver our services, process orders, respond to inquiries, send newsletters (with your consent) and meet legal obligations. We do not sell your data to third parties."
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": "The site uses essential cookies for the cart and session, plus analytics cookies to measure traffic. You may disable them in your browser settings."
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": "You have the right to access, correct, delete, restrict and port your data, as well as the right to object. Send requests to info@sportcaremed.rs."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "For data protection inquiries contact info@sportcaremed.rs or write to the clinic address in Šabac."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: April 2026",
+      "intro": "By using sportcaremed.rs you agree to the following terms. Please read them carefully.",
+      "sections": {
+        "use": {
+          "title": "Site use",
+          "body": "Site content is for informational purposes and does not replace professional medical advice, diagnosis or treatment. Always consult a qualified physician for health decisions."
+        },
+        "orders": {
+          "title": "Orders & payment",
+          "body": "Prices are in Serbian dinars (RSD) including VAT. Payment is available by card (RaiAccept) or cash on delivery. Orders are confirmed once a confirmation email is received."
+        },
+        "returns": {
+          "title": "Returns & complaints",
+          "body": "You may return goods within 14 days of receipt, per the Consumer Protection Act. Items must be undamaged and in original packaging."
+        },
+        "liability": {
+          "title": "Limitation of liability",
+          "body": "Sport Care Med is not liable for damage arising from misuse of information, tools or products from the site. Users are responsible for their own decisions."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "For terms-related inquiries contact info@sportcaremed.rs."
+        }
+      }
     }
   }
 }

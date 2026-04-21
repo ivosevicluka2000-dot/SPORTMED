@@ -69,6 +69,7 @@ export default function CheckoutForm() {
             items: orderItems,
             customer: data,
             shippingCost,
+            discountCode: isActive ? discountCode : undefined,
             locale: document.documentElement.lang || "sr",
           }),
         });
@@ -80,8 +81,12 @@ export default function CheckoutForm() {
 
         const { paymentUrl } = await res.json();
 
-        // Clear cart before redirect — user returns to confirmation page on success
-        clearCart();
+        // Persist pending order ref so confirmation page can clear cart on return
+        try {
+          sessionStorage.setItem("scm-pending-order", "1");
+        } catch {
+          // ignore
+        }
 
         // Redirect to RaiAccept hosted payment form
         window.location.href = paymentUrl;
@@ -95,8 +100,9 @@ export default function CheckoutForm() {
             items: orderItems,
             customer: data,
             paymentMethod: "cod",
-            totalAmount: grandTotal,
             shippingCost,
+            discountCode: isActive ? discountCode : undefined,
+            locale: document.documentElement.lang || "sr",
           }),
         });
 

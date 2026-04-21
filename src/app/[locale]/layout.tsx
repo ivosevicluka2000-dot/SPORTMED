@@ -9,6 +9,7 @@ import Footer from "@/components/layout/Footer";
 import FloatingContact from "@/components/layout/FloatingContact";
 import PageTransition from "@/components/layout/PageTransition";
 import Popups from "@/components/layout/Popups";
+import CartToast from "@/components/shop/CartToast";
 import { CartProvider } from "@/lib/cart-context";
 import { DiscountProvider } from "@/lib/discount-context";
 
@@ -90,13 +91,20 @@ export default async function LocaleLayout({
           <CartProvider>
             <Suspense>
               <DiscountProvider>
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-navy focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:shadow-lg focus:outline-2 focus:outline-teal"
+                >
+                  {messages.a11y?.skipToContent ?? "Skip to content"}
+                </a>
                 <Header />
-                <main className="flex-1">
+                <main id="main-content" className="flex-1">
                   <PageTransition>{children}</PageTransition>
                 </main>
                 <Footer />
                 <FloatingContact />
                 <Popups />
+                <CartToast />
               </DiscountProvider>
             </Suspense>
           </CartProvider>

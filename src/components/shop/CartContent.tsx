@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { ShoppingBag, ArrowRight, Tag } from "lucide-react";
+import { ShoppingBag, ArrowRight, Tag, X } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useDiscount } from "@/lib/discount-context";
 import CartItemRow from "./CartItemRow";
@@ -13,7 +14,9 @@ const SHIPPING_COST = 500;
 export default function CartContent() {
   const t = useTranslations("shop");
   const { items, total, clearCart } = useCart();
-  const { discountCode, discountPercent, isActive } = useDiscount();
+  const { discountCode, discountPercent, isActive, applyCode, clearCode } = useDiscount();
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState(false);
 
   const discountAmount = isActive ? Math.round(total * (discountPercent / 100)) : 0;
   const subtotalAfterDiscount = total - discountAmount;
@@ -70,8 +73,64 @@ export default function CartContent() {
           {isActive && discountCode && (
             <div className="mb-4 flex items-center gap-2 p-3 bg-green-50 border border-green-100 rounded-lg text-green-700 text-sm">
               <Tag className="w-4 h-4 flex-shrink-0" />
-              {t("discountApplied", { code: discountCode, percent: discountPercent })}
+              <span className="flex-1">
+                {t("discountApplied", { code: discountCode, percent: discountPercent })}
+              </span>
+              <button
+                type="button"
+                onClick={clearCode}
+                className="text-green-700/60 hover:text-green-700 cursor-pointer"
+                aria-label={t("removeDiscount")}
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
             </div>
+          )}
+
+          {!isActive && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!codeInput.trim()) return;
+                const ok = applyCode(codeInput);
+                setCodeError(!ok);
+                if (ok) setCodeInput("");
+              }}
+              className="mb-4"
+            >
+              <label
+                htmlFor="discount-code"
+                className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5"
+              >
+                {t("discountCodeLabel")}
+              </label>
+              <div className="flex gap-2">
+                <input
+                  id="discount-code"
+                  type="text"
+                  value={codeInput}
+                  onChange={(e) => {
+                    setCodeInput(e.target.value);
+                    if (codeError) setCodeError(false);
+                  }}
+                  placeholder={t("discountCodePlaceholder")}
+                  className={`flex-1 px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-teal/30 ${
+                    codeError ? "border-red-300" : "border-gray-200"
+                  }`}
+                  aria-invalid={codeError}
+                  autoComplete="off"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-sm font-medium bg-navy text-white rounded-md hover:bg-navy/90 transition-colors cursor-pointer"
+                >
+                  {t("apply")}
+                </button>
+              </div>
+              {codeError && (
+                <p className="mt-1.5 text-xs text-red-500">{t("discountInvalid")}</p>
+              )}
+            </form>
           )}
 
           <div className="space-y-3 text-sm">

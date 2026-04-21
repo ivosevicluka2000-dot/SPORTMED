@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticate, createOrder, createPaymentSession } from "@/lib/raiaccept";
 import { client } from "@/lib/sanity";
-
-interface OrderItemInput {
-  productId: string;
-  productName: string;
-  quantity: number;
-  price: number;
-}
+import {
+  validateCartItems,
+  calcOrderTotals,
+  type ClientCartItem,
+} from "@/lib/order-validation";
 
 interface CustomerInput {
   name: string;
@@ -34,45 +32,55 @@ export async function POST(req: NextRequest) {
       items,
       customer,
       shippingCost,
+      discountCode,
       locale,
     }: {
-      items: OrderItemInput[];
+      items: ClientCartItem[];
       customer: CustomerInput;
       shippingCost: number;
+      discountCode?: string;
       locale?: string;
     } = body;
 
-    if (!items || items.length === 0) {
+    let validated;
+    try {
+      validated = await validateCartItems(items, locale || "sr");
+    } catch (e) {
       return NextResponse.json(
-        { error: "No items provided" },
+        { error: e instanceof Error ? e.message : "Invalid cart" },
         { status: 400 }
       );
     }
 
-    const totalAmount =
-      items.reduce((sum, item) => sum + item.price * item.quantity, 0) +
-      (shippingCost || 0);
-
+    const totals = calcOrderTotals(validated, discountCode, shippingCost || 0);
     const orderNumber = `SCM-${Date.now().toString(36).toUpperCase()}`;
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const localePrefix = locale && locale !== "sr" ? `/${locale}` : "";
 
-    // Split customer name into first/last
     const nameParts = customer.name.trim().split(/\s+/);
     const firstName = nameParts[0] || "";
     const lastName = nameParts.slice(1).join(" ") || firstName;
 
+    const raiItems = validated.map((item) => ({
+      description: item.productName,
+      numberOfItems: item.quantity,
+      price: item.price,
+    }));
+    if (totals.discountAmount > 0) {
+      raiItems.push({
+        description: `Popust ${discountCode ?? ""} (-${totals.discountPercent}%)`,
+        numberOfItems: 1,
+        price: -totals.discountAmount,
+      });
+    }
+
     const orderParams = {
       merchantOrderReference: orderNumber,
-      amount: totalAmount,
+      amount: totals.totalAmount,
       currency: "RSD",
       description: `Sport Care Med Order ${orderNumber}`,
-      items: items.map((item) => ({
-        description: item.productName,
-        numberOfItems: item.quantity,
-        price: item.price,
-      })),
+      items: raiItems,
       customer: {
         firstName,
         lastName,
@@ -93,13 +101,8 @@ export async function POST(req: NextRequest) {
       notificationUrl: process.env.RAIACCEPT_NOTIFICATION_URL || undefined,
     };
 
-    // 1. Authenticate with RaiAccept
     const token = await authenticate();
-
-    // 2. Create order entry
     const orderResponse = await createOrder(token, orderParams);
-
-    // 3. Create payment session
     const language = locale === "en" ? "en" : "sr";
     const sessionResponse = await createPaymentSession(
       token,
@@ -108,19 +111,23 @@ export async function POST(req: NextRequest) {
       language
     );
 
-    // 4. Create order in Sanity
     if (client) {
       await client.create({
         _type: "order",
         orderNumber,
-        items: items.map((item) => ({
-          _key: item.productId,
-          product: { _type: "reference", _ref: item.productId },
+        items: validated.map((item, idx) => ({
+          _key: `${item.productId}-${idx}`,
+          product: item.productId.startsWith("mock-")
+            ? undefined
+            : { _type: "reference", _ref: item.productId },
           productName: item.productName,
           quantity: item.quantity,
           price: item.price,
         })),
-        totalAmount,
+        subtotal: totals.subtotal,
+        discountCode: discountCode || undefined,
+        discountAmount: totals.discountAmount,
+        totalAmount: totals.totalAmount,
         shippingCost: shippingCost || 0,
         customer: {
           name: customer.name,
@@ -150,3 +157,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

@@ -55,6 +55,7 @@ export default function B2BProposalBuilder() {
   const [teamSize, setTeamSize] = useState(25);
   const [seasonDuration, setSeasonDuration] = useState(10);
   const [competitionLevel, setCompetitionLevel] = useState<string>("amateur");
+  const [hp, setHp] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const {
@@ -100,6 +101,7 @@ export default function B2BProposalBuilder() {
           selectedServices,
           competitionLevel,
           seasonDuration: String(seasonDuration),
+          website: hp,
         }),
       });
       if (res.ok) {
@@ -364,6 +366,16 @@ export default function B2BProposalBuilder() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                    aria-hidden="true"
+                    className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <Input
                       id="proposal-org"

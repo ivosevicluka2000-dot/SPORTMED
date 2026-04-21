@@ -10,6 +10,7 @@ export default function ExitIntentPopup() {
   const [show, setShow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [phone, setPhone] = useState("");
+  const [hp, setHp] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const handleMouseLeave = useCallback(
@@ -59,6 +60,7 @@ export default function ExitIntentPopup() {
           phone,
           email: "",
           message: "Zahtev za poziv — exit intent",
+          website: hp,
         }),
       });
       if (res.ok) {
@@ -120,6 +122,16 @@ export default function ExitIntentPopup() {
                   </p>
 
                   <form onSubmit={handleSubmit} className="space-y-3">
+                    <input
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={hp}
+                      onChange={(e) => setHp(e.target.value)}
+                      aria-hidden="true"
+                      className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
+                    />
                     <input
                       type="tel"
                       value={phone}

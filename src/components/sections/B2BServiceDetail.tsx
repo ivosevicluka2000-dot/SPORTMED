@@ -239,13 +239,13 @@ export default function B2BServiceDetail({ slug, service }: B2BServiceDetailProp
                 <p className="text-sm text-gray-400 mb-5">
                   {t(`services.${slug}.shortDescription`)}
                 </p>
-                <a href="/b2b#proposal" className="block">
+                <Link href={{ pathname: "/b2b", hash: "proposal" }} className="block">
                   <Button className="w-full">
                     <TrendingUp className="w-4 h-4 mr-2" />
                     {t("quote.submit")}
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
-                </a>
+                </Link>
               </div>
             </motion.div>
           </div>

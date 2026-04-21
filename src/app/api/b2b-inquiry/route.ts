@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
 
 const b2bSchema = z.object({
   organization: z.string().min(2).max(200),
@@ -16,7 +17,20 @@ const b2bSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIp(request);
+    const rl = rateLimit(`b2b:${ip}`, 5, 60_000);
+    if (!rl.ok) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfter ?? 60) } }
+      );
+    }
+
     const body = await request.json();
+    if (isHoneypotTriggered(body)) {
+      return NextResponse.json({ success: true });
+    }
+
     const data = b2bSchema.parse(body);
 
     // TODO: Send email via Resend/Nodemailer

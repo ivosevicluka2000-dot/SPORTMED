@@ -17,13 +17,27 @@ export default function Hero() {
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover"
+        preload="metadata"
+        poster="https://images.pexels.com/videos/5319980/free-video-5319980.jpg"
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
       >
         <source
           src="https://videos.pexels.com/video-files/5319980/5319980-uhd_2560_1440_30fps.mp4"
           type="video/mp4"
         />
       </video>
+
+      {/* Static fallback for reduced-motion users */}
+      <div
+        aria-hidden="true"
+        className="hidden motion-reduce:block absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url(https://images.pexels.com/videos/5319980/free-video-5319980.jpg)",
+        }}
+      />
 
       {/* Dark overlay for readability */}
       <div className="absolute inset-0 bg-navy/70" />

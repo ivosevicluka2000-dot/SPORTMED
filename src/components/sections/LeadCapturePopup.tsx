@@ -15,6 +15,7 @@ export default function LeadCapturePopup() {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState("");
   const [condition, setCondition] = useState("");
+  const [hp, setHp] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,6 +33,7 @@ export default function LeadCapturePopup() {
           email: "",
           treatment: service,
           message: `Zahtev za besplatnu procenu — ${service || "Nije izabrano"}${condition ? `\nStanje: ${condition}` : ""}`,
+          website: hp,
         }),
       });
       if (res.ok) {
@@ -114,6 +116,16 @@ export default function LeadCapturePopup() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={hp}
+                        onChange={(e) => setHp(e.target.value)}
+                        aria-hidden="true"
+                        className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
+                      />
                       <div>
                         <label className="block text-xs uppercase tracking-wider text-gray-500 mb-1.5">
                           {t("name")}
