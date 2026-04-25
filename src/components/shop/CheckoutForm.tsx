@@ -89,6 +89,7 @@ export default function CheckoutForm() {
         }
 
         // Redirect to RaiAccept hosted payment form
+        // eslint-disable-next-line react-hooks/immutability -- intentional navigation side-effect in form submit handler
         window.location.href = paymentUrl;
         return;
       } else {

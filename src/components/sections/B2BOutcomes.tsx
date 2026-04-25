@@ -25,6 +25,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
     if (!isInView) return;
     const numericMatch = value.match(/^(\d+)/);
     if (!numericMatch) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- non-numeric value, no animation needed
       setDisplay(value);
       return;
     }

@@ -36,6 +36,7 @@ export function DiscountProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const code = searchParams.get("discount")?.toUpperCase();
     if (code && DISCOUNT_CODES[code]) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing state with URL search params (external)
       setState({
         discountCode: code,
         discountPercent: DISCOUNT_CODES[code],

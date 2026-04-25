@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Section, { SectionHeader } from "@/components/ui/Section";
@@ -9,32 +9,43 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const testimonials = [
   {
     name: "Marko Petrović",
-    role: "Fudbalski igrač / Football player",
+    role: {
+      sr: "Fudbaler · povreda kolena (LCA)",
+      en: "Footballer · knee injury (ACL)",
+    },
     content: {
-      sr: "Zahvaljujući timu Sport Care Med-a, vratio sam se na teren za rekordno vreme nakon povrede ligamenata kolena. Profesionalni pristup i vrhunska oprema.",
-      en: "Thanks to the Sport Care Med team, I returned to the field in record time after a knee ligament injury. Professional approach and top equipment.",
+      sr: "Recovery Starter Kit + protokol za koleno — radio sam vežbe kod kuće svaki dan, foam roller i kinezio traka su me držali u igri između termina. Vratio sam se na teren za 6 nedelja umesto 12.",
+      en: "Recovery Starter Kit + the knee protocol — I ran the drills at home every day; the foam roller and kinesio tape kept me moving between sessions. Back on the pitch in 6 weeks instead of 12.",
     },
   },
   {
     name: "Ana Jovanović",
-    role: "Atletičarka / Athlete",
+    role: {
+      sr: "Atletičarka · oporavak između treninga",
+      en: "Track athlete · between-session recovery",
+    },
     content: {
-      sr: "Redovno koristim recovery terapije nakon treninga. Primetila sam ogromnu razliku u oporavku i performansama. Preporučujem svima!",
-      en: "I regularly use recovery therapies after training. I noticed a huge difference in recovery and performance. Highly recommend!",
+      sr: "Magnezijum + kompresione čarape + njihov protokol za oporavak posle teških treninga — drugi dan više nemam onaj “mrtav” osećaj u nogama. Vremena na 400m su mi pala za sekundu i po.",
+      en: "Magnesium + compression socks + their post-session recovery protocol — that “dead legs” feeling on day two is gone. My 400m times dropped by a second and a half.",
     },
   },
   {
     name: "Stefan Nikolić",
-    role: "Košarkaš / Basketball player",
+    role: {
+      sr: "Košarkaš · skočni zglob",
+      en: "Basketball player · ankle",
+    },
     content: {
-      sr: "Dijagnostika u Sport Care Med-u mi je pomogla da na vreme otkrijem problem i sprečim ozbiljniju povredu. Stručan i pažljiv tim.",
-      en: "Diagnostics at Sport Care Med helped me detect a problem early and prevent a serious injury. Expert and attentive team.",
+      sr: "Pre nego što sam išao na pregled, uradio sam njihov besplatni Readiness Checklist i naručio kit za skočni zglob. Za 4 nedelje sam bio spreman za utakmicu — bez fizioterapije svaki drugi dan.",
+      en: "Before booking anything I ran their free Readiness Checklist and ordered the ankle kit. Match-ready in 4 weeks — no every-other-day physio appointments needed.",
     },
   },
 ];
 
 export default function Testimonials() {
   const t = useTranslations("testimonials");
+  const locale = useLocale();
+  const lang: "sr" | "en" = locale === "en" ? "en" : "sr";
   const [current, setCurrent] = useState(0);
 
   const next = () => setCurrent((prev) => (prev + 1) % testimonials.length);
@@ -61,7 +72,7 @@ export default function Testimonials() {
             <span className="block font-heading text-6xl text-gold/30 leading-none mb-4">&ldquo;</span>
 
             <p className="font-heading text-xl md:text-2xl text-gray-700 mb-10 leading-relaxed">
-              {testimonials[current].content.sr}
+              {testimonials[current].content[lang]}
             </p>
 
             <div className="h-px w-8 bg-gold/40 mx-auto mb-6" />
@@ -70,7 +81,7 @@ export default function Testimonials() {
               {testimonials[current].name}
             </p>
             <p className="text-xs text-gray-400 mt-1">
-              {testimonials[current].role}
+              {testimonials[current].role[lang]}
             </p>
           </motion.div>
         </AnimatePresence>

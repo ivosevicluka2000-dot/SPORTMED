@@ -4,19 +4,19 @@
   },
   "notFound": {
     "title": "Page not found",
-    "description": "The requested page does not exist or has been moved.",
-    "backHome": "Back to home"
+    "description": "That page doesn't exist. Head back to the shop and find the kit for your injury.",
+    "backHome": "Go to shop"
   },
   "errorPage": {
     "eyebrow": "Error",
-    "title": "Something went wrong",
-    "description": "An error occurred. Please try again or return to the home page.",
+    "title": "Something broke",
+    "description": "Temporary glitch. Try again or jump straight to the shop.",
     "retry": "Try again",
-    "home": "Home"
+    "home": "Go to shop"
   },
   "metadata": {
-    "title": "Sport Care Med | Sports Medicine Šabac",
-    "description": "Center for sports medicine, physical therapy and rehabilitation in Šabac. Diagnostics, kinesitherapy, massage, recovery therapies."
+    "title": "Sport Care Med — Recovery gear, supplements & protocols for athletes",
+    "description": "Recovery kit, supplements and protocols used by a working sports-medicine team in Šabac. Get back on the field faster — no guesswork."
   },
   "nav": {
     "home": "Home",
@@ -30,28 +30,28 @@
     "tools": "Tools"
   },
   "hero": {
-    "title": "Your path to recovery starts here",
-    "subtitle": "Specialized center for sports medicine, rehabilitation and physical therapy in Šabac",
-    "cta": "Book Appointment",
-    "learnMore": "Learn More"
+    "title": "Get back on the field faster — with the right gear and the right protocol",
+    "subtitle": "Recovery Starter Kit + a free PDF protocol matched to your injury. Picked and used by a working sports-medicine team in Šabac.",
+    "cta": "Shop the kit",
+    "learnMore": "Get the free guide"
   },
   "services": {
-    "title": "Our Services",
-    "subtitle": "Complete sports medicine care in one place",
-    "label": "Services",
-    "viewAll": "View all services",
-    "learnMore": "Learn More",
+    "title": "What we help you fix",
+    "subtitle": "For every injury — a kit, a protocol and, if you really need it, the clinic. No wasted steps.",
+    "label": "Recovery",
+    "viewAll": "View all recovery categories",
+    "learnMore": "See the kit and protocol",
     "duration": "Duration",
-    "benefits": "Benefits",
-    "process": "Process",
-    "relatedServices": "Related Services",
-    "bookNow": "Book Appointment",
-    "faq": "Frequently Asked Questions",
+    "benefits": "What you get",
+    "process": "How it works",
+    "relatedServices": "You might also need",
+    "bookNow": "See recommended products",
+    "faq": "FAQs",
     "items": {
       "fizikalna-terapija": {
         "title": "Physical Therapy",
-        "shortDescription": "Modern physical therapy methods for faster recovery and pain relief.",
-        "description": "Physical therapy uses physical agents such as heat, cold, ultrasound, electrotherapy and laser for treating injuries and chronic conditions. Our team uses state-of-the-art equipment for optimal results.",
+        "shortDescription": "Pain and swelling don't wait for a clinic appointment. Recovery kit + free protocol for your injury — at home. The clinic in Šabac as backup if you need it.",
+        "description": "Knee pain after training, chronic back pain, swelling after an injury? The goal is simple: kill the pain, kill the swelling, get you back to full motion — fast, with no resets. Electrotherapy, ultrasound, laser and cryotherapy live in our clinic; the same principle at home comes through the Recovery Starter Kit and a free PDF protocol matched to your specific injury. Start with the free protocol, equip yourself with what actually helps, and if you need a hands-on assessment — come see us in Šabac.",
         "benefits": ["Pain reduction", "Accelerated recovery", "Improved mobility", "Reduced swelling and inflammation"],
         "duration": "30-60 min",
         "process": "Initial assessment \u2192 Treatment plan \u2192 Sessions \u2192 Progress evaluation",
@@ -63,8 +63,8 @@
       },
       "manuelna-terapija": {
         "title": "Manual Therapy",
-        "shortDescription": "Hands-on techniques for joint, soft tissue and spinal mobilization.",
-        "description": "Manual therapy encompasses specialized hands-on techniques for mobilization and manipulation of joints, soft tissues and the spine. Effective in treating back, neck and joint pain.",
+        "shortDescription": "Stiff back, neck or shoulders? Release most of it at home — with the same tools and protocol our therapists use.",
+        "description": "Manual mobilization and manipulation work — but you don't need a session every week to feel it. The Recovery Starter Kit (foam roller, lacrosse ball, massage stick) plus a free PDF protocol for self-mobilizing the neck, back and shoulders gets you ~80% of the in-clinic effect at home. For stubborn blockages and complex cases — book a hands-on session at our Šabac clinic.",
         "benefits": ["Improved range of motion", "Reduced muscle spasm", "Posture correction", "Pain reduction"],
         "duration": "30-45 min",
         "process": "Functional assessment \u2192 Diagnosis \u2192 Manual treatment \u2192 Home exercises",
@@ -76,8 +76,8 @@
       },
       "kineziterapija": {
         "title": "Kinesitherapy",
-        "shortDescription": "Movement therapy — individualized exercise programs for recovery and prevention.",
-        "description": "Kinesitherapy is movement therapy using specific exercises tailored to your condition. Programs are individually designed for injury rehabilitation, strength improvement and re-injury prevention.",
+        "shortDescription": "Get moving with a proven progressive exercise program — free PDF + gear that fits in a corner of your room.",
+        "description": "Movement heals. But random YouTube exercises lead to plateaus or new injuries. We give you a structured progressive program for your injury: a set of resistance bands + foam roller + free PDF with a weekly plan and video demos. You train at home, we track progress. If progress stalls — book an assessment at our Šabac clinic.",
         "benefits": ["Muscle strengthening", "Improved coordination", "Injury prevention", "Functional recovery"],
         "duration": "45-60 min",
         "process": "Functional status assessment \u2192 Individual program \u2192 Guided exercises \u2192 Progression",
@@ -89,8 +89,8 @@
       },
       "dijagnostika": {
         "title": "Diagnostics",
-        "shortDescription": "Detailed sports medicine diagnostics for precise condition assessment.",
-        "description": "Sports medicine diagnostics includes complete evaluation of your condition using modern diagnostic methods. Accurate diagnosis is the foundation for an effective treatment plan.",
+        "shortDescription": "Before you spend months and money on the wrong treatment — find out exactly what's going on.",
+        "description": "The biggest cost in recovery isn't therapy — it's the wrong diagnosis. Before you buy anything, run our free Recovery Estimator and the self-assessment PDF. If the result suggests a complex injury, come to our Šabac clinic for a detailed exam — history, functional tests, a clear written plan. No guessing, no wasted spend.",
         "benefits": ["Accurate diagnosis", "Early injury screening", "Prevention plan", "Progress monitoring"],
         "duration": "60-90 min",
         "process": "Medical history \u2192 Clinical exam \u2192 Functional testing \u2192 Report and plan",
@@ -102,8 +102,8 @@
       },
       "sportska-rehabilitacija": {
         "title": "Sports Rehabilitation",
-        "shortDescription": "Complete sports injury rehabilitation — from injury to return to play.",
-        "description": "Sports rehabilitation is a comprehensive recovery program from sports injuries. We combine physical therapy, kinesitherapy and functional training for safe return to sport.",
+        "shortDescription": "From injury to first match — a complete return-to-play protocol, kit, and clinical support when you need it.",
+        "description": "Returning to sport doesn't just mean 'no pain'. It means 100% strength with zero fear of re-injury. Our return-to-play system combines: rehab phases with measurable goals, a Recovery Starter Kit with sport-specific tapes and supports, a free PDF protocol for your sport, plus clinical support in Šabac when hands-on work is needed. Fewer setbacks, faster comeback.",
         "benefits": ["Faster return to sport", "Reduced re-injury risk", "Performance optimization", "Individual approach"],
         "duration": "60 min",
         "process": "Injury evaluation \u2192 Recovery phase \u2192 Functional training \u2192 Return-to-play protocol",
@@ -115,8 +115,8 @@
       },
       "masaza": {
         "title": "Massage",
-        "shortDescription": "Sports and therapeutic massage for recovery, relaxation and prevention.",
-        "description": "We offer sports massage, deep tissue massage and therapeutic massage tailored to your needs. Ideal for post-training recovery, tension relief and injury prevention.",
+        "shortDescription": "After training or a brutal week — release tight muscles yourself, with the same tools our therapists use.",
+        "description": "Sports massage works — but you can't book one every day. The Recovery Starter Kit (foam roller, massage stick, vibrating roller) plus a free PDF for self-myofascial release gets you ~80% of the sports-massage effect, at home, whenever you need it. For chronic blockages and competition prep, book a session with us in Šabac.",
         "benefits": ["Muscle relaxation", "Improved circulation", "Stress reduction", "Faster recovery"],
         "duration": "30-60 min",
         "process": "Consultation \u2192 Technique selection \u2192 Treatment \u2192 Maintenance advice",
@@ -128,8 +128,8 @@
       },
       "recovery-terapije": {
         "title": "Recovery Therapies",
-        "shortDescription": "Advanced recovery methods: cryotherapy, compression therapy, and more.",
-        "description": "Recovery therapies use the most advanced methods to accelerate recovery. Including cryotherapy, compression therapy, infrared sauna and other advanced techniques.",
+        "shortDescription": "Cryo, compression, magnesium, real sleep. Boxed up as a kit + protocol.",
+        "description": "Fast recovery isn't magic — it's a system. Our specialists use cryotherapy, compression boots and advanced modalities in clinic. In your kit we pack what actually works at home: cooling gel pack, compression sleeves, magnesium, sleep stack — plus a free '24-hour Recovery Protocol' PDF. Pro-level results without a pro-level budget.",
         "benefits": ["Accelerated recovery", "Reduced inflammation", "Improved sleep", "Immune boost"],
         "duration": "20-45 min",
         "process": "Needs assessment \u2192 Modality selection \u2192 Treatment \u2192 Recovery protocol",
@@ -141,8 +141,8 @@
       },
       "testiranje-merenja": {
         "title": "Testing & Measurements",
-        "shortDescription": "Functional testing and measurements for athletes — performance analysis and prevention.",
-        "description": "Complete functional testing and measurements for athletes and recreational exercisers. Analysis of strength, endurance, mobility and biomechanics for training optimization.",
+        "shortDescription": "Pre-season, post-injury, or just to know where you stand — functional assessment, plan, and the exact gear list you need.",
+        "description": "Without measurement you train blind. We run FMS, strength, power and biomechanics testing in Šabac and give you a clear written report — so you know exactly which kit and which protocol to take next. Guides and gear adapt to your results, so you only spend on what actually helps.",
         "benefits": ["Strength and weakness analysis", "Injury prevention", "Training optimization", "Progress tracking"],
         "duration": "60-90 min",
         "process": "Testing protocol \u2192 Measurements \u2192 Results analysis \u2192 Training recommendations",
@@ -155,56 +155,56 @@
     }
   },
   "whyUs": {
-    "title": "Why Sport Care Med?",
-    "subtitle": "Dedicated to your health and performance",
+    "title": "Why buy from us, not from AliExpress",
+    "subtitle": "Specialists pick the gear and write the protocols. You just follow the plan.",
     "items": {
       "expertise": {
-        "title": "Expert Team",
-        "description": "Experienced therapists specialized in sports medicine"
+        "title": "Picked by specialists",
+        "description": "Every product tested in clinical work with real athletes in Šabac."
       },
       "equipment": {
-        "title": "Modern Equipment",
-        "description": "Latest medical and diagnostic equipment"
+        "title": "Built around proven protocols",
+        "description": "Every kit ships with a PDF protocol — you know exactly how and when to use it."
       },
       "individual": {
-        "title": "Individual Approach",
-        "description": "Personalized treatment and rehabilitation plans"
+        "title": "Free tools before you spend a dime",
+        "description": "Recovery Estimator and Readiness Checklist — no account, no card. Find out what you need before you buy."
       },
       "results": {
-        "title": "Proven Results",
-        "description": "Hundreds of athletes successfully returned to play"
+        "title": "Backed by a real clinic",
+        "description": "You're not alone with a box — our sports-medicine team in Šabac is reachable if you need hands-on help."
       }
     }
   },
   "testimonials": {
-    "title": "What Our Patients Say",
-    "subtitle": "Experiences from athletes and patients who trusted us"
+    "title": "Athletes who got back on the field",
+    "subtitle": "Real injuries, real kits, real return-to-play dates."
   },
   "partners": {
-    "title": "Our Partners",
-    "subtitle": "Collaborating with leading sports organizations"
+    "title": "Brands and teams that trust us",
+    "subtitle": "Clubs, academies and manufacturers who count us as part of their staff."
   },
   "newsletter": {
-    "title": "Stay Updated",
-    "subtitle": "Subscribe to our newsletter for health and prevention tips",
+    "title": "Your next free recovery protocol — straight to your inbox",
+    "subtitle": "One email a month: a new PDF protocol, early access to product drops, subscriber-only discounts. No spam.",
     "placeholder": "Your email address",
-    "button": "Subscribe",
-    "success": "Successfully subscribed!",
+    "button": "Send me the next protocol",
+    "success": "Welcome. Your first protocol is on its way.",
     "error": "An error occurred. Please try again."
   },
   "caseStudies": {
-    "title": "Success Stories",
-    "subtitle": "Results that speak for themselves",
+    "title": "What they used \u2014 and how they got back",
+    "subtitle": "Specific injuries, specific kits and protocols, specific return-to-play dates.",
     "label": "Results",
     "readMore": "Read more",
-    "cta": "Start your recovery",
+    "cta": "See their kit",
     "items": [
       {
         "name": "Nikola M.",
         "sport": "Football",
         "injury": "ACL (anterior cruciate ligament) rupture",
-        "result": "Return to the field in 8 months",
-        "story": "After ACL surgery, Nikola started rehabilitation at Sport Care Med. Through an individual kinesitherapy and sports rehabilitation program, he returned to training in 8 months \u2014 one month ahead of schedule.",
+        "result": "Back on the field in 8 months with the Post-Op Knee Kit",
+        "story": "After ACL surgery Nikola started with our Post-Op Knee Recovery Kit (compression knee support + foam roller + resistance band set + magnesium) and a 24-week PDF protocol. Weekly check-ins at our \u0160abac clinic, daily work at home. Back on the field a month ahead of schedule.",
         "duration": "8 months",
         "services": ["Sports Rehabilitation", "Kinesitherapy", "Diagnostics"]
       },
@@ -212,8 +212,8 @@
         "name": "Jelena S.",
         "sport": "Tennis",
         "injury": "Chronic shoulder pain",
-        "result": "Completely pain-free playing",
-        "story": "Jelena suffered from shoulder pain for months that prevented her from playing at a professional level. Through a combination of manual therapy, physical therapy, and targeted exercise program, the pain was completely eliminated in 6 weeks.",
+        "result": "Pain-free in 6 weeks with the Shoulder Recovery Kit",
+        "story": "Months of shoulder pain, missed tennis sessions, dodged matches. She started with our Shoulder Recovery Kit (kinesiology tape + lacrosse ball + resistance bands) and a free 6-week PDF shoulder protocol. Two manual sessions in clinic. Pain-free in 6 weeks.",
         "duration": "6 weeks",
         "services": ["Manual Therapy", "Physical Therapy", "Kinesitherapy"]
       },
@@ -221,59 +221,59 @@
         "name": "FK \u0160abac U19",
         "sport": "Football",
         "injury": "Team prevention program",
-        "result": "60% fewer injuries in the season",
-        "story": "FK \u0160abac\u2019s youth team started working with Sport Care Med for injury prevention. Through regular functional testing and individual corrective programs, the team recorded 60% fewer injuries during the season.",
+        "result": "60% fewer injuries + 40% lower treatment spend",
+        "story": "The team got the Team Bulk Kit (foam rollers, tapes, compression sleeves for every player) plus a FIFA 11+ protocol fitted into training and monthly clinic check-ins. Result: 60% fewer injuries in the season and 40% less money spent on ad-hoc treatment.",
         "duration": "12 months",
         "services": ["Testing & Measurements", "Kinesitherapy", "Sports Rehabilitation"]
       }
     ]
   },
   "leadCapture": {
-    "title": "Free Assessment",
-    "subtitle": "Schedule a free initial assessment and find out how we can help",
+    "title": "Free PDF protocol for your injury",
+    "subtitle": "Tell us what's bothering you — we'll send the protocol + a product shortlist that actually works for that injury. $0.",
     "name": "Your name",
     "phone": "Phone number",
-    "service": "Service you're interested in",
-    "selectService": "Select a service",
-    "submit": "Book for free",
+    "service": "What are you dealing with",
+    "selectService": "Pick an area",
+    "submit": "Send me the protocol",
     "sending": "Sending...",
-    "success": "Success! We'll contact you within 24h.",
+    "success": "On its way! Protocol + product shortlist in your inbox in a few minutes.",
     "error": "Error. Please try again.",
-    "guarantee": "No obligations \u2022 100% free",
-    "exitTitle": "Wait! Have a question?",
-    "exitSubtitle": "Leave your phone number and we'll call you within 24h",
-    "stickyTitle": "Book Appointment",
-    "urgency": "{count} slots available today",
+    "guarantee": "No card • no obligation • 100% free",
+    "exitTitle": "Before you go — grab the free protocol",
+    "exitSubtitle": "Leave your number — we'll send you the PDF and a product shortlist for your injury.",
+    "stickyTitle": "Get the free protocol",
+    "urgency": "{count} protocols sent today",
     "condition": "Describe your problem",
     "conditionPlaceholder": "E.g. knee pain, injury recovery..."
   },
   "about": {
     "title": "About Us",
-    "subtitle": "Sport Care Med — sports medicine center in Šabac",
+    "subtitle": "A sports-medicine team that built a recovery brand",
     "story": {
       "title": "Our Story",
-      "description": "Sport Care Med was founded with a vision to provide athletes and recreational exercisers access to top-tier sports medicine care. Our team of experienced therapists and doctors is dedicated to your recovery and performance."
+      "description": "We're sports-medicine specialists from Šabac. For years we watched patients walk out the door with advice but no tools. So we built the kit. And the protocol. And the shop. Now any athlete in Serbia can use what our patients use — no waiting, no trip to Šabac."
     },
     "mission": {
       "title": "Mission",
-      "description": "We provide comprehensive sports medicine care using the most advanced methods and equipment, with a focus on individual approach to each patient."
+      "description": "Every person with an injury should get the right gear and a clear protocol — immediately. No guessing, no wasted purchases, no lost time."
     },
     "vision": {
       "title": "Vision",
-      "description": "To be the leading center for sports medicine in the region, recognized for service quality, team expertise and patient satisfaction."
+      "description": "Sport Care Med as the first place an athlete in Serbia goes when something goes wrong — before AliExpress, before the pharmacy, before Google."
     },
     "team": {
       "title": "Our Team",
-      "subtitle": "Meet the experts who care for your health"
+      "subtitle": "The specialists who pick every product in the shop and write every protocol."
     },
     "gallery": {
       "title": "Our Facility",
-      "subtitle": "Modern facility equipped for all your needs"
+      "subtitle": "The clinic in Šabac — where we test everything we ship."
     }
   },
   "location": {
-    "title": "Location",
-    "subtitle": "Visit us in Šabac",
+    "title": "Visit the team in Šabac (optional)",
+    "subtitle": "Most injuries you can fix at home with the kit and protocol. For hands-on assessment and complex cases — the door is open.",
     "address": "Address",
     "workingHours": "Working Hours",
     "weekdays": "Monday - Friday",
@@ -281,31 +281,33 @@
     "sunday": "Sunday",
     "closed": "Closed",
     "directions": "Directions",
-    "parking": "Parking"
+    "parking": "Parking",
+    "parkingNote": "Free parking right in front of the clinic.",
+    "facilityLabel": "Our clinic"
   },
   "contact": {
     "title": "Contact",
-    "subtitle": "Get in touch — we're here for you",
+    "subtitle": "Tell us what happened — we'll send you a protocol, a product shortlist, and (if you really need one) a clinic appointment.",
     "form": {
       "name": "Full Name",
       "email": "Email Address",
       "phone": "Phone Number",
-      "treatment": "Interested in service",
-      "selectTreatment": "Select a service",
+      "treatment": "What are you dealing with",
+      "selectTreatment": "Pick a recovery area",
       "condition": "Describe your condition",
       "conditionPlaceholder": "E.g. knee pain after training, limited shoulder movement, post-surgery recovery...",
-      "message": "Additional notes (optional)",
-      "messagePlaceholder": "Special notes, questions or requests...",
-      "submit": "Send Message",
+      "message": "What have you tried (optional)",
+      "messagePlaceholder": "What you've tried, what hurts most, any extra context...",
+      "submit": "Send — get the protocol",
       "sending": "Sending...",
-      "success": "Message sent successfully! We'll contact you soon.",
+      "success": "On its way! PDF protocol and product shortlist in your inbox in a few minutes. A specialist will follow up within 24h.",
       "error": "An error occurred. Please try again.",
-      "step1Title": "What's bothering you?",
-      "step1Subtitle": "Describe your problem and select a service",
-      "step2Title": "Your details",
-      "step2Subtitle": "How should we contact you",
-      "step3Title": "Additional information",
-      "step3Subtitle": "Anything else we should know?",
+      "step1Title": "What are you recovering from?",
+      "step1Subtitle": "Tell us the injury — we'll match the right kit and protocol.",
+      "step2Title": "Where do we send your plan?",
+      "step2Subtitle": "Name, email, phone — we'll send the PDF + product shortlist and a specialist will follow up.",
+      "step3Title": "Anything else we should know?",
+      "step3Subtitle": "What you've tried, what hurts most — the more detail, the better the recommendation.",
       "next": "Next",
       "back": "Back",
       "stepOf": "Step {current} of {total}"
@@ -318,37 +320,37 @@
   },
   "b2b": {
     "title": "B2B Solutions",
-    "subtitle": "Partnering with teams and organizations",
-    "heroText": "One contract. Complete team coverage. Up to 50 individual patient equivalents in one package.",
-    "heroSubtext": "Specialized sports medicine services for sports teams, clubs and organizations",
+    "subtitle": "Bulk recovery kits + protocols for the whole team — with optional clinical backup",
+    "heroText": "One contract. A kit for every player. Fewer injuries, smaller treatment bill.",
+    "heroSubtext": "Recovery kits and PDF protocols for the entire roster, on-site therapist when needed, the Šabac clinic as backup. Cost per player drops dramatically.",
     "packages": {
-      "title": "Service Packages",
-      "subtitle": "Choose the package that fits your team's needs",
+      "title": "Team packages",
+      "subtitle": "Pick: kits only, kits + on-site, or the full club package.",
       "rehabilitation": {
         "title": "Team Rehabilitation",
-        "description": "Complete rehabilitation programs tailored to the needs of your sports team"
+        "description": "Kit + protocol + clinical coordination for every injured player."
       },
       "onsite": {
         "title": "On-Site Physiotherapy",
-        "description": "Our therapists come to your training sessions and matches"
+        "description": "Our therapist comes to training and matches — with a full bag of kits."
       },
       "prevention": {
         "title": "Injury Prevention Programs",
-        "description": "Proactive approach to reducing injury risk in your team"
+        "description": "FIFA 11+ protocol + bulk prevention kit + coach education. Fewer injuries, more players on the pitch."
       },
       "testing": {
         "title": "Team Performance Testing",
-        "description": "Complete functional testing for all team members"
+        "description": "FMS, strength, power — we test the whole roster in one day, you get the plan and a gear shortlist."
       }
     },
     "learnMore": "Learn More",
-    "viewAll": "View all B2B services",
+    "viewAll": "View all B2B packages",
     "forTeams": "For Teams",
     "services": {
       "timska-rehabilitacija": {
         "title": "Team Rehabilitation",
-        "shortDescription": "Complete rehabilitation programs tailored to the needs of your sports team",
-        "description": "Our team rehabilitation program provides a comprehensive approach to athlete recovery. Each team member receives an individual rehabilitation plan, while our team coordinates with coaches and club medical staff. We monitor each player's progress and adjust protocols in real time, ensuring a faster and safer return to play.",
+        "shortDescription": "Kit + protocol + clinical coordination for every injured player — no wandering from one therapist to another.",
+        "description": "A player gets injured — and the circus starts: which therapist, which pharmacy, what to take home. We cut that. Every injured player immediately gets their kit (rehab gear + PDF protocol), we coordinate with your coach and S&C staff, and when hands-on work is needed — a therapist from our team comes to your facility or the player comes to Šabac. Faster return to play, lower total cost per injury.",
         "includes": [
           "Individual rehabilitation plans for each player",
           "Regular check-ups and progress monitoring",
@@ -379,8 +381,8 @@
       },
       "fizioterapija-na-terenu": {
         "title": "On-Site Physiotherapy",
-        "shortDescription": "Our therapists come to your training sessions and matches",
-        "description": "Our on-site physiotherapy service ensures a qualified therapist is present at all your training sessions and matches. Immediate injury response, professional taping and bandaging, and injury prevention during activities — all on-site. Your athletes receive instant medical support without having to visit the clinic.",
+        "shortDescription": "Therapist + a full bag of kits at every training session and match.",
+        "description": "Acute on-pitch injury, taping, fast intervention, pre-training prevention — all on site. Our therapist comes with a full bag (tapes, supports, cooling gel, portable ultrasound) and stays for warm-up and cool-down. No panic when someone goes down, no waiting for appointments, no wasted player time.",
         "includes": [
           "Therapist present at training sessions",
           "Immediate injury response during matches",
@@ -411,8 +413,8 @@
       },
       "prevencija-povreda": {
         "title": "Injury Prevention Programs",
-        "shortDescription": "Proactive approach to reducing injury risk in your team",
-        "description": "Prevention is the most effective and cost-efficient strategy in sports medicine. Our program includes complete screening of all team members at the start of the season, individual prevention programs, coach and player education, and regular monthly risk reports. We use proven protocols like FIFA 11+ for dramatic injury reduction.",
+        "shortDescription": "FIFA 11+ + a bulk prevention kit for the whole team + start-of-season screening.",
+        "description": "The cheapest injury is the one that never happened. At the start of the season we screen every player, flag the high-risk ones, give each player a personal prevention kit (tapes, foam roller, supports) and a free PDF protocol matched to the sport. Clubs that did this saw 50% fewer injuries in the first season — the numbers are there.",
         "includes": [
           "Screening of all players at season start",
           "Individual prevention programs",
@@ -443,8 +445,8 @@
       },
       "testiranje-performansi": {
         "title": "Team Performance Testing",
-        "shortDescription": "Complete functional testing for all team members",
-        "description": "Our performance testing program provides a complete picture of each team member's physical abilities. We use FMS screening, strength and explosiveness measurements, cardio-respiratory testing, and movement analysis. Each athlete receives an individual report with recommendations, and the coaching team receives a summary overview for training planning.",
+        "shortDescription": "FMS, strength, power — the whole roster in one day, you get a plan and tailored kits.",
+        "description": "Without data you train blind. We test 25+ players in one day: FMS, vertical jump, sprint, isokinetic tests, biomechanics. Each athlete gets an individual report, the coach gets a risk matrix and a plan, the club gets an offer of tailored kits for the weaknesses we found. Re-test in 3-6 months — progress shows up in black and white.",
         "includes": [
           "FMS screening (Functional Movement Screen)",
           "Strength and explosiveness measurement",
@@ -475,8 +477,8 @@
       }
     },
     "roi": {
-      "title": "Cost Savings Calculator",
-      "subtitle": "Compare individual visit costs with a B2B contract",
+      "title": "How much you save with bulk kits",
+      "subtitle": "Compare ad-hoc treatment cost per player against the cost of kit + protocol for the whole team.",
       "teamSize": "Team Size",
       "avgInjuries": "Average injuries per season",
       "sessionsPerInjury": "Average sessions per injury",
@@ -494,8 +496,8 @@
       "sessions": "sessions"
     },
     "outcomes": {
-      "title": "Results That Speak",
-      "subtitle": "Proven results from our B2B partnerships",
+      "title": "The numbers behind our B2B packages",
+      "subtitle": "What clubs get when they swap ad-hoc treatment for a systematic kit + protocol approach.",
       "stats": [
         { "value": "50+", "label": "teams using our services" },
         { "value": "800+", "label": "athletes under our care" },
@@ -530,8 +532,8 @@
       }
     },
     "proposal": {
-      "title": "Build Your Team's Proposal",
-      "subtitle": "Select services, enter team details, and get a cost estimate",
+      "title": "Build a package for your team",
+      "subtitle": "Pick services and kits, enter team details, get an estimate.",
       "step1Title": "Select Services",
       "step1Subtitle": "Choose the packages you're interested in",
       "step2Title": "Team Details",
@@ -573,7 +575,7 @@
       "stepOf": "Step {current} of {total}"
     },
     "quote": {
-      "title": "Request a Quote",
+      "title": "Send a quote inquiry",
       "organization": "Organization Name",
       "contactPerson": "Contact Person",
       "email": "Email Address",
@@ -592,7 +594,7 @@
     }
   },
   "footer": {
-    "description": "Center for sports medicine, physical therapy and rehabilitation in Šabac.",
+    "description": "Recovery gear, supplements and protocols — picked and used by a working sports-medicine team in Šabac.",
     "quickLinks": "Quick Links",
     "workingHours": "Working Hours",
     "weekdays": "Mon - Fri: 08:00 - 20:00",
@@ -613,7 +615,7 @@
   },
   "blog": {
     "title": "Blog",
-    "subtitle": "Tips, news and expert articles from the world of sports medicine",
+    "subtitle": "Free recovery education from working specialists — read up, then equip yourself in the shop.",
     "allCategories": "All Categories",
     "search": "Search articles...",
     "readMore": "Read More",
@@ -636,9 +638,9 @@
   },
   "shop": {
     "title": "Shop",
-    "subtitle": "Supplements, equipment and recovery aids for sports and training",
+    "subtitle": "Everything you need to get back on the field — in one place.",
     "pageTitle": "Shop | Sport Care Med",
-    "pageDescription": "Buy supplements, equipment, braces, tapes and other sports and recovery aids.",
+    "pageDescription": "Recovery kits, supplements, kinesiology tape, foam rollers, supports and free PDF protocols — all picked by a working sports-medicine team.",
     "addToCart": "Add to Cart",
     "outOfStock": "Out of Stock",
     "inStock": "In Stock ({count})",
@@ -652,7 +654,7 @@
     "cartTitle": "Cart",
     "cartItems": "Items ({count})",
     "emptyCart": "Your cart is empty",
-    "emptyCartDescription": "Add products to your cart to continue shopping.",
+    "emptyCartDescription": "Browse the kits and free guides — your recovery starts there.",
     "continueShopping": "Continue Shopping",
     "clearCart": "Clear Cart",
     "orderSummary": "Order Summary",
@@ -661,7 +663,7 @@
     "freeShipping": "Free Shipping",
     "freeShippingThreshold": "Free shipping on orders over {amount} RSD",
     "total": "Total",
-    "proceedToCheckout": "Proceed to Checkout",
+    "proceedToCheckout": "Check out — start your recovery",
     "checkoutTitle": "Checkout",
     "shippingInfo": "Shipping Information",
     "fullName": "Full Name",
@@ -679,10 +681,10 @@
     "cardDescription": "Secure card payment via RaiAccept",
     "processing": "Processing...",
     "payNow": "Pay Now",
-    "placeOrder": "Place Order",
-    "orderConfirmed": "Order Confirmed!",
+    "placeOrder": "Check out — start your recovery",
+    "orderConfirmed": "Your recovery starts now",
     "orderNumber": "Order Number",
-    "orderConfirmedDescription": "Thank you for your purchase! We'll send you an email with order details.",
+    "orderConfirmedDescription": "Thanks — your package arrives in 2-4 days. Your free PDF protocol for that area is in the email too.",
     "backToHome": "Back to Home",
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity",
@@ -690,8 +692,8 @@
     "cart": "Cart",
     "freeDownload": "Free Download",
     "freeBadge": "FREE",
-    "pdfComingSoon": "PDF coming soon — leave your email and we'll send it to you!",
-    "oftenBoughtTogether": "Often Bought Together",
+    "pdfComingSoon": "PDF on the way — leave your email and we'll send it as soon as it's ready.",
+    "oftenBoughtTogether": "Goes together — grab the full set",
     "addAllToCart": "Add All to Cart",
     "totalBundle": "Bundle Total",
     "discountApplied": "Discount {code} applied — {percent}% off!",
@@ -711,12 +713,12 @@
     "orderNotFoundDescription": "We couldn't find your order. If you believe this is an error, please contact us."
   },
   "tools": {
-    "title": "Interactive Tools",
-    "subtitle": "Free tools for recovery assessment and sport readiness",
+    "title": "Free tools — before you spend a dime",
+    "subtitle": "Find out exactly what you need and how much. No account, no card.",
     "recoveryEstimator": {
       "title": "Recovery Timeline Estimator",
-      "shortDescription": "Find out how long it takes to recover from your sports injury",
-      "description": "An interactive tool that estimates recovery time based on injury type, severity and your personal factors, and shows a phased rehabilitation plan.",
+      "shortDescription": "Find out how long recovery takes for your sports injury — and which kit and protocol go with it.",
+      "description": "An interactive tool that estimates your recovery time and immediately suggests the matching Recovery Kit + free PDF protocol — before you spend a dime.",
       "metaTitle": "Sports Injury Recovery Timeline Estimator | Sport Care Med",
       "metaDescription": "Free tool to estimate recovery time from sports injuries. Find out how long rehabilitation takes and what the recovery phases are.",
       "step1Title": "Select injury type",
@@ -740,7 +742,7 @@
       "recoveryTimeline": "Recovery plan by phases",
       "keyActivities": "Key activities",
       "recommendedServices": "Recommended services",
-      "bookAssessment": "Book a free assessment",
+      "bookAssessment": "See the recommended kit + protocol",
       "disclaimer": "This estimate is for informational purposes only and does not replace a professional medical examination. For an accurate diagnosis and treatment plan, schedule an appointment with our specialists.",
       "stepOf": "Step {current} of {total}",
       "injuries": {
@@ -810,8 +812,8 @@
     },
     "readinessChecklist": {
       "title": "Return-to-Sport Readiness Checklist",
-      "shortDescription": "Check if you're ready for a safe return to sports activities",
-      "description": "An interactive checklist that evaluates your readiness for a safe return to sport based on pain, mobility, strength, function and psychological readiness.",
+      "shortDescription": "Check if you're ready for a safe return — and which kit + protocol to grab for the last mile.",
+      "description": "An interactive checklist that evaluates your return-to-sport readiness — and recommends the matching kit, PDF protocol and (if needed) a clinical consult for the areas where you're not yet 100%.",
       "metaTitle": "Return-to-Sport Readiness Checklist | Sport Care Med",
       "metaDescription": "Free interactive checklist to evaluate whether you're ready for a safe return to sports activities after injury.",
       "overallReadiness": "Overall Readiness",
@@ -822,7 +824,7 @@
       "almostReadyText": "You're on the right track, but some areas need more work before a full return.",
       "ready": "Ready for Sport",
       "readyText": "Your results indicate you're ready for a safe return to sports activities!",
-      "bookSession": "Book a session with our specialists",
+      "bookSession": "Get the kit + PDF for your final phase",
       "resetChecklist": "Reset checklist",
       "showResults": "Show results",
       "disclaimer": "This checklist is for informational purposes only and does not replace a professional medical assessment. For final clearance to return to sport, consult with your doctor.",

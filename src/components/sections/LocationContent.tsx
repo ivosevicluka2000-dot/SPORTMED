@@ -115,7 +115,7 @@ export default function LocationContent() {
                     {t("parking")}
                   </h3>
                   <p className="text-gray-500 text-sm">
-                    Besplatan parking dostupan / Free parking available
+                    {t("parkingNote")}
                   </p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default function LocationContent() {
       {/* Clinic photos placeholder */}
       <Section className="bg-ivory">
         <h2 className="text-2xl font-heading font-semibold text-navy text-center mb-10">
-          Naš prostor / Our facility
+          {t("facilityLabel")}
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((i) => (

@@ -25,6 +25,7 @@ export default function ExitIntentPopup() {
   useEffect(() => {
     // Check if already dismissed in this session
     if (sessionStorage.getItem("exitPopupDismissed")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing with sessionStorage external state
       setDismissed(true);
       return;
     }

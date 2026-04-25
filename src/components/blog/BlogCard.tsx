@@ -88,9 +88,11 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
             {post.author && (
               <div className="flex items-center gap-2">
                 {post.author.image ? (
-                  <img
+                  <Image
                     src={post.author.image}
                     alt={post.author.name}
+                    width={28}
+                    height={28}
                     className="w-7 h-7 rounded-full object-cover"
                   />
                 ) : (

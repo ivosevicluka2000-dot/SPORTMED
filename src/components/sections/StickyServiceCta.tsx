@@ -42,7 +42,7 @@ export default function StickyServiceCta() {
                 {t("stickyTitle")}
               </a>
               <Link
-                href="/kontakt"
+                href="/alati"
                 className="flex-1 flex items-center justify-center gap-2 bg-teal text-white font-medium py-3 rounded-lg text-sm transition-colors hover:bg-teal-dark"
               >
                 <Calendar className="w-4 h-4" />

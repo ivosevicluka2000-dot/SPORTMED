@@ -392,7 +392,7 @@ export default function ReadinessChecklist() {
                 {t("bookSession")}
               </p>
               <Link
-                href="/kontakt"
+                href="/prodavnica"
                 className="inline-flex items-center gap-2 bg-teal text-white px-6 py-3 rounded-full font-medium hover:bg-teal/90 transition-colors"
               >
                 {t("bookSession")}

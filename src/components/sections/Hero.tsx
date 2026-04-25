@@ -83,14 +83,14 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-5"
         >
-          <Link href="/kontakt">
+          <Link href="/prodavnica">
             <Button size="lg">
               {t("cta")}
               <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </Link>
           <Link
-            href="/usluge"
+            href="/alati"
             className="group inline-flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors"
           >
             {t("learnMore")}

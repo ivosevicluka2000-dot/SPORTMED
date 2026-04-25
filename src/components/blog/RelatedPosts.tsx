@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
@@ -36,10 +37,12 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
             >
               <div className="relative h-40 bg-ivory overflow-hidden">
                 {post.mainImage ? (
-                  <img
+                  <Image
                     src={post.mainImage}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

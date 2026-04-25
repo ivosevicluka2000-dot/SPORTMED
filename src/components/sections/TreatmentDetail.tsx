@@ -208,7 +208,7 @@ export default function TreatmentDetail({
                 <p className="text-sm text-gray-400 mb-5">
                   {t(`items.${slug}.shortDescription`)}
                 </p>
-                <Link href="/kontakt" className="block">
+                <Link href="/prodavnica" className="block">
                   <Button className="w-full">
                     {t("bookNow")}
                     <ArrowRight className="ml-2 w-4 h-4" />

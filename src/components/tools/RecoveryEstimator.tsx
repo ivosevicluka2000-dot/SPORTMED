@@ -519,7 +519,7 @@ export default function RecoveryEstimator() {
               {t("disclaimer")}
             </p>
             <Link
-              href="/kontakt"
+              href="/prodavnica"
               className="inline-flex items-center gap-2 bg-teal text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-teal-dark transition-colors shadow-md"
             >
               {t("bookAssessment")}

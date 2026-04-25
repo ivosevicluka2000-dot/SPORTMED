@@ -4,19 +4,19 @@
   },
   "notFound": {
     "title": "Stranica nije pronađena",
-    "description": "Tražena stranica ne postoji ili je premeštena.",
-    "backHome": "Vrati se na početnu"
+    "description": "Traženi sadržaj ne postoji. Vratite se u prodavnicu i pronađite kit za vašu povredu.",
+    "backHome": "Idite u prodavnicu"
   },
   "errorPage": {
     "eyebrow": "Greška",
-    "title": "Nešto je pošlo po zlu",
-    "description": "Došlo je do greške. Pokušajte ponovo ili se vratite na početnu stranu.",
+    "title": "Nešto je puklo",
+    "description": "Privremena greška. Pokušajte ponovo ili pređite direktno u prodavnicu.",
     "retry": "Pokušaj ponovo",
-    "home": "Početna"
+    "home": "U prodavnicu"
   },
   "metadata": {
-    "title": "Sport Care Med | Sportska medicina Šabac",
-    "description": "Centar za sportsku medicinu, fizikalnu terapiju i rehabilitaciju u Šapcu. Dijagnostika, kineziterapija, masaža, recovery terapije."
+    "title": "Sport Care Med — Oprema, suplementi i protokoli za oporavak sportista",
+    "description": "Recovery kit, suplementi i protokoli koje koristi sportsko-medicinski tim u Šapcu. Brži povratak na teren — bez nagađanja."
   },
   "nav": {
     "home": "Početna",
@@ -30,28 +30,28 @@
     "tools": "Alati"
   },
   "hero": {
-    "title": "Vaš put ka oporavku počinje ovde",
-    "subtitle": "Specijalizovani centar za sportsku medicinu, rehabilitaciju i fizikalnu terapiju u Šapcu",
-    "cta": "Zakažite termin",
-    "learnMore": "Saznajte više"
+    "title": "Vratite se na teren brže — sa pravom opremom i pravim protokolom",
+    "subtitle": "Recovery Starter Kit + besplatan PDF protokol za vašu povredu. Odabrano i korišćeno od strane sportsko-medicinskog tima u Šapcu.",
+    "cta": "Pogledajte prodavnicu",
+    "learnMore": "Preuzmite besplatan vodič"
   },
   "services": {
-    "title": "Naše usluge",
-    "subtitle": "Kompletna sportsko-medicinska nega na jednom mestu",
-    "label": "Usluge",
-    "viewAll": "Pogledajte sve usluge",
-    "learnMore": "Saznajte više",
+    "title": "Šta vam pomažemo da rešite",
+    "subtitle": "Za svaku povredu — kit, protokol i, ako baš zatreba, klinika. Bez praznog hoda.",
+    "label": "Oporavak",
+    "viewAll": "Pogledajte sve kategorije oporavka",
+    "learnMore": "Pogledajte kit i protokol",
     "duration": "Trajanje",
-    "benefits": "Prednosti",
-    "process": "Proces",
-    "relatedServices": "Povezane usluge",
-    "bookNow": "Zakažite termin",
-    "faq": "Često postavljana pitanja",
+    "benefits": "Šta dobijate",
+    "process": "Kako ide",
+    "relatedServices": "Slično vam može trebati",
+    "bookNow": "Pogledajte preporučene proizvode",
+    "faq": "Česta pitanja",
     "items": {
       "fizikalna-terapija": {
         "title": "Fizikalna terapija",
-        "shortDescription": "Savremene metode fizikalne terapije za brži oporavak i smanjenje bola.",
-        "description": "Fizikalna terapija koristi fizičke agense kao što su toplota, hladnoća, ultrazvuk, elektroterapija i laser za lečenje povreda i hroničnih stanja. Naš tim koristi najsavremeniju opremu za postizanje optimalnih rezultata.",
+        "shortDescription": "Bol i otok ne čekaju red u domu zdravlja. Recovery kit + besplatan protokol za vašu povredu — kod kuće. Klinika u Šapcu kao backup ako zatreba.",
+        "description": "Bol u kolenu posle treninga, hroničan bol u leđima, otok posle povrede? Cilj je jasan: smanjiti bol, smanjiti otok, vratiti vas u pun pokret — brzo i bez vraćanja na nulu. Elektroterapija, ultrazvuk, laser i krioterapija žive u našem centru; isti princip kod kuće dobijete kroz Recovery Starter Kit i besplatan PDF protokol za vašu specifičnu povredu. Krenite od besplatnog protokola, opremite se onim što vam stvarno treba, a ako zatreba hands-on procena — dođite kod nas u Šabac.",
         "benefits": ["Smanjenje bola", "Ubrzanje oporavka", "Poboljšanje pokretljivosti", "Smanjenje otoka i upale"],
         "duration": "30-60 min",
         "process": "Inicijalna procena → Plan terapije → Tretmani → Evaluacija napretka",
@@ -63,8 +63,8 @@
       },
       "manuelna-terapija": {
         "title": "Manuelna terapija",
-        "shortDescription": "Ručne tehnike za mobilizaciju zglobova, mekih tkiva i kičmenog stuba.",
-        "description": "Manuelna terapija obuhvata specijalizovane ručne tehnike mobilizacije i manipulacije zglobova, mekih tkiva i kičmenog stuba. Efikasna u tretmanu bolova u leđima, vratu i zglobovima.",
+        "shortDescription": "Ukočena leđa, vrat i ramena? Većinu blokada popustite kod kuće — alatima i protokolom koji koriste naši terapeuti.",
+        "description": "Manuelne tehnike mobilizacije i manipulacije rade — ali ne morate svake nedelje na sat tretmana. Recovery Starter Kit (foam roller, lacrosse loptica, masažni štap) plus besplatan PDF protokol za samo-mobilizaciju vrata, leđa i ramena daju vam 80% efekta od kuće. Za teze blokade i kompleksne slučajeve — zakažite hands-on tretman u našoj klinici u Šapcu.",
         "benefits": ["Poboljšanje opsega pokreta", "Smanjenje mišićnog spazma", "Korekcija držanja", "Smanjenje bolova"],
         "duration": "30-45 min",
         "process": "Funkcionalana procena → Dijagnostika → Manuelni tretman → Vežbe za kuću",
@@ -76,8 +76,8 @@
       },
       "kineziterapija": {
         "title": "Kineziterapija",
-        "shortDescription": "Terapija pokretom — individualni programi vežbi za oporavak i prevenciju.",
-        "description": "Kineziterapija je terapija pokretom koja koristi specifične vežbe prilagođene vašem stanju. Programi su individualno dizajnirani za rehabilitaciju povreda, poboljšanje snage i prevenciju ponovnih povreda.",
+        "shortDescription": "Vratite se u pokret po proverenom programu vezbi — uz besplatan PDF i opremu koja staje u sobu.",
+        "description": "Pokret leči. Ali nasumične vežbe sa YouTube-a vode u stagnaciju ili novu povredu. Mi vam dajemo struktuiran progresivni program za vašu povredu: set elastičnih traka + foam roller + besplatan PDF sa nedeljnim planom i video demonstracijama. Vežbate kod kuće, mi pratimo napredak. Ako progres stane — zakažite procenu kod nas u Šapcu.",
         "benefits": ["Jačanje mišića", "Poboljšanje koordinacije", "Prevencija povreda", "Funkcionalni oporavak"],
         "duration": "45-60 min",
         "process": "Procena funkcionalnog statusa → Individualni program → Vođene vežbe → Progresija",
@@ -89,8 +89,8 @@
       },
       "dijagnostika": {
         "title": "Dijagnostika",
-        "shortDescription": "Detaljna sportsko-medicinska dijagnostika za precizno utvrđivanje stanja.",
-        "description": "Sportsko-medicinska dijagnostika obuhvata kompletnu evaluaciju vašeg stanja koristeći savremene dijagnostičke metode. Precizna dijagnoza je osnov za efikasan plan lečenja.",
+        "shortDescription": "Pre nego što potrošite mesece i novac na pogrešan tretman — saznajte tačno o čemu se radi.",
+        "description": "Najveći trošak u oporavku nije terapija — nego pogrešna dijagnoza. Pre nego što bilo šta kupite, koristite naš besplatni Recovery Estimator i PDF za samo-procenu. Ako rezultat sugeriše kompleksnu povredu, dođite kod nas u Šabac na detaljan pregled — anamneza, funkcionalni testovi, jasan pisani plan. Bez nagađanja, bez bacanja novca.",
         "benefits": ["Precizna dijagnoza", "Rani screening povreda", "Plan prevencije", "Praćenje napretka"],
         "duration": "60-90 min",
         "process": "Anamneza → Klinički pregled → Funkcionalno testiranje → Izveštaj i plan",
@@ -102,8 +102,8 @@
       },
       "sportska-rehabilitacija": {
         "title": "Sportska rehabilitacija",
-        "shortDescription": "Kompletna rehabilitacija sportskih povreda — od povrede do povratka na teren.",
-        "description": "Sportska rehabilitacija je sveobuhvatan program oporavka od sportskih povreda. Kombinujemo fizikalnu terapiju, kineziterapiju i funkcionalni trening za bezbedan povratak sportu.",
+        "shortDescription": "Od povrede do prve utakmice — kompletan return-to-play protokol, kit i klinička podrška kad zatreba.",
+        "description": "Vratiti se na teren ne znači samo „nema bola“. Znači biti u 100% snage, sa nula straha od ponovne povrede. Naš return-to-play sistem kombinuje: faze rehabilitacije sa merljivim ciljevima, Recovery Starter Kit + sport-specifične trake i podrške, besplatan PDF protokol za vaš sport, plus kličku podršku u Šapcu kad treba hands-on. Manje recidiva, brži povratak.",
         "benefits": ["Brži povratak sportu", "Smanjenje rizika od ponovne povrede", "Optimizacija performansi", "Individualni pristup"],
         "duration": "60 min",
         "process": "Evaluacija povrede → Faza oporavka → Funkcionalni trening → Return-to-play protokol",
@@ -115,8 +115,8 @@
       },
       "masaza": {
         "title": "Masaža",
-        "shortDescription": "Sportska i terapeutska masaža za oporavak, relaksaciju i prevenciju.",
-        "description": "Nudimo sportsku masažu, deep tissue masažu i terapeutsku masažu prilagođenu vašim potrebama. Idealna za oporavak nakon treninga, smanjenje napetosti i prevenciju povreda.",
+        "shortDescription": "Posle treninga ili teške nedelje — opustite mišiće sami, alatima koje koriste naši terapeuti.",
+        "description": "Sportska masaža radi — ali ne možete na masažu svaki dan. Recovery Starter Kit (foam roller, masažni štap, vibracioni roller) + besplatan PDF za samomijofascijalno opuštanje daju vam 80% efekta sportske masaže, kod kuće, kad god treba. Za hronične blokade i pripremu za takmičenje, zakažite tretman kod nas u Šapcu.",
         "benefits": ["Opuštanje mišića", "Poboljšanje cirkulacije", "Smanjenje stresa", "Brži oporavak"],
         "duration": "30-60 min",
         "process": "Konsultacija → Izbor tehnike → Tretman → Saveti za održavanje",
@@ -128,8 +128,8 @@
       },
       "recovery-terapije": {
         "title": "Recovery terapije",
-        "shortDescription": "Napredne metode oporavka: krioterapija, kompresivna terapija, i više.",
-        "description": "Recovery terapije koriste najsavremenije metode za ubrzanje oporavka. Uključuju krioterapiju, kompresivnu terapiju, infracrvenu saunu i druge napredne tehnike.",
+        "shortDescription": "Krioterapija, kompresija, magnezijum, kvalitetan san. Spakovano u kit + protokol.",
+        "description": "Brzi oporavak nije magija — to je sistem. Naši specijalisti koriste krioterapiju, kompresivne čizme i napredne modalitete u klinici. Vama u kit pakujemo ono što stvarno radi kod kuće: rashladni gel paket, kompresivne čarape, magnezijum, suplementi za san — plus besplatan PDF „24-časovni recovery protokol“. Profesionalni rezultati bez profesionalnog budžeta.",
         "benefits": ["Ubrzani oporavak", "Smanjenje inflamacije", "Poboljšanje sna", "Boost imuniteta"],
         "duration": "20-45 min",
         "process": "Procena potreba → Izbor modaliteta → Tretman → Protokol oporavka",
@@ -141,8 +141,8 @@
       },
       "testiranje-merenja": {
         "title": "Testiranje i merenja",
-        "shortDescription": "Funkcionalno testiranje i merenja za sportiste — analiza performansi i prevencija.",
-        "description": "Kompletno funkcionalno testiranje i merenja za sportiste i rekreativce. Analiza snage, izdržljivosti, pokretljivosti i biomehanike za optimizaciju treninga.",
+        "shortDescription": "Pre sezone, posle povrede ili da znate gde stojite — funkcionalna procena, plan i tačna lista opreme koja vam treba.",
+        "description": "Bez merenja vežbate naslepo. Mi u Šapcu radimo FMS, testove snage, eksplozivnosti i biomehanike, dajemo vam jasan pisani izveštaj — pa tačno znate koji kit i koji protokol dalje. Vodiči i oprema se prilagođavaju rezultatima, pa novac trošite samo na ono što vam zaista pomaže.",
         "benefits": ["Analiza snage i slabosti", "Prevencija povreda", "Optimizacija treninga", "Praćenje napretka"],
         "duration": "60-90 min",
         "process": "Protokol testiranja → Merenja → Analiza rezultata → Preporuke za trening",
@@ -155,65 +155,65 @@
     }
   },
   "whyUs": {
-    "title": "Zašto Sport Care Med?",
-    "subtitle": "Posvećeni vašem zdravlju i performansama",
+    "title": "Zašto kupiti od nas, a ne sa Aliexpressa",
+    "subtitle": "Specijalisti biraju opremu i pišu protokole. Vi samo pratite plan.",
     "items": {
       "expertise": {
-        "title": "Stručni tim",
-        "description": "Iskusni terapeuti specijalizovani za sportsku medicinu"
+        "title": "Birano od strane specijalista",
+        "description": "Svaki proizvod testiran u kliničkom radu sa stvarnim sportistima u Šapcu."
       },
       "equipment": {
-        "title": "Savremena oprema",
-        "description": "Najnovija medicinska i dijagnostička oprema"
+        "title": "Izgrađeno oko proverenih protokola",
+        "description": "Svaki kit dolazi sa PDF protokolom — znate tačno kako i kada da ga koristite."
       },
       "individual": {
-        "title": "Individualni pristup",
-        "description": "Personalizovani planovi lečenja i rehabilitacije"
+        "title": "Besplatni alati pre nego što potrošite dinar",
+        "description": "Recovery Estimator i Readiness Checklist — bez naloga, bez kartice. Saznajte šta vam treba pre kupovine."
       },
       "results": {
-        "title": "Dokazani rezultati",
-        "description": "Uspešan povratak stotina sportista na teren"
+        "title": "Iza svega stoji prava klinika",
+        "description": "Niste sami sa kutijom — sportsko-medicinski tim u Šapcu je dostupan ako zatreba hands-on."
       }
     }
   },
   "testimonials": {
-    "title": "Šta kažu naši pacijenti",
-    "subtitle": "Iskustva sportista i pacijenata koji su nam ukazali poverenje"
+    "title": "Sportisti koji su se vratili na teren",
+    "subtitle": "Prave povrede, pravi kitovi, pravi datumi povratka."
   },
   "partners": {
-    "title": "Naši partneri",
-    "subtitle": "Saradnja sa vodećim sportskim organizacijama"
+    "title": "Brendovi i timovi koji nam veruju",
+    "subtitle": "Klubovi, akademije i proizvođači koji nas ubrajaju u svoj tim."
   },
   "newsletter": {
-    "title": "Budite u toku",
-    "subtitle": "Prijavite se za naš newsletter i primajte savete o zdravlju i prevenciji",
+    "title": "Sledeći besplatni protokol — pravo u vaš inbox",
+    "subtitle": "Jedan email mesečno: novi PDF protokol, rani pristup novim proizvodima, popusti samo za pretplatnike. Bez spama.",
     "placeholder": "Vaša email adresa",
-    "button": "Prijavite se",
-    "success": "Uspešno ste se prijavili!",
+    "button": "Pošalji mi sledeći protokol",
+    "success": "Dobrodošli. Prvi protokol stiže za par minuta.",
     "error": "Došlo je do greške. Pokušajte ponovo."
   },
   "caseStudies": {
-    "title": "Priče uspeha",
-    "subtitle": "Rezultati koji govore sami za sebe",
+    "title": "Šta su koristili — i kako su se vratili",
+    "subtitle": "Konkretne povrede, konkretni kitovi i protokoli, konkretni datumi povratka.",
     "label": "Rezultati",
     "readMore": "Pročitajte više",
-    "cta": "Započnite vaš oporavak",
+    "cta": "Pogledajte njihov kit",
     "items": [
       {
         "name": "Nikola M.",
         "sport": "Fudbal",
         "injury": "Ruptura prednjeg ukrštenog ligamenta (ACL)",
-        "result": "Povratak na teren za 8 meseci",
-        "story": "Nakon operacije ACL-a, Nikola je započeo rehabilitaciju u Sport Care Med-u. Kroz individualni program kineziterapije i sportske rehabilitacije, vratio se treninzima za 8 meseci — mesec dana pre očekivanog roka.",
+        "result": "Povratak na teren za 8 meseci sa Post-Op Knee Kit",
+        "story": "Posle ACL operacije, Nikola je krenuo sa našim Post-Op Knee Recovery Kit-om (kompresivna podrška za koleno + foam roller + set elastičnih traka + magnezijum) i 24-nedeljnim PDF protokolom. Nedeljne provere u našoj klinici u Šapcu, dnevni rad kod kuće. Vratio se na teren mesec dana pre roka.",
         "duration": "8 meseci",
         "services": ["Sportska rehabilitacija", "Kineziterapija", "Dijagnostika"]
       },
       {
         "name": "Jelena S.",
         "sport": "Tenis",
-        "injury": "Hronične bolove u ramenu",
-        "result": "Potpuno bezbolno igranje",
-        "story": "Jelena je mesecima trpela bol u ramenu koji joj je sprečavao da igra na profesionalnom nivou. Kombinacijom manuelne terapije, fizikalne terapije i ciljanog programa vežbi, bol je potpuno eliminisan za 6 nedelja.",
+        "injury": "Hronični bolovi u ramenu",
+        "result": "Bez bola za 6 nedelja sa Shoulder Recovery Kit",
+        "story": "Mesecima bola u ramenu, propuštene tenis sesije, izbegnute igre. Krenula je sa našim Shoulder Recovery Kit-om (kineziološka traka + lacrosse loptica + elastične trake) i besplatnim 6-nedeljnim PDF protokolom za rame. Dva manuelna tretmana u klinici. Bez bola za 6 nedelja.",
         "duration": "6 nedelja",
         "services": ["Manuelna terapija", "Fizikalna terapija", "Kineziterapija"]
       },
@@ -221,59 +221,59 @@
         "name": "FK Šabac U19",
         "sport": "Fudbal",
         "injury": "Timski program prevencije",
-        "result": "60% manje povreda u sezoni",
-        "story": "Omladinski tim FK Šabac je započeo saradnju sa Sport Care Med-om za prevenciju povreda. Kroz redovno funkcionalno testiranje i individualne korektivne programe, tim je zabeležio 60% manje povreda u toku sezone.",
+        "result": "60% manje povreda + 40% manje budžeta na lečenje",
+        "story": "Tim je dobio Team Bulk Kit (foam rolleri, trake, kompresivni rukavi za sve igrače) plus FIFA 11+ protokol prilagođen treninzima i mesečne provere u klinici. Rezultat: 60% manje povreda u sezoni i 40% manje novca potrošenog na ad-hoc lečenje.",
         "duration": "12 meseci",
         "services": ["Testiranje i merenja", "Kineziterapija", "Sportska rehabilitacija"]
       }
     ]
   },
   "leadCapture": {
-    "title": "Besplatna procena",
-    "subtitle": "Zakažite besplatnu inicijalnu procenu i saznajte kako vam možemo pomoći",
+    "title": "Besplatan PDF protokol za vašu povredu",
+    "subtitle": "Recite nam šta vas muči — pošaljemo vam protokol + listu proizvoda koji rade za baš tu povredu. 0 dinara.",
     "name": "Vaše ime",
     "phone": "Broj telefona",
-    "service": "Usluga koja vas zanima",
-    "selectService": "Izaberite uslugu",
-    "submit": "Zakažite besplatno",
+    "service": "Sa čime se borite",
+    "selectService": "Izaberite oblast",
+    "submit": "Pošaljite mi protokol",
     "sending": "Slanje...",
-    "success": "Uspešno! Kontaktiraćemo vas u roku od 24h.",
+    "success": "Stiže! Protokol + lista proizvoda u vašem inboxu za par minuta.",
     "error": "Greška. Pokušajte ponovo.",
-    "guarantee": "Bez obaveza • 100% besplatno",
-    "exitTitle": "Sačekajte! Imate pitanje?",
-    "exitSubtitle": "Ostavite broj telefona i javićemo vam se u roku od 24h",
-    "stickyTitle": "Zakažite termin",
-    "urgency": "Danas slobodnih {count} termina",
+    "guarantee": "Bez kartice • bez obaveze • 100% besplatno",
+    "exitTitle": "Pre nego što odete — uzmite besplatan protokol",
+    "exitSubtitle": "Ostavite broj — pošaljemo vam PDF i listu proizvoda za vašu povredu.",
+    "stickyTitle": "Uzmite besplatan protokol",
+    "urgency": "Danas poslato {count} protokola",
     "condition": "Opišite vaš problem",
     "conditionPlaceholder": "Npr. bol u kolenu, oporavak od povrede..."
   },
   "about": {
     "title": "O nama",
-    "subtitle": "Sport Care Med — centar za sportsku medicinu u Šapcu",
+    "subtitle": "Sportski medicinski tim koji je izgradio brend oporavka",
     "story": {
       "title": "Naša priča",
-      "description": "Sport Care Med je osnovan sa vizijom da pruži sportistima i rekreativcima pristup vrhunskoj sportsko-medicinskoj nezi. Naš tim iskusnih terapeuta i lekara posvećen je vašem oporavku i performansama."
+      "description": "Mi smo sportsko-medicinski specijalisti iz Šapca. Godinama smo gledali kako pacijenti odlaze kući samo sa savetom — bez ijednog alata. Pa smo izgradili kit. I protokol. I shop. Sad svaki sportista u Srbiji koristi isto što koriste naši pacijenti — bez čekanja, bez puta do Šapca."
     },
     "mission": {
       "title": "Misija",
-      "description": "Pružamo sveobuhvatnu sportsko-medicinsku negu koristeći najsavremenije metode i opremu, sa fokusom na individualni pristup svakom pacijentu."
+      "description": "Da svaka osoba sa povredom dobije pravu opremu i jasan protokol — odmah. Bez nagađanja, bez prazne kupovine, bez izgubljenog vremena."
     },
     "vision": {
       "title": "Vizija",
-      "description": "Biti vodeći centar za sportsku medicinu u regionu, poznat po kvalitetu usluga, stručnosti tima i zadovoljstvu pacijenata."
+      "description": "Sport Care Med kao prvo mesto gde sportista u Srbiji ide kad povredi nešto — pre Aliexpressa, pre apoteke, pre Google-a."
     },
     "team": {
       "title": "Naš tim",
-      "subtitle": "Upoznajte stručnjake koji brinu o vašem zdravlju"
+      "subtitle": "Specijalisti koji biraju svaki proizvod u shop-u i pišu svaki protokol."
     },
     "gallery": {
       "title": "Naš prostor",
-      "subtitle": "Savremen prostor opremljen za sve vaše potrebe"
+      "subtitle": "Klinika u Šapcu — gde testiramo sve što vam kasnije pošaljemo."
     }
   },
   "location": {
-    "title": "Lokacija",
-    "subtitle": "Posetite nas u Šapcu",
+    "title": "Posetite tim u Šapcu (opciono)",
+    "subtitle": "Većinu povreda rešite kit-om i protokolom kod kuće. Za hands-on procenu i kompleksne slučajeve — vrata su otvorena.",
     "address": "Adresa",
     "workingHours": "Radno vreme",
     "weekdays": "Ponedeljak - Petak",
@@ -281,31 +281,33 @@
     "sunday": "Nedelja",
     "closed": "Zatvoreno",
     "directions": "Kako do nas",
-    "parking": "Parking"
+    "parking": "Parking",
+    "parkingNote": "Besplatan parking ispred klinike.",
+    "facilityLabel": "Naša klinika"
   },
   "contact": {
     "title": "Kontakt",
-    "subtitle": "Javite nam se — tu smo za vas",
+    "subtitle": "Recite nam šta se desilo — pošaljemo vam protokol, listu proizvoda i (ako baš treba) termin u klinici.",
     "form": {
       "name": "Ime i prezime",
       "email": "Email adresa",
       "phone": "Broj telefona",
-      "treatment": "Zainteresovani za uslugu",
-      "selectTreatment": "Izaberite uslugu",
+      "treatment": "Sa čime se borite",
+      "selectTreatment": "Izaberite oblast oporavka",
       "condition": "Opišite vaše stanje",
       "conditionPlaceholder": "Npr. bol u kolenu nakon treninga, otežano pokretanje ramena, oporavak nakon operacije...",
-      "message": "Dodatne napomene (opciono)",
-      "messagePlaceholder": "Posebne napomene, pitanja ili želje...",
-      "submit": "Pošaljite poruku",
+      "message": "Šta ste do sada probali (opciono)",
+      "messagePlaceholder": "Šta ste probali, šta vas najviše muči, dodatne napomene...",
+      "submit": "Pošaljite — dobijate protokol",
       "sending": "Slanje...",
-      "success": "Poruka je uspešno poslata! Kontaktiraćemo vas uskoro.",
+      "success": "Stiže! PDF protokol i lista proizvoda u vašem inboxu za par minuta. Javiće vam se i specijalista u toku 24h.",
       "error": "Došlo je do greške. Pokušajte ponovo.",
-      "step1Title": "Šta vas muči?",
-      "step1Subtitle": "Opišite vaš problem i izaberite uslugu",
-      "step2Title": "Vaši podaci",
-      "step2Subtitle": "Kako da vas kontaktiramo",
-      "step3Title": "Dodatne informacije",
-      "step3Subtitle": "Još nešto što treba da znamo?",
+      "step1Title": "Sa čime se oporavljate?",
+      "step1Subtitle": "Recite nam povredu — biramo vam pravi kit i protokol.",
+      "step2Title": "Gde da pošaljemo vaš plan?",
+      "step2Subtitle": "Ime, email, broj — pošaljemo PDF + listu proizvoda i javlja se specijalista.",
+      "step3Title": "Šta još treba da znamo?",
+      "step3Subtitle": "Šta ste do sada probali, šta vas najviše muči — što više detalja, to bolji izbor.",
       "next": "Dalje",
       "back": "Nazad",
       "stepOf": "Korak {current} od {total}"
@@ -318,37 +320,37 @@
   },
   "b2b": {
     "title": "B2B Rešenja",
-    "subtitle": "Partnerstva sa timovima i organizacijama",
-    "heroText": "Jedan ugovor. Kompletan tim. Do 50 individualnih pacijenata u jednom paketu.",
-    "heroSubtext": "Specijalizovane usluge sportske medicine za sportske timove, klubove i organizacije",
+    "subtitle": "Bulk kit-ovi + protokoli za ceo tim — uz opcionalan klinički backup",
+    "heroText": "Jedan ugovor. Kit za svakog igrača. Manje povreda, manje budžeta na lečenje.",
+    "heroSubtext": "Recovery kit-ovi i PDF protokoli za ceo tim, on-site terapeut po potrebi, klinika u Šapcu kao backup. Cena po igraču dramatično pada.",
     "packages": {
-      "title": "Paketi usluga",
-      "subtitle": "Izaberite paket koji odgovara potrebama vašeg tima",
+      "title": "Paketi za timove",
+      "subtitle": "Birajte: samo kit, kit + on-site, ili kompletan klub-paket.",
       "rehabilitation": {
         "title": "Timska rehabilitacija",
-        "description": "Kompletni rehabilitacioni programi prilagođeni potrebama sportskog tima"
+        "description": "Kit + protokol za svakog povređenog igrača, plus klinička koordinacija."
       },
       "onsite": {
         "title": "Fizioterapija na terenu",
-        "description": "Naši terapeuti dolaze na vaše treninge i utakmice"
+        "description": "Naš terapeut dolazi na treninge i utakmice — sa kompletnom torbom kit-ova."
       },
       "prevention": {
         "title": "Programi prevencije povreda",
-        "description": "Proaktivni pristup smanjenju rizika od povreda u vašem timu"
+        "description": "FIFA 11+ protokol + bulk prevencioni kit + edukacija trenera. Manje povreda, više igrača na terenu."
       },
       "testing": {
         "title": "Testiranje performansi za timove",
-        "description": "Kompletno funkcionalno testiranje za sve članove tima"
+        "description": "FMS, snaga, eksplozivnost — testiramo sve igrače u jednom danu, dobijate plan i listu opreme."
       }
     },
     "learnMore": "Saznajte više",
-    "viewAll": "Pogledajte sve B2B usluge",
+    "viewAll": "Pogledajte sve B2B pakete",
     "forTeams": "Za timove",
     "services": {
       "timska-rehabilitacija": {
         "title": "Timska rehabilitacija",
-        "shortDescription": "Kompletni rehabilitacioni programi prilagođeni potrebama sportskog tima",
-        "description": "Naš program timske rehabilitacije pruža sveobuhvatan pristup oporavku sportista. Svaki član tima dobija individualni plan rehabilitacije, dok naš tim koordinira sa trenerima i medicinskim osobljem kluba. Pratimo napredak svakog igrača i prilagođavamo protokole u realnom vremenu, obezbeđujući brži i sigurniji povratak na teren.",
+        "shortDescription": "Kit + protokol + klinička koordinacija za svakog povređenog igrača — bez lutanja od terapeuta do terapeuta.",
+        "description": "Igrač se povredi — i počinje cirkus: koji terapeut, koja apoteka, šta da nosi sa sobom kući. Mi to skratimo. Svaki povređeni igrač odmah dobija svoj kit (rehabilitaciona oprema + PDF protokol), koordiniramo sa vašim trenerom i kondicijskim trenerom, a kad zatreba hands-on rad — terapeut iz našeg tima dolazi u vaš objekat ili igrač dolazi u Šabac. Brži povratak na teren, manji ukupan trošak po povredi.",
         "includes": [
           "Individualni planovi rehabilitacije za svakog igrača",
           "Redovni pregledi i praćenje napretka",
@@ -379,8 +381,8 @@
       },
       "fizioterapija-na-terenu": {
         "title": "Fizioterapija na terenu",
-        "shortDescription": "Naši terapeuti dolaze na vaše treninge i utakmice",
-        "description": "Naš servis fizioterapije na terenu obezbeđuje prisustvo kvalifikovanog terapeuta na svim vašim treninzima i utakmicama. Hitna reakcija na povrede, profesionalno taping i bandažiranje, te prevencija povreda tokom aktivnosti — sve na licu mesta. Vaši sportisti dobijaju trenutnu medicinsku podršku bez odlaska u kliniku.",
+        "shortDescription": "Terapeut + kompletna torba kit-ova na svakom treningu i utakmici.",
+        "description": "Hitna povreda na terenu, taping, brza intervencija, prevencija pred trening — sve na licu mesta. Naš terapeut dolazi sa kompletnom torbom (trake, podrške, krio gel, portabl ultrazvuk) i ostaje za zagrevanje i hlađenje. Bez panike kad se neko povredi, bez čekanja na termine, bez gubitka vremena igrača.",
         "includes": [
           "Terapeut prisutan na treninzima",
           "Hitna reakcija na povrede tokom utakmica",
@@ -411,8 +413,8 @@
       },
       "prevencija-povreda": {
         "title": "Programi prevencije povreda",
-        "shortDescription": "Proaktivni pristup smanjenju rizika od povreda u vašem timu",
-        "description": "Prevencija je najefikasnija i najjeftinija strategija u sportskoj medicini. Naš program obuhvata kompletni screening svih članova tima na početku sezone, izradu individualnih programa prevencije, edukaciju trenera i igrača, i redovne mesečne izveštaje o rizicima. Koristimo dokazane protokole poput FIFA 11+ za dramatično smanjenje povreda.",
+        "shortDescription": "FIFA 11+ + bulk prevencioni kit za ceo tim + screening na početku sezone.",
+        "description": "Najjeftinija povreda je ona koja se nije ni desila. Početkom sezone radimo screening svih igrača, identifikujemo visoki rizik, dajemo svakom igraču personalni prevencioni kit (trake, foam roller, podrške) i besplatan PDF protokol prilagođen sportu. Klubovi koji su ovo uradili imaju 50% manje povreda u prvoj sezoni — brojevi su tu.",
         "includes": [
           "Screening svih igrača na početku sezone",
           "Individualni programi prevencije",
@@ -443,8 +445,8 @@
       },
       "testiranje-performansi": {
         "title": "Testiranje performansi za timove",
-        "shortDescription": "Kompletno funkcionalno testiranje za sve članove tima",
-        "description": "Naš program testiranja performansi pruža kompletnu sliku fizičkih sposobnosti svakog člana tima. Koristimo FMS screening, merenje snage i eksplozivnosti, kardio-respiratorno testiranje i analizu pokreta. Svaki sportista dobija individualni izveštaj sa preporukama, a trenerski tim dobija zbirni prikaz za planiranje treninga.",
+        "shortDescription": "FMS, snaga, eksplozivnost — ceo tim za jedan dan, dobijate plan i prilagođene kit-ove.",
+        "description": "Bez podataka vežbate naslepo. Mi za jedan dan testiramo 25+ igrača: FMS, vertikalni skok, sprint, izokinetički testovi, biomehanika. Svaki igrač dobija individualni izveštaj, trener dobija matricu rizika i plan, klub dobija ponudu prilagođenih kit-ova za prepoznate slabosti. Retest za 3-6 meseci — napredak se vidi crno na belo.",
         "includes": [
           "FMS screening (Functional Movement Screen)",
           "Merenje snage i eksplozivnosti",
@@ -475,8 +477,8 @@
       }
     },
     "roi": {
-      "title": "Kalkulator uštede",
-      "subtitle": "Uporedite troškove individualnih poseta sa B2B ugovorom",
+      "title": "Koliko štedite sa bulk kit-om",
+      "subtitle": "Uporedite trošak ad-hoc lečenja igrača sa cenom kit-a + protokola za ceo tim.",
       "teamSize": "Broj članova tima",
       "avgInjuries": "Prosečan broj povreda po sezoni",
       "sessionsPerInjury": "Prosečan broj tretmana po povredi",
@@ -494,8 +496,8 @@
       "sessions": "tretmana"
     },
     "outcomes": {
-      "title": "Rezultati koji govore",
-      "subtitle": "Dokazani rezultati naših B2B partnerstava",
+      "title": "Brojevi iza naših B2B paketa",
+      "subtitle": "Šta klubovi dobijaju kad zamene ad-hoc lečenje sa sistematskim kit + protokol pristupom.",
       "stats": [
         { "value": "50+", "label": "timova koristi naše usluge" },
         { "value": "800+", "label": "sportista pod našom brigom" },
@@ -530,8 +532,8 @@
       }
     },
     "proposal": {
-      "title": "Kreirajte ponudu za vaš tim",
-      "subtitle": "Izaberite usluge, unesite podatke o timu i dobijte procenu troškova",
+      "title": "Sastavite paket za vaš tim",
+      "subtitle": "Izaberite usluge i kit-ove, unesite podatke o timu i dobijte procenu.",
       "step1Title": "Izaberite usluge",
       "step1Subtitle": "Označite pakete koji vas interesuju",
       "step2Title": "Podaci o timu",
@@ -573,7 +575,7 @@
       "stepOf": "Korak {current} od {total}"
     },
     "quote": {
-      "title": "Zatražite ponudu",
+      "title": "Pošaljite upit za ponudu",
       "organization": "Naziv organizacije",
       "contactPerson": "Kontakt osoba",
       "email": "Email adresa",
@@ -592,7 +594,7 @@
     }
   },
   "footer": {
-    "description": "Centar za sportsku medicinu, fizikalnu terapiju i rehabilitaciju u Šapcu.",
+    "description": "Recovery oprema, suplementi i protokoli — birano i korišćeno od strane sportsko-medicinskog tima u Šapcu.",
     "quickLinks": "Brzi linkovi",
     "workingHours": "Radno vreme",
     "weekdays": "Pon - Pet: 08:00 - 20:00",
@@ -613,7 +615,7 @@
   },
   "blog": {
     "title": "Blog",
-    "subtitle": "Saveti, vesti i stručni članci iz sveta sportske medicine",
+    "subtitle": "Besplatna edukacija o oporavku — od specijalista koji rade sa sportistima. Pročitajte, pa se opremite u shop-u.",
     "allCategories": "Sve kategorije",
     "search": "Pretraži članke...",
     "readMore": "Pročitajte više",
@@ -636,9 +638,9 @@
   },
   "shop": {
     "title": "Prodavnica",
-    "subtitle": "Suplementi, oprema i pomagala za oporavak i trening",
+    "subtitle": "Sve što vam treba za povratak na teren — na jednom mestu.",
     "pageTitle": "Prodavnica | Sport Care Med",
-    "pageDescription": "Kupite suplemente, opremu, orteze, trake i ostala pomagala za sport i oporavak.",
+    "pageDescription": "Recovery kit-ovi, suplementi, kineziološke trake, foam rolleri, podrške i besplatni PDF protokoli — sve odabrano od strane sportsko-medicinskog tima.",
     "addToCart": "Dodaj u korpu",
     "outOfStock": "Nema na stanju",
     "inStock": "Na stanju ({count})",
@@ -652,7 +654,7 @@
     "cartTitle": "Korpa",
     "cartItems": "Proizvodi ({count})",
     "emptyCart": "Vaša korpa je prazna",
-    "emptyCartDescription": "Dodajte proizvode u korpu da biste nastavili sa kupovinom.",
+    "emptyCartDescription": "Pregledajte kit-ove i besplatne vodiče — vaš oporavak kreće odatle.",
     "continueShopping": "Nastavi kupovinu",
     "clearCart": "Isprazni korpu",
     "orderSummary": "Pregled porudžbine",
@@ -661,7 +663,7 @@
     "freeShipping": "Besplatna dostava",
     "freeShippingThreshold": "Besplatna dostava za porudžbine preko {amount} RSD",
     "total": "Ukupno",
-    "proceedToCheckout": "Nastavi ka plaćanju",
+    "proceedToCheckout": "Završite — krenite sa oporavkom",
     "checkoutTitle": "Plaćanje",
     "shippingInfo": "Podaci za dostavu",
     "fullName": "Ime i prezime",
@@ -679,10 +681,10 @@
     "cardDescription": "Sigurno plaćanje karticom preko RaiAccept",
     "processing": "Obrada...",
     "payNow": "Plati sada",
-    "placeOrder": "Poruči",
-    "orderConfirmed": "Porudžbina je potvrđena!",
+    "placeOrder": "Završite — krenite sa oporavkom",
+    "orderConfirmed": "Vaš oporavak kreće sada",
     "orderNumber": "Broj porudžbine",
-    "orderConfirmedDescription": "Hvala vam na kupovini! Poslaćemo vam email sa detaljima porudžbine.",
+    "orderConfirmedDescription": "Hvala — paket stiže za 2-4 dana. U emailu vam dolazi i besplatan PDF protokol za vašu oblast.",
     "backToHome": "Nazad na početnu",
     "decreaseQuantity": "Smanji količinu",
     "increaseQuantity": "Povećaj količinu",
@@ -690,8 +692,8 @@
     "cart": "Korpa",
     "freeDownload": "Besplatno preuzmi",
     "freeBadge": "BESPLATNO",
-    "pdfComingSoon": "PDF uskoro — ostavite email i poslaćemo vam!",
-    "oftenBoughtTogether": "Često kupljeno zajedno",
+    "pdfComingSoon": "PDF stiže — ostavite email i pošaljemo ga čim bude spreman.",
+    "oftenBoughtTogether": "Idu zajedno — uzmite ceo set",
     "addAllToCart": "Dodaj sve u korpu",
     "totalBundle": "Ukupno za paket",
     "discountApplied": "Kod {code} primenjen — {percent}% popusta!",
@@ -711,12 +713,12 @@
     "orderNotFoundDescription": "Nismo uspeli da pronađemo vašu narudžbinu. Ako mislite da je došlo do greške, kontaktirajte nas."
   },
   "tools": {
-    "title": "Interaktivni alati",
-    "subtitle": "Besplatni alati za procenu oporavka i spremnosti za sport",
+    "title": "Besplatni alati — pre nego što potrošite dinar",
+    "subtitle": "Saznajte tačno koliko vam treba i šta vam treba. Bez naloga, bez kartice.",
     "recoveryEstimator": {
       "title": "Procena vremena oporavka",
-      "shortDescription": "Saznajte koliko vremena je potrebno za oporavak od vaše sportske povrede",
-      "description": "Interaktivni alat koji na osnovu vrste povrede, težine i vaših ličnih faktora procenjuje vreme oporavka i prikazuje plan rehabilitacije po fazama.",
+      "shortDescription": "Saznajte koliko vremena je potrebno za oporavak od vaše sportske povrede — i koji kit i protokol idu uz to.",
+      "description": "Interaktivni alat koji procenjuje vreme oporavka za vašu povredu i odmah vam predlaže odgovarajući Recovery Kit + besplatan PDF protokol — pre nego što potrošite dinar.",
       "metaTitle": "Procena vremena oporavka od sportske povrede | Sport Care Med",
       "metaDescription": "Besplatan alat za procenu vremena oporavka od sportskih povreda. Saznajte koliko traje rehabilitacija i koje su faze oporavka.",
       "step1Title": "Izaberite vrstu povrede",
@@ -740,7 +742,7 @@
       "recoveryTimeline": "Plan oporavka po fazama",
       "keyActivities": "Ključne aktivnosti",
       "recommendedServices": "Preporučene usluge",
-      "bookAssessment": "Zakažite besplatnu procenu",
+      "bookAssessment": "Pogledajte preporučene kit-ove i protokol",
       "disclaimer": "Ova procena je informativnog karaktera i ne zamenjuje stručni medicinski pregled. Za tačnu dijagnozu i plan lečenja, zakažite pregled kod naših stručnjaka.",
       "stepOf": "Korak {current} od {total}",
       "injuries": {
@@ -810,8 +812,8 @@
     },
     "readinessChecklist": {
       "title": "Test spremnosti za povratak sportu",
-      "shortDescription": "Proverite da li ste spremni za bezbedan povratak sportskim aktivnostima",
-      "description": "Interaktivna kontrolna lista koja procenjuje vašu spremnost za bezbedan povratak sportu na osnovu bola, pokretljivosti, snage, funkcije i psihološke spremnosti.",
+      "shortDescription": "Proverite da li ste spremni za bezbedan povratak — i koji kit + protokol da uzmete za poslednju fazu.",
+      "description": "Interaktivna kontrolna lista koja procenjuje vašu spremnost za povratak sportu — i preporučuje matching kit, PDF protokol i (po potrebi) kliničku konsultaciju za zone gde još niste 100%.",
       "metaTitle": "Test spremnosti za povratak sportu | Sport Care Med",
       "metaDescription": "Besplatan interaktivni test koji procenjuje da li ste spremni za bezbedan povratak sportskim aktivnostima nakon povrede.",
       "overallReadiness": "Ukupna spremnost",
@@ -822,7 +824,7 @@
       "almostReadyText": "Na dobrom ste putu, ali neke oblasti zahtevaju dodatni rad pre potpunog povratka.",
       "ready": "Spremni za sport",
       "readyText": "Vaši rezultati pokazuju da ste spremni za bezbedan povratak sportskim aktivnostima!",
-      "bookSession": "Zakažite konsultaciju sa našim specijalistima",
+      "bookSession": "Pogledajte kit i PDF za poslednju fazu",
       "resetChecklist": "Ponovi test",
       "showResults": "Prikaži rezultate",
       "disclaimer": "Ovaj test je informativnog karaktera i ne zamenjuje stručnu medicinsku procenu. Za konačnu potvrdu spremnosti za povratak sportu, konsultujte se sa vašim lekarom.",

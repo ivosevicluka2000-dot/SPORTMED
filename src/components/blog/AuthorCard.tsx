@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Author } from "@/types";
 
 interface AuthorCardProps {
@@ -9,9 +10,11 @@ export default function AuthorCard({ author, label }: AuthorCardProps) {
   return (
     <div className="flex items-center gap-4 p-4 bg-ivory rounded-xl border border-gray-100">
       {author.image ? (
-        <img
+        <Image
           src={author.image}
           alt={author.name}
+          width={48}
+          height={48}
           className="w-12 h-12 rounded-full object-cover"
         />
       ) : (

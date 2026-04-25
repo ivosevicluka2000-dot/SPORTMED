@@ -100,7 +100,7 @@ export default function CaseStudies() {
         viewport={{ once: true }}
         className="text-center mt-12"
       >
-        <Link href="/kontakt">
+        <Link href="/prodavnica">
           <Button size="lg">
             {t("cta")}
             <ArrowRight className="ml-2 w-4 h-4" />
