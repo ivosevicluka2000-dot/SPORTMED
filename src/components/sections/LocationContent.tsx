@@ -3,7 +3,8 @@
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import Section from "@/components/ui/Section";
-import { MapPin, Clock, Car, Navigation } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import { MapPin, Clock, Car, Navigation, Phone, Send, Image as ImageIcon } from "lucide-react";
 
 export default function LocationContent() {
   const t = useTranslations("location");
@@ -170,22 +171,85 @@ export default function LocationContent() {
         </div>
       </Section>
 
-      {/* Clinic photos placeholder */}
+      {/* Clinic gallery */}
       <Section className="bg-ivory">
-        <h2 className="text-2xl font-heading font-semibold text-navy text-center mb-10">
-          {t("facilityLabel")}
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[1, 2, 3, 4].map((i) => (
-            <div
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="text-3xl md:text-4xl font-heading font-semibold text-navy mb-4">
+            {t("galleryTitle")}
+          </h2>
+          <p className="text-gray-500">{t("gallerySubtitle")}</p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          {[
+            { i: 1, span: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto" },
+            { i: 2, span: "aspect-square" },
+            { i: 3, span: "aspect-square" },
+            { i: 4, span: "aspect-square" },
+            { i: 5, span: "aspect-square" },
+            { i: 6, span: "aspect-square" },
+          ].map(({ i, span }) => (
+            <motion.div
               key={i}
-              className="aspect-square bg-white border border-gray-100 rounded-lg flex items-center justify-center"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-navy/5 via-teal/10 to-navy/10 border border-gray-100 ${span}`}
             >
-              <span className="text-gray-300 text-xs uppercase tracking-wider">
-                Photo {i}
-              </span>
-            </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-teal/30">
+                <ImageIcon className="w-8 h-8 mb-2" />
+                <span className="text-[10px] uppercase tracking-[0.2em] font-medium">
+                  {t("facilityLabel")} {i}
+                </span>
+              </div>
+            </motion.div>
           ))}
+        </div>
+      </Section>
+
+      {/* CTA */}
+      <Section className="bg-navy">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl font-heading font-semibold text-white mb-4"
+          >
+            {t("ctaTitle")}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-white/60 mb-8"
+          >
+            {t("ctaSubtitle")}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3"
+          >
+            <a
+              href="tel:+381691982215"
+              className="inline-flex items-center justify-center gap-2 bg-teal text-white font-medium px-7 py-3.5 rounded-lg hover:bg-teal-dark transition-colors w-full sm:w-auto"
+            >
+              <Phone className="w-4 h-4" />
+              {t("ctaCall")}
+            </a>
+            <Link
+              href="/kontakt"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-medium px-7 py-3.5 rounded-lg hover:bg-white/15 transition-colors border border-white/20 w-full sm:w-auto"
+            >
+              <Send className="w-4 h-4" />
+              {t("ctaContact")}
+            </Link>
+          </motion.div>
         </div>
       </Section>
     </>

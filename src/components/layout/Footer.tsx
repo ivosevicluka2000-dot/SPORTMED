@@ -38,7 +38,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/sport.care.med"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-teal hover:border-teal/30 transition-colors"
@@ -139,14 +139,14 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-teal flex-shrink-0" />
-                <a href="tel:+381600000000" className="hover:text-white transition-colors">
-                  +381 60 000 0000
+                <a href="tel:+381691982215" className="hover:text-white transition-colors">
+                  +381 69 1982215
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-teal flex-shrink-0" />
-                <a href="mailto:info@sportcaremed.rs" className="hover:text-white transition-colors">
-                  info@sportcaremed.rs
+                <a href="mailto:info@sportcaremed.com" className="hover:text-white transition-colors">
+                  info@sportcaremed.com
                 </a>
               </li>
             </ul>
@@ -157,6 +157,10 @@ export default function Footer() {
         <div className="border-t border-white/5 mt-14 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
             &copy; {new Date().getFullYear()} Sport Care Med. {t("rights")}
+            <span className="mx-2 text-gray-600">·</span>
+            PIB: 115516204
+            <span className="mx-2 text-gray-600">·</span>
+            MB: 68426782
           </p>
           <div className="flex gap-6 text-xs text-gray-500">
             <Link href="/privatnost" className="hover:text-gray-300 transition-colors">

@@ -33,7 +33,7 @@ export default function StickyServiceCta() {
           <div className="bg-white/95 backdrop-blur-md border-t border-gray-100 px-4 py-3 shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.08)]">
             <div className="flex items-center gap-3 max-w-lg mx-auto">
               <a
-                href="tel:+381600000000"
+                href="tel:+381691982215"
                 className={cn(
                   "flex-1 flex items-center justify-center gap-2 bg-navy text-white font-medium py-3 rounded-lg text-sm transition-colors hover:bg-navy-light"
                 )}

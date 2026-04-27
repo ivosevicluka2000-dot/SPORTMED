@@ -30,7 +30,7 @@
     "tools": "Alati"
   },
   "hero": {
-    "title": "Vratite se na teren brže — sa pravom opremom i pravim protokolom",
+    "title": "Vratite se na teren brže sa pravom opremom i pravim protokolom",
     "subtitle": "Recovery Starter Kit + besplatan PDF protokol za vašu povredu. Odabrano i korišćeno od strane sportsko-medicinskog tima u Šapcu.",
     "cta": "Pogledajte prodavnicu",
     "learnMore": "Preuzmite besplatan vodič"
@@ -233,6 +233,7 @@
     "subtitle": "Recite nam šta vas muči — pošaljemo vam protokol + listu proizvoda koji rade za baš tu povredu. 0 dinara.",
     "name": "Vaše ime",
     "phone": "Broj telefona",
+    "email": "Email adresa",
     "service": "Sa čime se borite",
     "selectService": "Izaberite oblast",
     "submit": "Pošaljite mi protokol",
@@ -241,7 +242,7 @@
     "error": "Greška. Pokušajte ponovo.",
     "guarantee": "Bez kartice • bez obaveze • 100% besplatno",
     "exitTitle": "Pre nego što odete — uzmite besplatan protokol",
-    "exitSubtitle": "Ostavite broj — pošaljemo vam PDF i listu proizvoda za vašu povredu.",
+    "exitSubtitle": "Ostavite email — pošaljemo vam PDF i listu proizvoda za vašu povredu.",
     "stickyTitle": "Uzmite besplatan protokol",
     "urgency": "Danas poslato {count} protokola",
     "condition": "Opišite vaš problem",
@@ -272,8 +273,8 @@
     }
   },
   "location": {
-    "title": "Posetite tim u Šapcu (opciono)",
-    "subtitle": "Većinu povreda rešite kit-om i protokolom kod kuće. Za hands-on procenu i kompleksne slučajeve — vrata su otvorena.",
+    "title": "Posetite naš tim u Šapcu",
+    "subtitle": "Moderna klinika sa kompletnom opremom za sportsku medicinu i rehabilitaciju — hands-on procena, terapije i kompleksniji slučajevi.",
     "address": "Adresa",
     "workingHours": "Radno vreme",
     "weekdays": "Ponedeljak - Petak",
@@ -283,7 +284,13 @@
     "directions": "Kako do nas",
     "parking": "Parking",
     "parkingNote": "Besplatan parking ispred klinike.",
-    "facilityLabel": "Naša klinika"
+    "facilityLabel": "Naša klinika",
+    "galleryTitle": "Pogledajte naš prostor",
+    "gallerySubtitle": "Klinika opremljena za sportsku rehabilitaciju — elektroterapija, ultrazvuk, laser, krioterapija i prostor za kineziterapiju.",
+    "ctaTitle": "Spremni da zakažete termin?",
+    "ctaSubtitle": "Pozovite nas i dogovorite procenu — odgovaramo isti dan.",
+    "ctaCall": "Pozovi nas",
+    "ctaContact": "Pošalji upit"
   },
   "contact": {
     "title": "Kontakt",
@@ -925,11 +932,11 @@
         },
         "rights": {
           "title": "Vaša prava",
-          "body": "Imate pravo na pristup, ispravku, brisanje, ograničenje obrade i prenos vaših podataka, kao i pravo na prigovor. Zahtev možete poslati na info@sportcaremed.rs."
+          "body": "Imate pravo na pristup, ispravku, brisanje, ograničenje obrade i prenos vaših podataka, kao i pravo na prigovor. Zahtev možete poslati na info@sportcaremed.com."
         },
         "contact": {
           "title": "Kontakt",
-          "body": "Za pitanja u vezi sa zaštitom podataka kontaktirajte nas na info@sportcaremed.rs ili poštom na adresu klinike u Šapcu."
+          "body": "Za pitanja u vezi sa zaštitom podataka kontaktirajte nas na info@sportcaremed.com ili poštom na adresu klinike u Šapcu."
         }
       }
     },
@@ -956,7 +963,7 @@
         },
         "contact": {
           "title": "Kontakt",
-          "body": "Za sva pitanja u vezi sa uslovima korišćenja, obratite se na info@sportcaremed.rs."
+          "body": "Za sva pitanja u vezi sa uslovima korišćenja, obratite se na info@sportcaremed.com."
         }
       }
     }

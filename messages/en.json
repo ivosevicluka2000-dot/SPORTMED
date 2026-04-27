@@ -30,7 +30,7 @@
     "tools": "Tools"
   },
   "hero": {
-    "title": "Get back on the field faster — with the right gear and the right protocol",
+    "title": "Get back on the field faster with the right gear and the right protocol",
     "subtitle": "Recovery Starter Kit + a free PDF protocol matched to your injury. Picked and used by a working sports-medicine team in Šabac.",
     "cta": "Shop the kit",
     "learnMore": "Get the free guide"
@@ -233,6 +233,7 @@
     "subtitle": "Tell us what's bothering you — we'll send the protocol + a product shortlist that actually works for that injury. $0.",
     "name": "Your name",
     "phone": "Phone number",
+    "email": "Email address",
     "service": "What are you dealing with",
     "selectService": "Pick an area",
     "submit": "Send me the protocol",
@@ -241,7 +242,7 @@
     "error": "Error. Please try again.",
     "guarantee": "No card • no obligation • 100% free",
     "exitTitle": "Before you go — grab the free protocol",
-    "exitSubtitle": "Leave your number — we'll send you the PDF and a product shortlist for your injury.",
+    "exitSubtitle": "Leave your email — we'll send you the PDF and a product shortlist for your injury.",
     "stickyTitle": "Get the free protocol",
     "urgency": "{count} protocols sent today",
     "condition": "Describe your problem",
@@ -272,8 +273,8 @@
     }
   },
   "location": {
-    "title": "Visit the team in Šabac (optional)",
-    "subtitle": "Most injuries you can fix at home with the kit and protocol. For hands-on assessment and complex cases — the door is open.",
+    "title": "Visit our team in Šabac",
+    "subtitle": "Modern sports medicine clinic with full equipment for assessment, therapy and rehabilitation — hands-on care for complex cases.",
     "address": "Address",
     "workingHours": "Working Hours",
     "weekdays": "Monday - Friday",
@@ -283,7 +284,13 @@
     "directions": "Directions",
     "parking": "Parking",
     "parkingNote": "Free parking right in front of the clinic.",
-    "facilityLabel": "Our clinic"
+    "facilityLabel": "Our clinic",
+    "galleryTitle": "Take a look inside",
+    "gallerySubtitle": "A clinic built for sports rehab — electrotherapy, ultrasound, laser, cryotherapy and a dedicated kinesiotherapy space.",
+    "ctaTitle": "Ready to book an appointment?",
+    "ctaSubtitle": "Call us and schedule an assessment — we reply the same day.",
+    "ctaCall": "Call us",
+    "ctaContact": "Send inquiry"
   },
   "contact": {
     "title": "Contact",
@@ -925,11 +932,11 @@
         },
         "rights": {
           "title": "Your rights",
-          "body": "You have the right to access, correct, delete, restrict and port your data, as well as the right to object. Send requests to info@sportcaremed.rs."
+          "body": "You have the right to access, correct, delete, restrict and port your data, as well as the right to object. Send requests to info@sportcaremed.com."
         },
         "contact": {
           "title": "Contact",
-          "body": "For data protection inquiries contact info@sportcaremed.rs or write to the clinic address in Šabac."
+          "body": "For data protection inquiries contact info@sportcaremed.com or write to the clinic address in Šabac."
         }
       }
     },
@@ -956,7 +963,7 @@
         },
         "contact": {
           "title": "Contact",
-          "body": "For terms-related inquiries contact info@sportcaremed.rs."
+          "body": "For terms-related inquiries contact info@sportcaremed.com."
         }
       }
     }

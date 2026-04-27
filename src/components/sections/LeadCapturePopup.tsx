@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Phone, Send, CheckCircle, Shield } from "lucide-react";
+import { X, Phone, Send, CheckCircle, Shield, FileText } from "lucide-react";
 import { treatments } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,7 @@ export default function LeadCapturePopup() {
   const tServices = useTranslations("services.items");
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [service, setService] = useState("");
   const [condition, setCondition] = useState("");
   const [hp, setHp] = useState("");
@@ -20,7 +20,7 @@ export default function LeadCapturePopup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) return;
+    if (!name.trim() || !email.trim()) return;
 
     setStatus("sending");
     try {
@@ -29,17 +29,17 @@ export default function LeadCapturePopup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          phone,
-          email: "",
+          phone: "",
+          email,
           treatment: service,
-          message: `Zahtev za besplatnu procenu — ${service || "Nije izabrano"}${condition ? `\nStanje: ${condition}` : ""}`,
+          message: `Zahtev za besplatan PDF protokol — ${service || "Nije izabrano"}${condition ? `\nStanje: ${condition}` : ""}`,
           website: hp,
         }),
       });
       if (res.ok) {
         setStatus("success");
         setName("");
-        setPhone("");
+        setEmail("");
         setService("");
         setCondition("");
       } else {
@@ -55,13 +55,15 @@ export default function LeadCapturePopup() {
       {/* Floating CTA Button */}
       <button
         onClick={() => setIsOpen(true)}
+        aria-label={t("title")}
         className={cn(
-          "fixed bottom-6 left-6 z-40 flex items-center gap-2 bg-teal text-white px-5 py-3 rounded-full shadow-[var(--shadow-elevated)] hover:bg-teal-dark transition-all duration-300 cursor-pointer",
+          "fixed bottom-6 left-6 z-40 flex items-center justify-center gap-2 bg-teal text-white rounded-full shadow-[var(--shadow-elevated)] hover:bg-teal-dark transition-all duration-300 cursor-pointer",
+          "w-12 h-12 sm:w-auto sm:h-auto sm:px-5 sm:py-3",
           "hover:shadow-[0_10px_40px_-10px_rgba(0,152,180,0.4)]"
         )}
         style={{ animation: "subtle-pulse 3s ease-in-out infinite" }}
       >
-        <Phone className="w-4 h-4" />
+        <FileText className="w-5 h-5 sm:w-4 sm:h-4" />
         <span className="text-sm font-medium hidden sm:inline">{t("title")}</span>
       </button>
 
@@ -140,12 +142,12 @@ export default function LeadCapturePopup() {
                       </div>
                       <div>
                         <label className="block text-xs uppercase tracking-wider text-gray-500 mb-1.5">
-                          {t("phone")}
+                          {t("email")}
                         </label>
                         <input
-                          type="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           required
                           className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors"
                         />

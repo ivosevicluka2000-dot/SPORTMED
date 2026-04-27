@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Phone, Send, CheckCircle, Shield } from "lucide-react";
+import { X, Mail, Send, CheckCircle, Shield } from "lucide-react";
 
 export default function ExitIntentPopup() {
   const t = useTranslations("leadCapture");
   const [show, setShow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [hp, setHp] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
@@ -49,7 +49,7 @@ export default function ExitIntentPopup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim()) return;
+    if (!email.trim()) return;
 
     setStatus("sending");
     try {
@@ -58,9 +58,9 @@ export default function ExitIntentPopup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: "Exit intent lead",
-          phone,
-          email: "",
-          message: "Zahtev za poziv — exit intent",
+          phone: "",
+          email,
+          message: "Zahtev za PDF protokol — exit intent",
           website: hp,
         }),
       });
@@ -113,7 +113,7 @@ export default function ExitIntentPopup() {
               ) : (
                 <>
                   <div className="w-14 h-14 rounded-full bg-teal-50 flex items-center justify-center mx-auto mb-5">
-                    <Phone className="w-6 h-6 text-teal" />
+                    <Mail className="w-6 h-6 text-teal" />
                   </div>
                   <h3 className="text-xl font-heading font-semibold text-navy mb-2">
                     {t("exitTitle")}
@@ -134,10 +134,10 @@ export default function ExitIntentPopup() {
                       className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
                     />
                     <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder={t("phone")}
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder={t("email")}
                       required
                       className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 text-center focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors"
                     />

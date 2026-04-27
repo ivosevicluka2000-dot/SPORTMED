@@ -381,10 +381,10 @@ export default function ContactContent() {
                     {t("info.phone")}
                   </h3>
                   <a
-                    href="tel:+381600000000"
+                    href="tel:+381691982215"
                     className="text-navy font-medium hover:text-teal transition-colors"
                   >
-                    +381 60 000 0000
+                    +381 69 1982215
                   </a>
                 </div>
               </div>
@@ -405,10 +405,10 @@ export default function ContactContent() {
                     {t("info.email")}
                   </h3>
                   <a
-                    href="mailto:info@sportcaremed.rs"
+                    href="mailto:info@sportcaremed.com"
                     className="text-navy font-medium hover:text-teal transition-colors"
                   >
-                    info@sportcaremed.rs
+                    info@sportcaremed.com
                   </a>
                 </div>
               </div>
@@ -444,7 +444,7 @@ export default function ContactContent() {
               </h3>
               <div className="flex gap-3">
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/sport.care.med"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-teal hover:text-teal transition-colors"
