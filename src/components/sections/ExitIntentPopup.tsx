@@ -57,10 +57,12 @@ export default function ExitIntentPopup() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          source: "exit-intent",
           name: "Exit intent lead",
           phone: "",
           email,
           message: "Zahtev za PDF protokol — exit intent",
+          page: typeof window !== "undefined" ? window.location.pathname : undefined,
           website: hp,
         }),
       });

@@ -6,6 +6,7 @@ import {
   calcOrderTotals,
   type ClientCartItem,
 } from "@/lib/order-validation";
+import { validateDiscount } from "@/lib/queries";
 
 interface CustomerInput {
   name: string;
@@ -52,7 +53,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const totals = calcOrderTotals(validated, discountCode, shippingCost || 0);
+    const subtotal = validated.reduce(
+      (sum, i) => sum + i.price * i.quantity,
+      0,
+    );
+    const discountResult = discountCode
+      ? await validateDiscount(discountCode, subtotal)
+      : null;
+    const discount =
+      discountResult && discountResult.valid
+        ? { amount: discountResult.amount, percent: discountResult.percent }
+        : null;
+    const totals = calcOrderTotals(validated, discount, shippingCost || 0);
     const orderNumber = `SCM-${Date.now().toString(36).toUpperCase()}`;
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";

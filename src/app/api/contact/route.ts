@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
+import { createLead } from "@/lib/leads";
 
 const contactSchema = z.object({
   name: z.string().min(2).max(100),
@@ -10,6 +11,11 @@ const contactSchema = z.object({
   phone: z.string().min(6).max(20),
   treatment: z.string().max(100).optional(),
   message: z.string().min(1).max(2000),
+  source: z
+    .enum(["contact", "lead-capture-popup", "exit-intent"])
+    .optional(),
+  page: z.string().max(200).optional(),
+  locale: z.string().max(10).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -32,8 +38,20 @@ export async function POST(request: NextRequest) {
 
     const data = contactSchema.parse(body);
 
-    // TODO: Send email via Resend/Nodemailer
-    console.log("Contact form submission:", data);
+    await createLead({
+      source: data.source ?? "contact",
+      name: data.name,
+      phone: data.phone,
+      email: data.email || undefined,
+      service: data.treatment,
+      message: data.message,
+      metadata: {
+        page: data.page,
+        locale: data.locale,
+        userAgent: request.headers.get("user-agent") ?? undefined,
+        referrer: request.headers.get("referer") ?? undefined,
+      },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

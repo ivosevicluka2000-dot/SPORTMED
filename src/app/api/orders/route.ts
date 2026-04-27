@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "@/lib/sanity";
+import { client, writeClient } from "@/lib/sanity";
 import {
   validateCartItems,
   calcOrderTotals,
   type ClientCartItem,
 } from "@/lib/order-validation";
+import { validateDiscount } from "@/lib/queries";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
 
 interface CustomerInput {
@@ -64,7 +65,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const totals = calcOrderTotals(validated, discountCode, shippingCost || 0);
+    // Resolve discount server-side. Reject the request if the customer
+    // submitted a code that no longer validates (expired, used up, etc.).
+    const subtotal = validated.reduce((s, i) => s + i.price * i.quantity, 0);
+    let discountResult = null as Awaited<ReturnType<typeof validateDiscount>> | null;
+    let appliedCode: string | undefined;
+    if (discountCode && discountCode.trim()) {
+      discountResult = await validateDiscount(discountCode, subtotal);
+      if (!discountResult.valid) {
+        return NextResponse.json(
+          { error: "Discount code is not valid", reason: discountResult.reason },
+          { status: 400 }
+        );
+      }
+      appliedCode = discountResult.discount?.code;
+    }
+
+    const totals = calcOrderTotals(
+      validated,
+      discountResult?.valid ? { amount: discountResult.amount, percent: discountResult.percent } : null,
+      shippingCost || 0
+    );
     const orderNumber = `SCM-${Date.now().toString(36).toUpperCase()}`;
 
     if (client) {
@@ -81,7 +102,7 @@ export async function POST(req: NextRequest) {
           price: item.price,
         })),
         subtotal: totals.subtotal,
-        discountCode: discountCode || undefined,
+        discountCode: appliedCode,
         discountAmount: totals.discountAmount,
         totalAmount: totals.totalAmount,
         shippingCost: shippingCost || 0,
@@ -97,6 +118,25 @@ export async function POST(req: NextRequest) {
         status: paymentMethod === "cod" ? "confirmed" : "pending",
         createdAt: new Date().toISOString(),
       });
+    }
+
+    // For COD orders the sale is final at this point — bump the discount
+    // usage counter immediately. Card orders are bumped from the
+    // RaiAccept webhook once the payment is confirmed.
+    if (
+      paymentMethod === "cod" &&
+      discountResult?.valid &&
+      discountResult.discount?._id &&
+      writeClient
+    ) {
+      try {
+        await writeClient
+          .patch(discountResult.discount._id)
+          .inc({ usedCount: 1 })
+          .commit();
+      } catch (err) {
+        console.error("Failed to increment discount usedCount:", err);
+      }
     }
 
     return NextResponse.json({

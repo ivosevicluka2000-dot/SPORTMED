@@ -10,10 +10,11 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Input";
 import {
-  HeartPulse,
-  MapPinned,
-  ShieldCheck,
-  BarChart3,
+  Package,
+  Tag,
+  Cross,
+  Pill,
+  Dumbbell,
   ArrowRight,
   ArrowLeft,
   Send,
@@ -22,14 +23,25 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const SERVICE_KEYS = [
-  { key: "timska-rehabilitacija", icon: HeartPulse, price: 45000 },
-  { key: "fizioterapija-na-terenu", icon: MapPinned, price: 35000 },
-  { key: "prevencija-povreda", icon: ShieldCheck, price: 30000 },
-  { key: "testiranje-performansi", icon: BarChart3, price: 25000 },
+// Per-player price (RSD) at 25–49-player tier (matches mid bulk tier in messages).
+// For pack-based kits the value is per pack and we treat teamSize via packsNeeded.
+const KIT_KEYS = [
+  { key: "klupski-recovery-kit", icon: Package, perPlayer: 8900, perPack: 0 },
+  { key: "taping-bandaging-paket", icon: Tag, perPlayer: 0, perPack: 24500 },
+  { key: "prva-pomoc-paket", icon: Cross, perPlayer: 0, perPack: 18500 },
+  { key: "suplementi-paket", icon: Pill, perPlayer: 6500, perPack: 0 },
+  { key: "oprema-za-zagrevanje", icon: Dumbbell, perPlayer: 0, perPack: 42000 },
 ] as const;
 
 const LEVELS = ["recreational", "amateur", "semipro", "professional"] as const;
+
+// Discount tier vs retail used for the "savings" callout.
+function tierDiscount(teamSize: number): number {
+  if (teamSize <= 20) return 0.15;
+  if (teamSize <= 40) return 0.22;
+  if (teamSize <= 60) return 0.28;
+  return 0.32;
+}
 
 const contactSchema = z.object({
   organization: z.string().min(2),
@@ -47,7 +59,7 @@ function formatRSD(amount: number): string {
 
 export default function B2BProposalBuilder() {
   const t = useTranslations("b2b.proposal");
-  const tServices = useTranslations("b2b.services");
+  const tKits = useTranslations("b2b.kits");
 
   const [step, setStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -72,14 +84,21 @@ export default function B2BProposalBuilder() {
     );
   };
 
-  const estimatedMonthly = SERVICE_KEYS
-    .filter((s) => selectedServices.includes(s.key))
-    .reduce((acc, s) => acc + s.price, 0);
+  const estimatedRetail = KIT_KEYS
+    .filter((kit) => selectedServices.includes(kit.key))
+    .reduce((acc, kit) => {
+      const perPlayerCost = kit.perPlayer * teamSize;
+      const packsNeeded = kit.perPack > 0 ? Math.max(1, Math.ceil(teamSize / 25)) : 0;
+      const perPackCost = kit.perPack * packsNeeded;
+      // Retail benchmark = bulk price / (1 - midDiscount), giving a comparable retail anchor.
+      const bulk = perPlayerCost + perPackCost;
+      return acc + bulk / (1 - 0.22);
+    }, 0);
 
-  const teamMultiplier = teamSize <= 20 ? 1 : teamSize <= 40 ? 1.3 : teamSize <= 60 ? 1.5 : 1.8;
-  const adjustedMonthly = Math.round(estimatedMonthly * teamMultiplier);
-  const estimatedAnnual = adjustedMonthly * seasonDuration;
-  const estimatedSavings = Math.round(estimatedAnnual * 0.35);
+  const discount = tierDiscount(teamSize);
+  const estimatedOrder = Math.round(estimatedRetail * (1 - discount));
+  const estimatedAnnual = estimatedOrder * Math.max(1, Math.round(seasonDuration / 6));
+  const estimatedSavings = Math.round(estimatedRetail * discount * Math.max(1, Math.round(seasonDuration / 6)));
 
   const canProceed = (s: number) => {
     if (s === 1) return selectedServices.length > 0;
@@ -97,8 +116,8 @@ export default function B2BProposalBuilder() {
           ...data,
           sportType,
           teamSize: String(teamSize),
-          message: `Izabrane usluge: ${selectedServices.join(", ")}. Nivo: ${competitionLevel}. Sezona: ${seasonDuration} mes. ${data.notes || ""}`,
-          selectedServices,
+          message: `Izabrani kit-ovi: ${selectedServices.join(", ")}. Nivo: ${competitionLevel}. Sezona: ${seasonDuration} mes. ${data.notes || ""}`,
+          selectedKits: selectedServices,
           competitionLevel,
           seasonDuration: String(seasonDuration),
           website: hp,
@@ -167,14 +186,17 @@ export default function B2BProposalBuilder() {
               <p className="text-sm text-gray-400 mb-6">{t("step1Subtitle")}</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {SERVICE_KEYS.map((svc) => {
-                  const Icon = svc.icon;
-                  const selected = selectedServices.includes(svc.key);
+                {KIT_KEYS.map((kit) => {
+                  const Icon = kit.icon;
+                  const selected = selectedServices.includes(kit.key);
+                  const priceLabel = kit.perPlayer > 0
+                    ? t("fromPrice", { price: formatRSD(kit.perPlayer) })
+                    : t("fromPriceFlat", { price: formatRSD(kit.perPack) });
                   return (
                     <button
-                      key={svc.key}
+                      key={kit.key}
                       type="button"
-                      onClick={() => toggleService(svc.key)}
+                      onClick={() => toggleService(kit.key)}
                       className={cn(
                         "border rounded-xl p-5 text-left transition-all cursor-pointer",
                         selected
@@ -191,13 +213,13 @@ export default function B2BProposalBuilder() {
                         </div>
                         <div>
                           <h4 className={cn("font-heading font-semibold text-sm", selected ? "text-teal" : "text-navy")}>
-                            {tServices(`${svc.key}.title`)}
+                            {tKits(`${kit.key}.title`)}
                           </h4>
                           <p className="text-xs text-gray-400 mt-1">
-                            {tServices(`${svc.key}.shortDescription`)}
+                            {tKits(`${kit.key}.shortDescription`)}
                           </p>
                           <p className="text-xs text-teal font-medium mt-2">
-                            {t("fromPrice", { price: formatRSD(svc.price) })}
+                            {priceLabel}
                           </p>
                         </div>
                       </div>
@@ -299,15 +321,18 @@ export default function B2BProposalBuilder() {
                 <div className="border border-gray-100 rounded-lg p-4">
                   <h4 className="text-xs uppercase tracking-wider text-gray-400 font-medium mb-3">{t("selectedPackages")}</h4>
                   <div className="space-y-2">
-                    {SERVICE_KEYS.filter((s) => selectedServices.includes(s.key)).map((svc) => {
-                      const Icon = svc.icon;
+                    {KIT_KEYS.filter((k) => selectedServices.includes(k.key)).map((kit) => {
+                      const Icon = kit.icon;
+                      const priceLabel = kit.perPlayer > 0
+                        ? `${formatRSD(kit.perPlayer)} RSD/igr.`
+                        : `${formatRSD(kit.perPack)} RSD`;
                       return (
-                        <div key={svc.key} className="flex items-center justify-between">
+                        <div key={kit.key} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Icon className="w-4 h-4 text-teal" />
-                            <span className="text-sm text-navy font-medium">{tServices(`${svc.key}.title`)}</span>
+                            <span className="text-sm text-navy font-medium">{tKits(`${kit.key}.title`)}</span>
                           </div>
-                          <span className="text-sm text-gray-400">{formatRSD(svc.price)} RSD/{t("months").slice(0, 3)}</span>
+                          <span className="text-sm text-gray-400">{priceLabel}</span>
                         </div>
                       );
                     })}
@@ -318,15 +343,15 @@ export default function B2BProposalBuilder() {
                 <div className="bg-gradient-to-br from-navy to-navy-light rounded-xl p-6 text-white">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                     <div>
-                      <p className="text-white/50 text-xs mb-1">{t("estimatedMonthly")}</p>
-                      <p className="text-xl font-heading font-bold text-teal">{formatRSD(adjustedMonthly)} RSD</p>
+                      <p className="text-white/50 text-xs mb-1">{t("estimatedOrder")}</p>
+                      <p className="text-xl font-heading font-bold text-teal">{formatRSD(estimatedOrder)} RSD</p>
                     </div>
                     <div>
                       <p className="text-white/50 text-xs mb-1">{t("estimatedAnnual")}</p>
                       <p className="text-xl font-heading font-bold text-white">{formatRSD(estimatedAnnual)} RSD</p>
                     </div>
                     <div>
-                      <p className="text-white/50 text-xs mb-1">{t("estimatedRoi")}</p>
+                      <p className="text-white/50 text-xs mb-1">{t("estimatedSavings")}</p>
                       <p className="text-xl font-heading font-bold text-accent">{formatRSD(estimatedSavings)} RSD</p>
                     </div>
                   </div>

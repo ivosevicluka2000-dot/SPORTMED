@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import Section, { SectionHeader } from "@/components/ui/Section";
-import { Target, Eye, Award, Stethoscope, GraduationCap } from "lucide-react";
+import { Target, Eye, Award, Stethoscope, GraduationCap, User, CheckCircle2 } from "lucide-react";
 
 const teamMembers = [
   {
@@ -84,6 +84,62 @@ export default function AboutContent() {
         </div>
       </Section>
 
+      {/* Founder spotlight */}
+      <Section className="bg-ivory">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="order-1 md:order-1"
+          >
+            <div
+              className="aspect-square w-full max-w-md mx-auto md:mx-0 rounded-2xl border border-gray-200 bg-white flex items-center justify-center overflow-hidden shadow-[var(--shadow-soft)]"
+              role="img"
+              aria-label={t("founder.photoAlt")}
+            >
+              <User className="w-24 h-24 text-gray-200" strokeWidth={1.25} />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="order-2 md:order-2"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <span className="h-px w-8 bg-gold" />
+              <span className="text-xs uppercase tracking-[0.2em] text-gold font-semibold">
+                {t("founder.eyebrow")}
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-heading font-semibold text-navy mb-2">
+              {t("founder.name")}
+            </h2>
+            <p className="text-sm uppercase tracking-wider text-teal font-medium mb-6">
+              {t("founder.role")}
+            </p>
+            <p className="text-gray-500 leading-relaxed mb-7">
+              {t("founder.bio")}
+            </p>
+            <ul className="flex flex-wrap gap-2">
+              {(t.raw("founder.credentials") as string[]).map((credential) => (
+                <li
+                  key={credential}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-white text-xs font-medium text-gray-600"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-teal" />
+                  {credential}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </div>
+      </Section>
+
       {/* Mission & Vision */}
       <Section className="bg-ivory">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 rounded-xl overflow-hidden">
@@ -124,7 +180,7 @@ export default function AboutContent() {
         </div>
       </Section>
 
-      {/* Team */}
+      {/* Team — supporting members under the founder */}
       <Section>
         <SectionHeader
           title={t("team.title")}
@@ -132,7 +188,7 @@ export default function AboutContent() {
           accent
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
           {teamMembers.map((member, index) => {
             const Icon = teamIcons[index];
             return (
@@ -144,13 +200,13 @@ export default function AboutContent() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="w-28 h-28 rounded-full border border-gray-200 flex items-center justify-center mx-auto mb-5 bg-ivory">
-                  <Icon className="w-10 h-10 text-teal/70" />
+                <div className="w-20 h-20 rounded-full border border-gray-200 flex items-center justify-center mx-auto mb-4 bg-ivory">
+                  <Icon className="w-8 h-8 text-teal/70" />
                 </div>
-                <h3 className="text-lg font-heading font-semibold text-navy mb-1">
+                <h3 className="text-base font-heading font-semibold text-navy mb-1">
                   {member.name}
                 </h3>
-                <p className="text-xs uppercase tracking-wider text-gray-400">
+                <p className="text-[11px] uppercase tracking-wider text-gray-400">
                   {member.roleKey}
                 </p>
               </motion.div>

@@ -97,25 +97,19 @@ export async function validateCartItems(
   return validated;
 }
 
-const DISCOUNT_CODES: Record<string, number> = {
-  SPORT10: 10,
-  SPORT20: 20,
-  DOBRODOSLI: 15,
-};
-
-export function getDiscountPercent(code?: string | null): number {
-  if (!code) return 0;
-  return DISCOUNT_CODES[code.trim().toUpperCase()] ?? 0;
-}
-
+/**
+ * Compute order totals. Discount is resolved server-side via
+ * `validateDiscount` in `@/lib/queries` and passed in here so this module
+ * stays pure / synchronous.
+ */
 export function calcOrderTotals(
   items: ValidatedItem[],
-  discountCode?: string | null,
+  discount: { amount: number; percent: number } | null | undefined,
   shippingCost: number = 0
 ) {
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const discountPercent = getDiscountPercent(discountCode);
-  const discountAmount = Math.round((subtotal * discountPercent) / 100);
+  const discountAmount = Math.max(0, Math.min(discount?.amount ?? 0, subtotal));
+  const discountPercent = discount?.percent ?? 0;
   const totalAmount = subtotal - discountAmount + shippingCost;
   return { subtotal, discountPercent, discountAmount, totalAmount };
 }

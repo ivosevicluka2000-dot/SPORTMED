@@ -10,7 +10,6 @@ import {
 
 const BLOG_REVALIDATE = 3600; // 1 hour
 const PRODUCT_REVALIDATE = 900; // 15 min
-
 const blogCache = { next: { revalidate: BLOG_REVALIDATE, tags: ["blog"] } };
 const productCache = { next: { revalidate: PRODUCT_REVALIDATE, tags: ["products"] } };
 
@@ -303,4 +302,105 @@ export async function getRelatedProducts(
   );
   if (products && products.length > 0) return products;
   return getMockRelatedProducts(locale, slugs);
+}
+
+// ——— Discount codes ———
+
+export interface DiscountCodeDoc {
+  _id: string;
+  code: string;
+  type: "percent" | "fixed";
+  value: number;
+  validFrom?: string;
+  validUntil?: string;
+  maxUses?: number;
+  usedCount?: number;
+  minOrderAmount?: number;
+  active: boolean;
+}
+
+/**
+ * Server-only: fetch a discount code by its (case-insensitive) code.
+ * Bypasses CDN cache to keep validation fresh against `usedCount`.
+ */
+export async function getDiscountByCode(
+  rawCode: string
+): Promise<DiscountCodeDoc | null> {
+  if (!client) return null;
+  const code = rawCode.trim().toUpperCase();
+  if (!code) return null;
+  return safeFetch(
+    client.fetch<DiscountCodeDoc | null>(
+      `*[_type == "discountCode" && upper(code) == $code][0]{
+        _id, code, type, value, validFrom, validUntil,
+        maxUses, usedCount, minOrderAmount, active
+      }`,
+      { code },
+      { cache: "no-store" }
+    ),
+    null
+  );
+}
+
+export interface DiscountValidationResult {
+  valid: boolean;
+  reason?:
+    | "not_found"
+    | "inactive"
+    | "not_yet_valid"
+    | "expired"
+    | "max_uses_reached"
+    | "min_order_not_met";
+  discount?: DiscountCodeDoc;
+  /** Effective percent off subtotal (0 for fixed-amount codes). */
+  percent: number;
+  /** Effective amount off in RSD. */
+  amount: number;
+}
+
+/**
+ * Validate a discount code server-side against the current cart subtotal.
+ * Returns a structured result for both client UI and server checkout.
+ */
+export async function validateDiscount(
+  rawCode: string,
+  subtotal: number
+): Promise<DiscountValidationResult> {
+  const discount = await getDiscountByCode(rawCode);
+  if (!discount) return { valid: false, reason: "not_found", percent: 0, amount: 0 };
+
+  if (!discount.active) {
+    return { valid: false, reason: "inactive", discount, percent: 0, amount: 0 };
+  }
+  const now = Date.now();
+  if (discount.validFrom && new Date(discount.validFrom).getTime() > now) {
+    return { valid: false, reason: "not_yet_valid", discount, percent: 0, amount: 0 };
+  }
+  if (discount.validUntil && new Date(discount.validUntil).getTime() < now) {
+    return { valid: false, reason: "expired", discount, percent: 0, amount: 0 };
+  }
+  if (
+    typeof discount.maxUses === "number" &&
+    (discount.usedCount ?? 0) >= discount.maxUses
+  ) {
+    return { valid: false, reason: "max_uses_reached", discount, percent: 0, amount: 0 };
+  }
+  if (
+    typeof discount.minOrderAmount === "number" &&
+    subtotal < discount.minOrderAmount
+  ) {
+    return { valid: false, reason: "min_order_not_met", discount, percent: 0, amount: 0 };
+  }
+
+  let percent = 0;
+  let amount = 0;
+  if (discount.type === "percent") {
+    percent = discount.value;
+    amount = Math.round((subtotal * discount.value) / 100);
+  } else {
+    amount = Math.min(Math.round(discount.value), subtotal);
+    percent = subtotal > 0 ? Math.round((amount / subtotal) * 100) : 0;
+  }
+
+  return { valid: true, discount, percent, amount };
 }

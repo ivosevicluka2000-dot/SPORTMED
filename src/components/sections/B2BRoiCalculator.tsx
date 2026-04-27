@@ -6,21 +6,19 @@ import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { Calculator, ArrowRight } from "lucide-react";
 
-const PRICE_PER_SESSION = 3000;
-const B2B_TIERS = [
-  { max: 20, monthly: 45000 },
-  { max: 40, monthly: 75000 },
-  { max: 60, monthly: 95000 },
-  { max: 100, monthly: 110000 },
+// Bulk discount tiers based on total order size (players × items per player)
+const DISCOUNT_TIERS: { maxPlayers: number; discount: number }[] = [
+  { maxPlayers: 20, discount: 0.15 },
+  { maxPlayers: 40, discount: 0.22 },
+  { maxPlayers: 60, discount: 0.28 },
+  { maxPlayers: 1000, discount: 0.32 },
 ];
-const INCLUDED_VALUE_PER_PLAYER = 2000;
-const SEASON_MONTHS = 10;
 
-function getB2BMonthly(teamSize: number): number {
-  for (const tier of B2B_TIERS) {
-    if (teamSize <= tier.max) return tier.monthly;
+function getDiscount(teamSize: number): number {
+  for (const tier of DISCOUNT_TIERS) {
+    if (teamSize <= tier.maxPlayers) return tier.discount;
   }
-  return B2B_TIERS[B2B_TIERS.length - 1].monthly;
+  return DISCOUNT_TIERS[DISCOUNT_TIERS.length - 1].discount;
 }
 
 function formatRSD(amount: number): string {
@@ -31,19 +29,19 @@ export default function B2BRoiCalculator() {
   const t = useTranslations("b2b.roi");
 
   const [teamSize, setTeamSize] = useState(25);
-  const [avgInjuries, setAvgInjuries] = useState(8);
-  const [sessionsPerInjury, setSessionsPerInjury] = useState(10);
+  const [productsPerPlayer, setProductsPerPlayer] = useState(4);
+  const [avgRetailPrice, setAvgRetailPrice] = useState(2500);
 
-  const individualTotal = avgInjuries * sessionsPerInjury * PRICE_PER_SESSION;
-  const b2bMonthly = getB2BMonthly(teamSize);
-  const b2bAnnual = b2bMonthly * SEASON_MONTHS;
-  const savings = Math.max(0, individualTotal - b2bAnnual);
-  const savingsPercent = individualTotal > 0 ? Math.round((savings / individualTotal) * 100) : 0;
-  const includedValue = teamSize * INCLUDED_VALUE_PER_PLAYER;
+  const totalUnits = teamSize * productsPerPlayer;
+  const retailTotal = totalUnits * avgRetailPrice;
+  const discount = getDiscount(teamSize);
+  const bulkTotal = Math.round(retailTotal * (1 - discount));
+  const savings = Math.max(0, retailTotal - bulkTotal);
+  const savingsPercent = Math.round(discount * 100);
 
-  const maxBar = Math.max(individualTotal, b2bAnnual);
-  const individualBarWidth = maxBar > 0 ? (individualTotal / maxBar) * 100 : 0;
-  const b2bBarWidth = maxBar > 0 ? (b2bAnnual / maxBar) * 100 : 0;
+  const maxBar = Math.max(retailTotal, bulkTotal);
+  const retailBarWidth = maxBar > 0 ? (retailTotal / maxBar) * 100 : 0;
+  const bulkBarWidth = maxBar > 0 ? (bulkTotal / maxBar) * 100 : 0;
 
   return (
     <div>
@@ -81,45 +79,45 @@ export default function B2BRoiCalculator() {
             </div>
           </div>
 
-          {/* Avg injuries */}
+          {/* Items per player */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-navy">{t("avgInjuries")}</label>
-              <span className="text-sm font-semibold text-teal">{avgInjuries} {t("injuries")}</span>
+              <label className="text-sm font-medium text-navy">{t("productsPerPlayer")}</label>
+              <span className="text-sm font-semibold text-teal">{productsPerPlayer} {t("items")}</span>
             </div>
             <input
               type="range"
               min={2}
-              max={30}
+              max={12}
               step={1}
-              value={avgInjuries}
-              onChange={(e) => setAvgInjuries(Number(e.target.value))}
+              value={productsPerPlayer}
+              onChange={(e) => setProductsPerPlayer(Number(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal"
             />
             <div className="flex justify-between text-xs text-gray-400 mt-1">
               <span>2</span>
-              <span>30</span>
+              <span>12</span>
             </div>
           </div>
 
-          {/* Sessions per injury */}
+          {/* Average retail price */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-navy">{t("sessionsPerInjury")}</label>
-              <span className="text-sm font-semibold text-teal">{sessionsPerInjury} {t("sessions")}</span>
+              <label className="text-sm font-medium text-navy">{t("avgRetailPrice")}</label>
+              <span className="text-sm font-semibold text-teal">{formatRSD(avgRetailPrice)} RSD</span>
             </div>
             <input
               type="range"
-              min={5}
-              max={20}
-              step={1}
-              value={sessionsPerInjury}
-              onChange={(e) => setSessionsPerInjury(Number(e.target.value))}
+              min={1000}
+              max={6000}
+              step={250}
+              value={avgRetailPrice}
+              onChange={(e) => setAvgRetailPrice(Number(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal"
             />
             <div className="flex justify-between text-xs text-gray-400 mt-1">
-              <span>5</span>
-              <span>20</span>
+              <span>1.000</span>
+              <span>6.000</span>
             </div>
           </div>
         </div>
@@ -130,37 +128,37 @@ export default function B2BRoiCalculator() {
           <div className="space-y-6 mb-8">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">{t("individualCost")}</span>
-                <span className="text-sm font-semibold text-red-500">{formatRSD(individualTotal)} RSD/{t("perYear")}</span>
+                <span className="text-sm font-medium text-gray-600">{t("retailTotal")}</span>
+                <span className="text-sm font-semibold text-red-500">{formatRSD(retailTotal)} RSD</span>
               </div>
               <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-red-400 rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: `${individualBarWidth}%` }}
+                  animate={{ width: `${retailBarWidth}%` }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 />
               </div>
               <p className="text-xs text-gray-400 mt-1">
-                {avgInjuries} × {sessionsPerInjury} × {formatRSD(PRICE_PER_SESSION)} RSD {t("perSession")}
+                {teamSize} × {productsPerPlayer} × {formatRSD(avgRetailPrice)} RSD
               </p>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">{t("b2bCost")}</span>
-                <span className="text-sm font-semibold text-teal">{formatRSD(b2bMonthly)} RSD/{t("perMonth")}</span>
+                <span className="text-sm font-medium text-gray-600">{t("bulkTotal")}</span>
+                <span className="text-sm font-semibold text-teal">{formatRSD(bulkTotal)} RSD</span>
               </div>
               <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-teal rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: `${b2bBarWidth}%` }}
+                  animate={{ width: `${bulkBarWidth}%` }}
                   transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
                 />
               </div>
               <p className="text-xs text-gray-400 mt-1">
-                {formatRSD(b2bAnnual)} RSD/{t("perYear")} ({SEASON_MONTHS} mes.)
+                {t("discountTier")}: {savingsPercent}% ({totalUnits} {t("items")})
               </p>
             </div>
           </div>
@@ -178,9 +176,6 @@ export default function B2BRoiCalculator() {
               </p>
               <p className="text-teal text-sm font-medium">
                 {t("savingsPercent")}: {savingsPercent}%
-              </p>
-              <p className="text-white/40 text-xs mt-3">
-                {t("plusValue")} {formatRSD(includedValue)} RSD
               </p>
             </motion.div>
           )}

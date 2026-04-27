@@ -22,6 +22,11 @@ import {
   Sparkles,
   Snowflake,
   BarChart3,
+  Circle,
+  Link2,
+  Tag,
+  Wind,
+  Vibrate,
 } from "lucide-react";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -33,6 +38,11 @@ const iconMap: Record<string, React.ReactNode> = {
   Sparkles: <Sparkles className="w-8 h-8" />,
   Snowflake: <Snowflake className="w-8 h-8" />,
   BarChart3: <BarChart3 className="w-8 h-8" />,
+  Circle: <Circle className="w-8 h-8" />,
+  Link2: <Link2 className="w-8 h-8" />,
+  Tag: <Tag className="w-8 h-8" />,
+  Wind: <Wind className="w-8 h-8" />,
+  Vibrate: <Vibrate className="w-8 h-8" />,
 };
 
 const iconMapSmall: Record<string, React.ReactNode> = {
@@ -44,6 +54,11 @@ const iconMapSmall: Record<string, React.ReactNode> = {
   Sparkles: <Sparkles className="w-5 h-5" />,
   Snowflake: <Snowflake className="w-5 h-5" />,
   BarChart3: <BarChart3 className="w-5 h-5" />,
+  Circle: <Circle className="w-5 h-5" />,
+  Link2: <Link2 className="w-5 h-5" />,
+  Tag: <Tag className="w-5 h-5" />,
+  Wind: <Wind className="w-5 h-5" />,
+  Vibrate: <Vibrate className="w-5 h-5" />,
 };
 
 interface TreatmentDetailProps {

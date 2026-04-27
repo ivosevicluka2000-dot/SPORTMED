@@ -28,11 +28,13 @@ export default function LeadCapturePopup() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          source: "lead-capture-popup",
           name,
           phone: "",
           email,
           treatment: service,
           message: `Zahtev za besplatan PDF protokol — ${service || "Nije izabrano"}${condition ? `\nStanje: ${condition}` : ""}`,
+          page: typeof window !== "undefined" ? window.location.pathname : undefined,
           website: hp,
         }),
       });

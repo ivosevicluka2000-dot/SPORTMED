@@ -27,6 +27,20 @@ export const previewClient = isConfigured
     })
   : null;
 
+/**
+ * Server-only Sanity client with write access. Requires SANITY_API_WRITE_TOKEN.
+ * Never import from client components.
+ */
+export const writeClient = isConfigured
+  ? createClient({
+      projectId,
+      dataset,
+      apiVersion,
+      useCdn: false,
+      token: process.env.SANITY_API_WRITE_TOKEN,
+    })
+  : null;
+
 const builder = isConfigured ? imageUrlBuilder(client!) : null;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

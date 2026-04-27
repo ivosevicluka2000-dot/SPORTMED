@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { treatments, b2bServices } from "@/lib/utils";
+import { treatments, b2bAllItems } from "@/lib/utils";
 import { getAllBlogSlugs } from "@/lib/queries";
 import { getMockProductSlugs } from "@/lib/mock-products";
 
@@ -50,11 +50,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // B2B service pages for each locale
+  // B2B item pages (kits + clinical services) for each locale
   for (const locale of locales) {
-    for (const service of b2bServices) {
+    for (const item of b2bAllItems) {
       entries.push({
-        url: `${baseUrl}/${locale}/b2b/${service.slug}`,
+        url: `${baseUrl}/${locale}/b2b/${item.slug}`,
         lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.7,

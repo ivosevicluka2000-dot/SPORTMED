@@ -89,10 +89,10 @@ export default function CartContent() {
 
           {!isActive && (
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 if (!codeInput.trim()) return;
-                const ok = applyCode(codeInput);
+                const ok = await applyCode(codeInput, total);
                 setCodeError(!ok);
                 if (ok) setCodeInput("");
               }}

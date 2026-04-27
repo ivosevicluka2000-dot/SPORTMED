@@ -7,21 +7,22 @@ import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { cn } from "@/lib/utils";
+import { rehabTreatments, recoveryTreatments } from "@/lib/utils";
 
-const serviceSlugs = [
-  "fizikalna-terapija",
-  "manuelna-terapija",
-  "kineziterapija",
-  "dijagnostika",
-  "sportska-rehabilitacija",
-  "masaza",
-  "recovery-terapije",
-  "testiranje-merenja",
-] as const;
+const rehabSlugs = rehabTreatments.map((t) => t.slug);
+const recoverySlugs = recoveryTreatments.map((t) => t.slug);
 
 const toolLinks = [
   { href: "/alati/procena-oporavka" as const, key: "recoveryEstimator" },
   { href: "/alati/spremnost-za-sport" as const, key: "readinessChecklist" },
+] as const;
+
+const b2bKitSlugs = [
+  "klupski-recovery-kit",
+  "taping-bandaging-paket",
+  "prva-pomoc-paket",
+  "suplementi-paket",
+  "oprema-za-zagrevanje",
 ] as const;
 
 const b2bServiceSlugs = [
@@ -45,9 +46,11 @@ const navItems = [
 
 export default function Header() {
   const t = useTranslations("nav");
+  const tGroups = useTranslations("nav.servicesGroups");
   const tServices = useTranslations("services.items");
   const tTools = useTranslations("tools");
   const tB2B = useTranslations("b2b.services");
+  const tB2BKits = useTranslations("b2b.kits");
   const tShop = useTranslations("shop");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -218,26 +221,36 @@ export default function Header() {
                       >
                         <div className="bg-white rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] border border-gray-100/80 p-2 min-w-[280px]">
                           {dropdownKey === "services" && (
-                            <>
-                              {serviceSlugs.map((slug) => {
-                                const serviceActive = pathname === `/usluge/${slug}`;
-                                return (
-                                  <Link
-                                    key={slug}
-                                    href={{ pathname: "/usluge/[slug]", params: { slug } }}
-                                    className={cn(
-                                      "block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
-                                      serviceActive
-                                        ? "text-teal bg-teal-50"
-                                        : "text-gray-600 hover:text-teal hover:bg-gray-50"
-                                    )}
-                                    onClick={() => setOpenDropdown(null)}
-                                  >
-                                    {tServices(`${slug}.title`)}
-                                  </Link>
-                                );
-                              })}
-                              <div className="border-t border-gray-100 mt-1 pt-1">
+                            <div className="min-w-[280px] md:min-w-[560px] grid grid-cols-1 md:grid-cols-2 gap-1">
+                              {([
+                                { key: "rehab", slugs: rehabSlugs },
+                                { key: "recovery", slugs: recoverySlugs },
+                              ] as const).map((group) => (
+                                <div key={group.key} className="px-1">
+                                  <div className="px-4 pt-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-400">
+                                    {tGroups(group.key)}
+                                  </div>
+                                  {group.slugs.map((slug) => {
+                                    const serviceActive = pathname === `/usluge/${slug}`;
+                                    return (
+                                      <Link
+                                        key={`${group.key}-${slug}`}
+                                        href={{ pathname: "/usluge/[slug]", params: { slug } }}
+                                        className={cn(
+                                          "block px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150",
+                                          serviceActive
+                                            ? "text-teal bg-teal-50"
+                                            : "text-gray-600 hover:text-teal hover:bg-gray-50"
+                                        )}
+                                        onClick={() => setOpenDropdown(null)}
+                                      >
+                                        {tServices(`${slug}.title`)}
+                                      </Link>
+                                    );
+                                  })}
+                                </div>
+                              ))}
+                              <div className="col-span-1 md:col-span-2 border-t border-gray-100 mt-1 pt-1">
                                 <Link
                                   href="/usluge"
                                   className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-teal hover:bg-teal-50 transition-colors"
@@ -246,7 +259,7 @@ export default function Header() {
                                   {t("services")} →
                                 </Link>
                               </div>
-                            </>
+                            </div>
                           )}
                           {dropdownKey === "tools" && (
                             <>
@@ -281,6 +294,34 @@ export default function Header() {
                           )}
                           {dropdownKey === "b2b" && (
                             <>
+                              <div className="px-4 pt-1 pb-1">
+                                <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                                  Paketi opreme
+                                </p>
+                              </div>
+                              {b2bKitSlugs.map((slug) => {
+                                const kitActive = pathname === `/b2b/${slug}`;
+                                return (
+                                  <Link
+                                    key={slug}
+                                    href={{ pathname: "/b2b/[slug]", params: { slug } }}
+                                    className={cn(
+                                      "block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
+                                      kitActive
+                                        ? "text-teal bg-teal-50"
+                                        : "text-gray-600 hover:text-teal hover:bg-gray-50"
+                                    )}
+                                    onClick={() => setOpenDropdown(null)}
+                                  >
+                                    {tB2BKits(`${slug}.title`)}
+                                  </Link>
+                                );
+                              })}
+                              <div className="px-4 pt-3 pb-1 border-t border-gray-100 mt-1">
+                                <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                                  Klinička podrška
+                                </p>
+                              </div>
                               {b2bServiceSlugs.map((slug) => {
                                 const b2bActive = pathname === `/b2b/${slug}`;
                                 return (
@@ -422,27 +463,37 @@ export default function Header() {
                   </button>
                   <div className={cn(
                     "overflow-hidden transition-all duration-300",
-                    mobileServicesOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                    mobileServicesOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
                   )}>
-                    <div className="pl-4 py-1 space-y-0.5">
-                      {serviceSlugs.map((slug) => {
-                        const serviceActive = pathname === `/usluge/${slug}`;
-                        return (
-                          <Link
-                            key={slug}
-                            href={{ pathname: "/usluge/[slug]", params: { slug } }}
-                            className={cn(
-                              "block px-4 py-2 rounded-md text-sm font-medium transition-colors",
-                              serviceActive
-                                ? "text-teal bg-teal-50"
-                                : "text-gray-500 hover:text-navy hover:bg-gray-50"
-                            )}
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            {tServices(`${slug}.title`)}
-                          </Link>
-                        );
-                      })}
+                    <div className="pl-4 py-1 space-y-2">
+                      {([
+                        { key: "rehab", slugs: rehabSlugs },
+                        { key: "recovery", slugs: recoverySlugs },
+                      ] as const).map((group) => (
+                        <div key={group.key} className="space-y-0.5">
+                          <div className="px-4 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-400">
+                            {tGroups(group.key)}
+                          </div>
+                          {group.slugs.map((slug) => {
+                            const serviceActive = pathname === `/usluge/${slug}`;
+                            return (
+                              <Link
+                                key={`${group.key}-${slug}`}
+                                href={{ pathname: "/usluge/[slug]", params: { slug } }}
+                                className={cn(
+                                  "block px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                                  serviceActive
+                                    ? "text-teal bg-teal-50"
+                                    : "text-gray-500 hover:text-navy hover:bg-gray-50"
+                                )}
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                {tServices(`${slug}.title`)}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      ))}
                       <Link
                         href="/usluge"
                         className="block px-4 py-2 rounded-md text-sm font-semibold text-teal hover:bg-teal-50 transition-colors"
@@ -530,9 +581,33 @@ export default function Header() {
                   </button>
                   <div className={cn(
                     "overflow-hidden transition-all duration-300",
-                    mobileB2BOpen ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0"
+                    mobileB2BOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
                   )}>
                     <div className="pl-4 py-1 space-y-0.5">
+                      <p className="px-4 pt-2 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                        Paketi opreme
+                      </p>
+                      {b2bKitSlugs.map((slug) => {
+                        const kitActive = pathname === `/b2b/${slug}`;
+                        return (
+                          <Link
+                            key={slug}
+                            href={{ pathname: "/b2b/[slug]", params: { slug } }}
+                            className={cn(
+                              "block px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                              kitActive
+                                ? "text-teal bg-teal-50"
+                                : "text-gray-500 hover:text-navy hover:bg-gray-50"
+                            )}
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            {tB2BKits(`${slug}.title`)}
+                          </Link>
+                        );
+                      })}
+                      <p className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                        Klinička podrška
+                      </p>
                       {b2bServiceSlugs.map((slug) => {
                         const b2bActive = pathname === `/b2b/${slug}`;
                         return (
@@ -553,7 +628,7 @@ export default function Header() {
                       })}
                       <Link
                         href="/b2b"
-                        className="block px-4 py-2 rounded-md text-sm font-semibold text-teal hover:bg-teal-50 transition-colors"
+                        className="block px-4 py-2 mt-2 rounded-md text-sm font-semibold text-teal hover:bg-teal-50 transition-colors"
                         onClick={() => setMobileOpen(false)}
                       >
                         {t("b2b")} →

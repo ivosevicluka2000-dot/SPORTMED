@@ -5,6 +5,9 @@ import { author } from "./author";
 import { product } from "./product";
 import { productCategory } from "./productCategory";
 import { order } from "./order";
+import { discountCode } from "./discountCode";
+import { lead } from "./lead";
+import { newsletterSubscriber } from "./newsletterSubscriber";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   blogPost,
@@ -13,4 +16,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   product,
   productCategory,
   order,
+  discountCode,
+  lead,
+  newsletterSubscriber,
 ];

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
+import { createLead } from "@/lib/leads";
 
 const b2bSchema = z.object({
   organization: z.string().min(2).max(200),
@@ -13,6 +14,8 @@ const b2bSchema = z.object({
   selectedServices: z.array(z.string().max(100)).max(10).optional(),
   competitionLevel: z.string().max(50).optional(),
   seasonDuration: z.string().max(10).optional(),
+  page: z.string().max(200).optional(),
+  locale: z.string().max(10).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -33,8 +36,32 @@ export async function POST(request: NextRequest) {
 
     const data = b2bSchema.parse(body);
 
-    // TODO: Send email via Resend/Nodemailer
-    console.log("B2B inquiry:", data);
+    // Build a structured message body so the admin can see the full inquiry
+    // context inside the Studio Lead document.
+    const detailLines: string[] = [];
+    if (data.organization) detailLines.push(`Organization: ${data.organization}`);
+    if (data.sportType) detailLines.push(`Sport: ${data.sportType}`);
+    if (data.teamSize) detailLines.push(`Team size: ${data.teamSize}`);
+    if (data.competitionLevel) detailLines.push(`Level: ${data.competitionLevel}`);
+    if (data.seasonDuration) detailLines.push(`Season: ${data.seasonDuration}`);
+    if (data.selectedServices?.length)
+      detailLines.push(`Services: ${data.selectedServices.join(", ")}`);
+    detailLines.push("", data.message);
+
+    await createLead({
+      source: "b2b",
+      name: data.contactPerson,
+      phone: data.phone,
+      email: data.email,
+      service: data.selectedServices?.[0],
+      message: detailLines.join("\n"),
+      metadata: {
+        page: data.page,
+        locale: data.locale,
+        userAgent: request.headers.get("user-agent") ?? undefined,
+        referrer: request.headers.get("referer") ?? undefined,
+      },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

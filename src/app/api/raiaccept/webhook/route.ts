@@ -48,12 +48,18 @@ export async function POST(req: NextRequest) {
     }
 
     // Find the order by raiAcceptOrderId
-    const orderId = await sanityWriteClient.fetch(
-      `*[_type == "order" && raiAcceptOrderId == $raiOrderId][0]._id`,
+    const orderDoc = await sanityWriteClient.fetch<{
+      _id: string;
+      status?: string;
+      discountCode?: string;
+    } | null>(
+      `*[_type == "order" && raiAcceptOrderId == $raiOrderId][0]{
+        _id, status, discountCode
+      }`,
       { raiOrderId: orderIdentification }
     );
 
-    if (!orderId) {
+    if (!orderDoc?._id) {
       console.error("Order not found for RaiAccept ID:", orderIdentification);
       return NextResponse.json({ received: true });
     }
@@ -80,9 +86,32 @@ export async function POST(req: NextRequest) {
     }
 
     await sanityWriteClient
-      .patch(orderId)
+      .patch(orderDoc._id)
       .set({ status: newStatus })
       .commit();
+
+    // Bump discount usage exactly once per order: only when transitioning
+    // from a non-confirmed state to "confirmed".
+    if (
+      newStatus === "confirmed" &&
+      orderDoc.status !== "confirmed" &&
+      orderDoc.discountCode
+    ) {
+      try {
+        const discountId = await sanityWriteClient.fetch<string | null>(
+          `*[_type == "discountCode" && upper(code) == $code][0]._id`,
+          { code: orderDoc.discountCode.toUpperCase() }
+        );
+        if (discountId) {
+          await sanityWriteClient
+            .patch(discountId)
+            .inc({ usedCount: 1 })
+            .commit();
+        }
+      } catch (err) {
+        console.error("Failed to increment discount usedCount:", err);
+      }
+    }
 
     return NextResponse.json({ received: true });
   } catch (error) {

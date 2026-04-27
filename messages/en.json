@@ -27,7 +27,11 @@
     "b2b": "B2B Solutions",
     "blog": "Blog",
     "shop": "Shop",
-    "tools": "Tools"
+    "tools": "Tools",
+    "servicesGroups": {
+      "rehab": "Rehab",
+      "recovery": "Recovery"
+    }
   },
   "hero": {
     "title": "Get back on the field faster with the right gear and the right protocol",
@@ -47,6 +51,18 @@
     "relatedServices": "You might also need",
     "bookNow": "See recommended products",
     "faq": "FAQs",
+    "groups": {
+      "rehab": {
+        "label": "Rehab",
+        "title": "Fix the injury — Rehab",
+        "subtitle": "Pain, stiffness, blockages. Kit + protocol + clinic when you really need it."
+      },
+      "recovery": {
+        "label": "Recovery",
+        "title": "Bounce back faster — Recovery",
+        "subtitle": "After training, competition or a brutal week — back to 100% without losing a day."
+      }
+    },
     "items": {
       "fizikalna-terapija": {
         "title": "Physical Therapy",
@@ -150,6 +166,71 @@
           { "question": "What is tested during functional testing?", "answer": "We test strength, endurance, mobility, balance, movement biomechanics, and sport-specific abilities relevant to your sport." },
           { "question": "How often should testing be repeated?", "answer": "We recommend testing every 3-6 months to track progress, or before and after a training period/season." },
           { "question": "Can testing prevent injuries?", "answer": "Yes, functional testing identifies muscle imbalances and weaknesses that can lead to injuries, enabling preventive work." }
+        ]
+      },
+      "cupping-terapija": {
+        "title": "Cupping Therapy",
+        "shortDescription": "Stuck fascia and chronic tension in your back and shoulders? Cupping unlocks the tissue — we also give you a home set with a video protocol.",
+        "description": "Cupping (vacuum therapy) lifts the fascia, opens circulation and breaks down knots that massage alone struggles to reach. In the clinic we use both static and dynamic cupping; for home use we ship a silicone set + a free PDF and video with protocols for back, neck and quads. Less inflammation, more range — without waiting for an appointment.",
+        "benefits": ["Releases myofascial restrictions", "Reduces tension and pain", "Boosts local circulation", "Faster muscle recovery"],
+        "duration": "20-30 min",
+        "process": "Tissue assessment → Cup placement → Static or dynamic work → Home-use plan",
+        "faq": [
+          { "question": "Does cupping leave bruises?", "answer": "The reddish marks are normal and fade in 3-7 days. They show stagnant circulation responding — not a true bruise." },
+          { "question": "How often should I do cupping?", "answer": "For chronic issues 1-2x weekly for 4 weeks; for maintenance 1-2x per month or as part of a weekly home routine." },
+          { "question": "Can I use the home set on myself?", "answer": "Yes — the silicone cupping set is safe and easy to use. The PDF protocol and video show zones, sequence and timing for each issue." }
+        ]
+      },
+      "flossing-terapija": {
+        "title": "Flossing Therapy",
+        "shortDescription": "Stiff ankle, knee or elbow that won't loosen up after training? A flossing band restores range of motion in minutes — home use with a video protocol.",
+        "description": "Flossing uses a heavy elastic band to compress a joint while you move it actively — freeing the fascia, flushing the tissue and instantly expanding range of motion. In the clinic we apply it to specific joints; the kit ships with a band + a free PDF/video covering protocols for the ankle, knee, elbow and shoulder. A solution that works after 5 minutes, not 5 sessions.",
+        "benefits": ["Instant range-of-motion gains", "Reduces joint stiffness", "Faster post-training recovery", "Helps with post-injury restrictions"],
+        "duration": "10-20 min",
+        "process": "Joint assessment → Band application → Active movement under compression → Range re-test",
+        "faq": [
+          { "question": "Is flossing painful?", "answer": "The pressure is intense but short (1-2 minutes max). Any numbness and the band comes off immediately — safe and controlled." },
+          { "question": "Which injuries respond best?", "answer": "Best results: post-sprain ankle stiffness, chronic tennis elbow, limited shoulder range, post-surgical knee stiffness." },
+          { "question": "Is flossing alone enough?", "answer": "Flossing opens a window; you then need to use that mobility with exercise. The PDF protocol always pairs flossing with 2-3 follow-up drills." }
+        ]
+      },
+      "kinesiotape": {
+        "title": "Kinesiotape",
+        "shortDescription": "Knee, shoulder or back pain pulling you off training? Kinesiotape gives stability and reduces pain without limiting movement.",
+        "description": "Kinesiotape (elastic therapeutic tape) lifts the skin, opens lymph flow and gives proprioceptive input to a muscle that's overworked or injured. In the clinic a therapist tapes by diagnosis; the kit ships with a pro-grade roll + a free PDF and video covering 12 of the most common applications (knee, shoulder, back, achilles, elbow). Stability you wear for 3-5 days — no pills required.",
+        "benefits": ["Pain reduction without movement restriction", "Muscle and joint support", "Better proprioception", "Lymphatic drainage and reduced swelling"],
+        "duration": "15-25 min",
+        "process": "Pain area assessment → Technique selection (muscle / ligament / lymph) → Application → Care instructions",
+        "faq": [
+          { "question": "How long does one application last?", "answer": "3-5 days. You can shower and train in it — the tape is waterproof." },
+          { "question": "Can I tape myself?", "answer": "For simple zones (knee, achilles, lower back) — yes, the protocol video walks you through step-by-step. For shoulders and complex applications a therapist is better." },
+          { "question": "Does the tape heal the injury?", "answer": "No. The tape reduces pain and supports tissue while it heals — which is why it's always part of a wider protocol (exercise + recovery)." }
+        ]
+      },
+      "presoterapija": {
+        "title": "Pressotherapy",
+        "shortDescription": "Heavy legs after a long day or hard training? Compression boots do in 30 minutes what would otherwise take a full rest day.",
+        "description": "Pressotherapy (compression boots) uses sequential pressure to flush the venous and lymphatic system in your legs — the same principle the NBA and Tour de France use for post-training recovery. In the clinic we run a pro device with 4 pressure zones; for home use the shop offers a recovery stack: compression sleeves + magnesium + a free \"24h recovery\" PDF protocol. Less leg soreness, faster return to training.",
+        "benefits": ["Rapid leg-fatigue relief", "Reduced swelling and heaviness", "Faster lactate drainage", "Quicker turnaround between sessions"],
+        "duration": "30-45 min",
+        "process": "Recovery assessment → Boot setup → Sequential compression cycle → Home recovery routine plan",
+        "faq": [
+          { "question": "How often should I do pressotherapy?", "answer": "For athletes 2-3x weekly during heavy season; for recreational users 1x weekly or after particularly tough sessions." },
+          { "question": "Is the treatment comfortable?", "answer": "Very — most people fall asleep during the cycle. Strong enough to do the job, gentle enough to relax." },
+          { "question": "Who shouldn't use pressotherapy?", "answer": "People with deep vein thrombosis, severe heart failure or acute leg infections — always check with a specialist first." }
+        ]
+      },
+      "tretman-masaznim-pistoljem": {
+        "title": "Massage Gun Treatment",
+        "shortDescription": "Tight muscles after training or long desk hours? A massage gun unlocks knots in 5 minutes — we write the protocol, you use it at home every day.",
+        "description": "Percussive therapy (Theragun-style) breaks up myofascial adhesions, drives circulation and clears DOMS faster than classic massage. In the clinic a therapist knows where, how hard and how long — that's the whole game. In the shop you get a proven gun with attachments + a free PDF/video protocol per muscle group (quads, back, calves, shoulders). A pro-level recovery tool that doesn't require driving to a massage.",
+        "benefits": ["Quick release of muscle knots", "Less DOMS after training", "Pre-workout activation", "Daily home recovery routine"],
+        "duration": "15-30 min",
+        "process": "Map tight zones → Pick attachment + intensity → Treat by protocol → Home-use plan",
+        "faq": [
+          { "question": "Can I use a massage gun on myself?", "answer": "Yes — with a protocol. Rule: never directly on bony prominences, nerves or the inner thigh. The PDF shows safe zones and timing." },
+          { "question": "How long per muscle group?", "answer": "60-90 seconds per group. More doesn't give more — it just irritates the tissue." },
+          { "question": "Before or after training?", "answer": "Before training: 30 seconds per group for activation. After training: 60-90 seconds for recovery. Never on a painful, acutely injured area." }
         ]
       }
     }
@@ -263,9 +344,22 @@
       "title": "Vision",
       "description": "Sport Care Med as the first place an athlete in Serbia goes when something goes wrong — before AliExpress, before the pharmacy, before Google."
     },
+    "founder": {
+      "eyebrow": "Founder",
+      "name": "Đorđe Ignjatović",
+      "role": "Physiotherapist · Sports & Trauma Rehabilitation Specialist",
+      "bio": "Sport Care & Med was built with one job — connect proven sports-medicine products, real expertise and practical application across athletes, clubs and national teams. Đorđe Ignjatović is the founder and the person translating top-level sport know-how into the products and protocols you use. For twenty years he has led the rehabilitation team at OTP Pick Szeged handball club in Hungary — one of the most successful clubs in the region — with experience working with elite athletes, club systems and national teams. Everything that enters our shop and every protocol we publish has to pass one filter: would he hand it to his own athlete before a game? If not — it's not for you.",
+      "credentials": [
+        "20+ years of experience",
+        "Lead therapist at OTP Pick Szeged HC",
+        "National-team systems",
+        "Sports traumatology"
+      ],
+      "photoAlt": "Đorđe Ignjatović — founder of Sport Care Med"
+    },
     "team": {
-      "title": "Our Team",
-      "subtitle": "The specialists who pick every product in the shop and write every protocol."
+      "title": "The rest of the team",
+      "subtitle": "The specialists working alongside Đorđe who pick the shop's products and write the protocols."
     },
     "gallery": {
       "title": "Our Facility",
@@ -326,33 +420,215 @@
     }
   },
   "b2b": {
-    "title": "B2B Solutions",
-    "subtitle": "Bulk recovery kits + protocols for the whole team — with optional clinical backup",
-    "heroText": "One contract. A kit for every player. Fewer injuries, smaller treatment bill.",
-    "heroSubtext": "Recovery kits and PDF protocols for the entire roster, on-site therapist when needed, the Šabac clinic as backup. Cost per player drops dramatically.",
+    "title": "B2B Supply",
+    "subtitle": "Supplying clubs and professional teams",
+    "heroText": "Special pricing. Bulk orders. Club kits. A direct contract with a working sports-medicine team.",
+    "heroSubtext": "Equip the entire roster with recovery gear, taping supplies, supplements and first-aid — at prices individual purchases can't match.",
+    "primaryCta": "Apply for partnership",
+    "secondaryCta": "View kits",
+    "valueBullets": {
+      "title": "What your club gets",
+      "subtitle": "Four things we make obvious from the very first contact.",
+      "items": [
+        {
+          "title": "SPECIAL PRICING",
+          "description": "B2B discounts of 15–35% off retail — the more players, the deeper the discount."
+        },
+        {
+          "title": "BULK ORDERS",
+          "description": "Order once for the whole season. We pack, ship and invoice the club."
+        },
+        {
+          "title": "CLUB KITS",
+          "description": "Ready-made kits: recovery, taping, first-aid, supplements, warm-up. Or build your own."
+        },
+        {
+          "title": "PARTNERSHIP CONTACT",
+          "description": "One contact for everything — quote, contract, delivery, refill. No bouncing between suppliers."
+        }
+      ]
+    },
+    "kitsSection": {
+      "title": "Equipment kits for clubs",
+      "subtitle": "Five ready-made kits covering what a team uses week after week. Per-unit price drops sharply with order size."
+    },
+    "clinicBackup": {
+      "title": "Need clinical support too?",
+      "subtitle": "Beyond gear supply, our sports-medicine team can also cover hands-on work with players — as an optional add-on to the contract.",
+      "cta": "View clinical packages for teams"
+    },
+    "finalCta": {
+      "title": "Ready to partner up?",
+      "subtitle": "Send basic info about your club and within 24h you'll get a quote tailored to roster size and season.",
+      "button": "Register your club"
+    },
     "packages": {
-      "title": "Team packages",
-      "subtitle": "Pick: kits only, kits + on-site, or the full club package.",
-      "rehabilitation": {
-        "title": "Team Rehabilitation",
-        "description": "Kit + protocol + clinical coordination for every injured player."
-      },
-      "onsite": {
-        "title": "On-Site Physiotherapy",
-        "description": "Our therapist comes to training and matches — with a full bag of kits."
-      },
-      "prevention": {
-        "title": "Injury Prevention Programs",
-        "description": "FIFA 11+ protocol + bulk prevention kit + coach education. Fewer injuries, more players on the pitch."
-      },
-      "testing": {
-        "title": "Team Performance Testing",
-        "description": "FMS, strength, power — we test the whole roster in one day, you get the plan and a gear shortlist."
-      }
+      "title": "Equipment kits for clubs",
+      "subtitle": "Pick a ready-made kit or combine several for the whole roster."
     },
     "learnMore": "Learn More",
     "viewAll": "View all B2B packages",
     "forTeams": "For Teams",
+    "forClubs": "For Clubs",
+    "kits": {
+      "klupski-recovery-kit": {
+        "title": "Club Recovery Kit",
+        "shortDescription": "Foam roller, massage gun, ice packs and cryo gel — everything the team needs after training, in one box per player.",
+        "description": "After a hard session or match players do recovery — or they should. We pack the kit per player: foam roller, mini massage gun with attachments, two reusable ice packs, cryo gel spray and a short 10-minute routine guide. The club orders for the entire roster in one PO, we ship pre-packed and labeled. Bulk price drops up to 30% below retail, and the player actually knows what to use and how.",
+        "includes": [
+          "Foam roller (45 cm, EVA foam)",
+          "Mini massage gun with 4 attachments",
+          "2 reusable ice packs",
+          "Cryo gel spray (400 ml)",
+          "Recovery guide — 10-minute routine (PDF)",
+          "Packaging labeled with player name"
+        ],
+        "bulkPricing": "from 8,900 RSD/player at 25+ units",
+        "tiers": [
+          { "qty": "10–24 players", "price": "10,500 RSD/player", "discount": "15%" },
+          { "qty": "25–49 players", "price": "8,900 RSD/player", "discount": "22%" },
+          { "qty": "50+ players", "price": "7,700 RSD/player", "discount": "30%" }
+        ],
+        "leadTime": "Delivery in 5–7 business days",
+        "idealFor": ["Football clubs", "Basketball clubs", "Handball teams", "Athletics clubs"],
+        "stats": [
+          { "value": "30%", "label": "discount vs. retail" },
+          { "value": "5–7", "label": "day delivery" },
+          { "value": "1", "label": "contact for everything" }
+        ],
+        "faq": [
+          { "question": "Can we get a sample before a large order?", "answer": "Yes. We ship one full kit as a sample for testing before confirming a 25+ unit order." },
+          { "question": "Can we change the kit contents?", "answer": "You can add or skip individual items. The price adjusts transparently per item." },
+          { "question": "How do you invoice?", "answer": "One invoice to the club, with a delivery note per player name. Net-30 payment after delivery." }
+        ]
+      },
+      "taping-bandaging-paket": {
+        "title": "Taping & Bandaging Kit",
+        "shortDescription": "Kinesio tape, rigid tape, pre-wrap, scissors — what a therapist burns through in a season, in bulk pricing.",
+        "description": "Tape and bandages are consumables — the club always runs out, the therapist buys them piecemeal at pharmacies, and the price doubles. Our bulk pack covers a whole half-season: kinesio tape in 4 colors, rigid sports tape, pre-wrap rolls, sport scissors and adhesive spray. All in one box per therapist or facility.",
+        "includes": [
+          "Kinesio tape — 24 rolls (4 colors × 6)",
+          "Rigid sports tape — 24 rolls (3.8 cm)",
+          "Pre-wrap foam — 12 rolls",
+          "Sport scissors (2 pcs)",
+          "Adhesive spray (3 cans)",
+          "Basic taping techniques guide (PDF)"
+        ],
+        "bulkPricing": "from 24,500 RSD per half-season pack",
+        "tiers": [
+          { "qty": "1 pack", "price": "28,000 RSD", "discount": "15%" },
+          { "qty": "2–4 packs", "price": "24,500 RSD", "discount": "22%" },
+          { "qty": "5+ packs", "price": "21,500 RSD", "discount": "30%" }
+        ],
+        "leadTime": "Delivery in 3–5 business days",
+        "idealFor": ["Football clubs", "Combat sports", "Athletics clubs", "Sports academies"],
+        "stats": [
+          { "value": "30%", "label": "below pharmacy price" },
+          { "value": "6 mo.", "label": "covers half-season" },
+          { "value": "3–5", "label": "day delivery" }
+        ],
+        "faq": [
+          { "question": "Which brands do you use?", "answer": "We work with proven European sports-tape manufacturers. The specific brand depends on availability — we confirm with each pack." },
+          { "question": "Can we order kinesio tape only?", "answer": "Yes, every item can be ordered individually in bulk quantities. The price is still better than individual retail." },
+          { "question": "Do you offer custom colors or club logos?", "answer": "Logo on packaging — yes. Custom tape colors — possible for orders of 50+ rolls, contact us for details." }
+        ]
+      },
+      "prva-pomoc-paket": {
+        "title": "On-Field First-Aid Kit",
+        "shortDescription": "Sprays, cold packs, bandages, splints — a first-aid bag packed to sports-federation standards.",
+        "description": "Every federation rule: every training session and match must have a fully stocked first-aid bag. We pack the bag to protocol, label the contents, list expiry dates and a refill checklist. The club no longer has to track what's missing — once a year we ship a refill, replacing what was used.",
+        "includes": [
+          "Professional sports bag (waterproof)",
+          "Instant cold packs (10 pcs)",
+          "Elastic bandages in various sizes",
+          "Sterile gauze and plasters",
+          "Immobilization splints (finger, forearm, leg)",
+          "Cryo spray and wound spray",
+          "Gloves, scissors, tweezers",
+          "Contents list with expiry dates"
+        ],
+        "bulkPricing": "from 18,500 RSD per bag",
+        "tiers": [
+          { "qty": "1–2 bags", "price": "22,000 RSD", "discount": "15%" },
+          { "qty": "3–5 bags", "price": "18,500 RSD", "discount": "22%" },
+          { "qty": "6+ bags", "price": "15,900 RSD", "discount": "30%" }
+        ],
+        "leadTime": "Delivery in 5–7 business days",
+        "idealFor": ["Football clubs", "All youth academies", "Athletics clubs", "Combat sports"],
+        "stats": [
+          { "value": "100%", "label": "to federation standard" },
+          { "value": "1×", "label": "annual refill" },
+          { "value": "30%", "label": "below piecemeal retail" }
+        ],
+        "faq": [
+          { "question": "Does the bag meet football federation requirements?", "answer": "Yes. Contents align with standard first-aid equipment lists from FSS and regional federations." },
+          { "question": "What if something expires mid-season?", "answer": "We ship individual replacements on request, or do an annual lump-sum refill of everything used or expired." },
+          { "question": "Do we get training on how to use it?", "answer": "Each bag comes with a short guide and contents list. For a full first-aid course we have a separate module — contact us for details." }
+        ]
+      },
+      "suplementi-paket": {
+        "title": "Club Supplements Kit",
+        "shortDescription": "Magnesium, electrolytes, recovery shakes, protein — tested and free of WADA-listed substances.",
+        "description": "Team supplements are a minefield: too many brands, too many promises, risk of banned substances. We work with proven European manufacturers carrying Informed Sport / Cologne List certification. The kit is packed per player for a full month — magnesium for night recovery, electrolytes for training, recovery shake for post-match, optional protein.",
+        "includes": [
+          "Magnesium bisglycinate (30 days)",
+          "Electrolyte drink mix (30 sachets)",
+          "Recovery shake (10 servings)",
+          "Vitamin D3 + K2 (30 days)",
+          "Optional: whey protein (1 kg)",
+          "Composition and origin certificates"
+        ],
+        "bulkPricing": "from 6,500 RSD/player/month at 25+ players",
+        "tiers": [
+          { "qty": "10–24 players", "price": "7,800 RSD/player", "discount": "15%" },
+          { "qty": "25–49 players", "price": "6,500 RSD/player", "discount": "22%" },
+          { "qty": "50+ players", "price": "5,600 RSD/player", "discount": "30%" }
+        ],
+        "leadTime": "Monthly subscription, delivery in 5–7 days",
+        "idealFor": ["Professional teams", "Semi-professional clubs", "Athletics clubs", "Combat sports"],
+        "stats": [
+          { "value": "100%", "label": "WADA-safe certified" },
+          { "value": "30 days", "label": "per pack" },
+          { "value": "30%", "label": "below individual prices" }
+        ],
+        "faq": [
+          { "question": "Do you have proof of composition and certificates?", "answer": "Every product comes with a lab analysis and Informed Sport or Cologne List certification. We send these on request." },
+          { "question": "Can we customize the kit contents?", "answer": "Yes. You can drop the protein, add creatine, adjust the vitamin profile. The price adjusts transparently." },
+          { "question": "Monthly or seasonal payment?", "answer": "Both. Monthly subscription with no commitment, or a seasonal contract with an extra 5% discount." }
+        ]
+      },
+      "oprema-za-zagrevanje": {
+        "title": "Warm-Up & Mobility Kit",
+        "shortDescription": "Mini bands, resistance bands, mobility balls — what an S&C coach uses for the pre-training routine.",
+        "description": "FIFA 11+, dynamic warm-up, prevention — all of it requires equipment the club has to keep on hand. Our kit packs everything needed for group work with 25 players: mini bands in 3 resistance levels, long resistance bands, lacrosse balls for mobility, balance pads. Durable equipment, bought once for several seasons.",
+        "includes": [
+          "Mini bands 3 resistance levels (25 sets)",
+          "Long resistance bands (10 pcs)",
+          "Lacrosse mobility balls (25 pcs)",
+          "Balance pads (5 pcs)",
+          "Cones and markers (set of 50)",
+          "Guide: FIFA 11+ routines (PDF)"
+        ],
+        "bulkPricing": "from 42,000 RSD per club pack",
+        "tiers": [
+          { "qty": "1 pack (25 players)", "price": "48,000 RSD", "discount": "15%" },
+          { "qty": "2 packs (50 players)", "price": "42,000 RSD", "discount": "22%" },
+          { "qty": "3+ packs", "price": "36,000 RSD/pack", "discount": "30%" }
+        ],
+        "leadTime": "Delivery in 7–10 business days",
+        "idealFor": ["All youth academies", "Professional clubs", "Athletics clubs", "Fitness centers"],
+        "stats": [
+          { "value": "25", "label": "players per pack" },
+          { "value": "3+ seasons", "label": "equipment lifespan" },
+          { "value": "30%", "label": "discount vs. retail" }
+        ],
+        "faq": [
+          { "question": "Does the kit cover the FIFA 11+ protocol?", "answer": "Yes. All equipment is selected to cover every FIFA 11+ exercise, plus extra mobility work." },
+          { "question": "We have fewer than 25 players — is the kit worth it?", "answer": "Yes — the equipment is durable and stays with the club. For smaller groups we can adapt the pack (fewer pieces, lower price)." },
+          { "question": "Do you offer coach training?", "answer": "The kit comes with a PDF guide. For a full FIFA 11+ coach seminar we have a separate module — contact us for details." }
+        ]
+      }
+    },
     "services": {
       "timska-rehabilitacija": {
         "title": "Team Rehabilitation",
@@ -484,32 +760,29 @@
       }
     },
     "roi": {
-      "title": "How much you save with bulk kits",
-      "subtitle": "Compare ad-hoc treatment cost per player against the cost of kit + protocol for the whole team.",
-      "teamSize": "Team Size",
-      "avgInjuries": "Average injuries per season",
-      "sessionsPerInjury": "Average sessions per injury",
-      "individualCost": "Individual visit cost",
-      "b2bCost": "B2B contract (monthly)",
+      "title": "How much you save with bulk pricing",
+      "subtitle": "Compare what it would cost each player to buy gear at retail vs. one bulk order covering the whole roster.",
+      "teamSize": "Number of players",
+      "productsPerPlayer": "Items per player per year",
+      "avgRetailPrice": "Average retail price per item (RSD)",
+      "retailTotal": "Retail cost",
+      "bulkTotal": "B2B bulk price",
       "annualSavings": "Annual savings",
       "savingsPercent": "Savings",
-      "perSession": "per session",
-      "perMonth": "monthly",
+      "discountTier": "Your discount",
       "perYear": "annually",
-      "plusValue": "Plus included prevention and on-site coverage worth",
-      "cta": "Save {savings} — Request a Quote",
+      "cta": "Save {savings} — Send inquiry",
       "players": "players",
-      "injuries": "injuries",
-      "sessions": "sessions"
+      "items": "items"
     },
     "outcomes": {
-      "title": "The numbers behind our B2B packages",
-      "subtitle": "What clubs get when they swap ad-hoc treatment for a systematic kit + protocol approach.",
+      "title": "The numbers behind our B2B supply",
+      "subtitle": "What clubs get when one order covers what they otherwise buy 50 times piecemeal.",
       "stats": [
-        { "value": "50+", "label": "teams using our services" },
-        { "value": "800+", "label": "athletes under our care" },
-        { "value": "92%", "label": "successful return-to-play rate" },
-        { "value": "30%", "label": "fewer team injuries" }
+        { "value": "50+", "label": "clubs supplied regularly" },
+        { "value": "12,000+", "label": "items shipped per year" },
+        { "value": "30%", "label": "average savings vs. retail" },
+        { "value": "5–7", "label": "day average delivery" }
       ],
       "caseStudies": {
         "title": "Case Studies",
@@ -517,42 +790,43 @@
           {
             "team": "FK Šabac Youth",
             "sport": "Football",
-            "challenge": "High number of injuries during the season and long recovery periods",
-            "solution": "Implemented complete prevention program + team rehabilitation",
-            "result": "40% fewer injuries in the season, average 2 weeks shorter recovery"
+            "challenge": "S&C coach buying tape and ice packs piecemeal at pharmacies every week",
+            "solution": "Club Recovery Kit + Taping Pack for half-season, one PO, one invoice",
+            "result": "32% lower annual spend on consumables, zero 'we ran out' situations"
           },
           {
             "team": "KK Šabac",
             "sport": "Basketball",
-            "challenge": "Lack of continuous physiotherapy support",
-            "solution": "On-site physiotherapy + complete recovery program for 12 players",
-            "result": "All injured players returned ahead of schedule"
+            "challenge": "No consistent recovery gear supply — players improvising at home",
+            "solution": "Club Recovery Kit for 12 players, monthly refill of consumables",
+            "result": "All players on the same gear, recovery routine baked into daily training"
           },
           {
             "team": "Athletic Club Šabac",
             "sport": "Athletics",
-            "challenge": "Need for comprehensive testing of young athletes",
-            "solution": "Screening of 35 athletes, 8 high-risk cases identified",
-            "result": "Preventive program prevented 5 potential injuries"
+            "challenge": "Supplements bought individually, unverified brands, contamination risk",
+            "solution": "Club Supplements Kit with Informed Sport certification for 35 athletes",
+            "result": "Certified composition for every competitor, 28% lower monthly spend per athlete"
           }
         ]
       }
     },
     "proposal": {
-      "title": "Build a package for your team",
-      "subtitle": "Pick services and kits, enter team details, get an estimate.",
-      "step1Title": "Select Services",
-      "step1Subtitle": "Choose the packages you're interested in",
-      "step2Title": "Team Details",
-      "step2Subtitle": "Help us tailor the proposal",
-      "step3Title": "Proposal Review",
+      "title": "Build a quote for your club",
+      "subtitle": "Pick kits, set roster size and season — get an estimated price and annual savings.",
+      "step1Title": "Select kits",
+      "step1Subtitle": "Choose the packs you're interested in",
+      "step2Title": "Club details",
+      "step2Subtitle": "Help us tailor the bulk price",
+      "step3Title": "Quote review",
       "step3Subtitle": "Your personalized estimate",
-      "step4Title": "Contact Details",
-      "step4Subtitle": "Submit your inquiry and receive a detailed proposal",
-      "selectServices": "Selected services",
-      "fromPrice": "from {price} RSD/month",
+      "step4Title": "Contact details",
+      "step4Subtitle": "Submit and receive a detailed quote within 24h",
+      "selectKits": "Selected kits",
+      "fromPrice": "from {price} RSD/player",
+      "fromPriceFlat": "from {price} RSD",
       "sportType": "Sport / Organization type",
-      "teamSize": "Team size",
+      "teamSize": "Number of players",
       "seasonDuration": "Season duration (months)",
       "competitionLevel": "Competition level",
       "levels": {
@@ -561,21 +835,21 @@
         "semipro": "Semi-professional",
         "professional": "Professional"
       },
-      "estimatedMonthly": "Estimated monthly cost",
+      "estimatedOrder": "Estimated order price",
       "estimatedAnnual": "Estimated annual value",
-      "estimatedRoi": "Estimated annual savings",
+      "estimatedSavings": "Estimated annual savings",
       "seasonCoverage": "Season coverage",
       "months": "months",
-      "proposalSummary": "Proposal summary",
-      "selectedPackages": "Selected packages",
-      "organization": "Organization name",
+      "proposalSummary": "Quote summary",
+      "selectedPackages": "Selected kits",
+      "organization": "Club / organization name",
       "contactPerson": "Contact person",
       "email": "Email address",
       "phone": "Phone number",
       "notes": "Additional notes",
-      "submit": "Submit proposal inquiry",
+      "submit": "Submit quote inquiry",
       "sending": "Sending...",
-      "success": "Inquiry sent successfully! Our team will send you a detailed proposal within 24 hours.",
+      "success": "Inquiry sent successfully! Our team will send you a detailed quote within 24 hours.",
       "error": "An error occurred. Please try again.",
       "next": "Next",
       "back": "Back",
@@ -583,12 +857,12 @@
     },
     "quote": {
       "title": "Send a quote inquiry",
-      "organization": "Organization Name",
-      "contactPerson": "Contact Person",
-      "email": "Email Address",
-      "phone": "Phone Number",
-      "sportType": "Sport / Organization Type",
-      "teamSize": "Team Size",
+      "organization": "Club / organization name",
+      "contactPerson": "Contact person",
+      "email": "Email address",
+      "phone": "Phone number",
+      "sportType": "Sport / Organization type",
+      "teamSize": "Number of players",
       "message": "Describe your needs",
       "submit": "Submit Inquiry",
       "sending": "Sending...",
@@ -596,8 +870,8 @@
       "error": "An error occurred. Please try again."
     },
     "clients": {
-      "title": "Our Clients",
-      "subtitle": "Teams and organizations that trust us"
+      "title": "Clubs we supply",
+      "subtitle": "Teams and organizations on active B2B contracts with us"
     }
   },
   "footer": {

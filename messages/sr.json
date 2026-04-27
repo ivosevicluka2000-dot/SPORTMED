@@ -27,7 +27,11 @@
     "b2b": "B2B Rešenja",
     "blog": "Blog",
     "shop": "Prodavnica",
-    "tools": "Alati"
+    "tools": "Alati",
+    "servicesGroups": {
+      "rehab": "Rehab",
+      "recovery": "Recovery"
+    }
   },
   "hero": {
     "title": "Vratite se na teren brže sa pravom opremom i pravim protokolom",
@@ -47,6 +51,18 @@
     "relatedServices": "Slično vam može trebati",
     "bookNow": "Pogledajte preporučene proizvode",
     "faq": "Česta pitanja",
+    "groups": {
+      "rehab": {
+        "label": "Rehab",
+        "title": "Rešavanje povrede — Rehab",
+        "subtitle": "Bol, otežano kretanje, blokade. Kit + protokol + klinika kada zatreba."
+      },
+      "recovery": {
+        "label": "Recovery",
+        "title": "Brži oporavak — Recovery",
+        "subtitle": "Posle treninga, takmičenja ili teske nedelje — vraćamo vas u 100% bez izgubljenog dana."
+      }
+    },
     "items": {
       "fizikalna-terapija": {
         "title": "Fizikalna terapija",
@@ -150,6 +166,71 @@
           { "question": "Šta se testira na funkcionalnom testiranju?", "answer": "Testiramo snagu, izdržljivost, pokretljivost, ravnotežu, biomehaniku pokreta i specifične sportske sposobnosti relevantne za vaš sport." },
           { "question": "Koliko često treba ponavljati testiranje?", "answer": "Preporučujemo testiranje na svaka 3-6 meseci za praćenje napretka, ili pre i posle trenažnog perioda/sezone." },
           { "question": "Da li testiranje može sprečiti povrede?", "answer": "Da, funkcionalno testiranje identifikuje mišićne disbalanse i slabosti koje mogu dovesti do povreda, omogućavajući preventivni rad." }
+        ]
+      },
+      "cupping-terapija": {
+        "title": "Cupping terapija",
+        "shortDescription": "Ukleštene fascije i hronična napetost u leđima i ramenima? Cupping otključava tkivo — mi vam dajemo i set za kućnu primenu uz video protokol.",
+        "description": "Cupping (vakuum terapija) podiže fasciju, otvara cirkulaciju i razbija čvorove koje masaža sama teško da hvata. U klinici radimo klasični i dinamički cupping; za kuću nudimo silikonski set + besplatan PDF i video sa protokolom za leđa, vrat i kvadricepse. Manje upale, više pokreta — bez čekanja na termin.",
+        "benefits": ["Otključavanje miofascijalnih restrikcija", "Smanjenje napetosti i bola", "Pojačana lokalna cirkulacija", "Brži mišićni oporavak"],
+        "duration": "20-30 min",
+        "process": "Procena tkiva → Aplikacija čašica → Statika ili dinamički rad → Plan kućne primene",
+        "faq": [
+          { "question": "Da li cupping ostavlja modrice?", "answer": "Crvenkasti tragovi su normalni i nestaju za 3-7 dana. To su znaci da je tištena cirkulacija reagovala — ne prava modrica." },
+          { "question": "Koliko često se radi cupping?", "answer": "Za hronična stanja 1-2 puta nedeljno tokom 4 nedelje; za održavanje 1-2 puta mesečno ili kao deo nedeljne rutine kod kuće." },
+          { "question": "Da li mogu sam da koristim kućni set?", "answer": "Da — silikonski cupping set je bezbedan i jednostavan. PDF protokol i video pokazuju zone, redosled i trajanje za svako stanje." }
+        ]
+      },
+      "flossing-terapija": {
+        "title": "Flossing terapija",
+        "shortDescription": "Ukočen članak, koleno ili lakat ne pušta posle treninga? Flossing band vraća opseg pokreta za par minuta — kućna primena uz video protokol.",
+        "description": "Flossing koristi elastičnu gumenu traku za kompresiju zgloba uz aktivni pokret — što oslobadja fasciju, ispira tkivo i odmah širi opseg pokreta. U klinici aplikujemo na specifične zglobove; u kit dolazi traka + besplatan PDF/video sa protokolima za članak, koleno, lakat i rame. Rešenje koje radi posle 5 minuta, ne posle 5 termina.",
+        "benefits": ["Trenutno povećanje opsega pokreta", "Smanjenje ukočenosti zgloba", "Brži oporavak posle treninga", "Pomoć kod posttraumatskih restrikcija"],
+        "duration": "10-20 min",
+        "process": "Procena zgloba → Aplikacija trake → Aktivni pokret pod kompresijom → Reevaluacija opsega",
+        "faq": [
+          { "question": "Da li je flossing bolan?", "answer": "Pritisak je snažan ali kratak (max 1-2 minuta). Ako se pojavi utrnulost, traka se odmah skida — sigurno i kontrolisano." },
+          { "question": "Za koje povrede je najefikasniji?", "answer": "Najbolji rezultati: ukrutost članka posle uganuća, hronični teniski lakat, ograničen opseg ramena, postoperativna ukrutost kolena." },
+          { "question": "Da li je dovoljan samo flossing?", "answer": "Flossing otvara prozor; tu funkcionalnu vredbu zatim trebate iskoristiti vezbom. PDF protokol uvek kombinuje flossing + 2-3 vezbe." }
+        ]
+      },
+      "kinesiotape": {
+        "title": "Kinesiotape",
+        "shortDescription": "Bol u kolenu, ramenu ili leđima koji vas izbacuje sa treninga? Kinesiotape daje stabilnost i smanjuje bol bez ograničavanja pokreta.",
+        "description": "Kinesiotape (elastična terapeutska traka) podiže kožu, otvara limfu i daje proprioceptivni input mišiću koji je pretrenirao ili bio povređen. U klinici aplikuje terapeut po dijagnozi; u kit dolazi profesionalna rolna trake + besplatan PDF i video za 12 najčešćih aplikacija (koleno, rame, leđa, ahil, lakat). Stabilnost koja se nosi 3-5 dana — bez tableta.",
+        "benefits": ["Smanjenje bola bez ograničavanja pokreta", "Podrška mišića i zglobova", "Bolja propriocepcija", "Drenaza i smanjenje otoka"],
+        "duration": "15-25 min",
+        "process": "Procena bolne zone → Izbor tehnike (mišić / ligament / limfa) → Aplikacija → Saveti za održavanje",
+        "faq": [
+          { "question": "Koliko traje jedna aplikacija?", "answer": "3-5 dana. Može se tuširati i trenirati sa trakom — vodootporna je." },
+          { "question": "Mogu li sam da nalepim traku?", "answer": "Za jednostavne zone (koleno, ahil, donji deo leđa) — da, video iz našeg protokola pokazuje korak-po-korak. Za rame i kompleksnije aplikacije bolje je naš terapeut." },
+          { "question": "Da li traka leči povredu?", "answer": "Ne. Traka smanjuje bol i podržava tkivo dok ono zarasta — zato je uvek deo šireg protokola (vezbe + recovery)." }
+        ]
+      },
+      "presoterapija": {
+        "title": "Presoterapija",
+        "shortDescription": "Teške noge posle dugog dana ili intenzivnog treninga? Kompresivne čizme za 30 minuta urade ono što bi inace zahtevalo ceo slobodan dan.",
+        "description": "Presoterapija (kompresivne čizme) sekvencijalnim pritiskom prazni venski i limfni sistem nogu — isti princip koji koristi NBA i Tour de France za oporavak posle treninga. U klinici imamo profesionalni uređaj sa 4 zone pritiska; za kuću u shop-u nudimo recovery stack: kompresivne čarape + magnezijum + besplatan PDF \"24h recovery\" protokol. Manji bol u nogama, brzi povratak na trening.",
+        "benefits": ["Brzo uklanjanje umora iz nogu", "Smanjenje otoka i težine", "Ubrzana drenaza mlečne kiseline", "Brži povratak na sledeći trening"],
+        "duration": "30-45 min",
+        "process": "Procena oporavka → Postavljanje čizama → Sekvencijalni pritisak → Plan recovery rutine",
+        "faq": [
+          { "question": "Koliko često treba dolaziti na presoterapiju?", "answer": "Za sportiste 2-3x nedeljno tokom intenzivne sezone; za rekreativce 1x nedeljno ili posle posebno teškog treninga." },
+          { "question": "Da li je tretman prijatan?", "answer": "Veoma — većina pacijenata zaspi tokom seanse. Pritisak je dovoljno jak da radi posao, ali nije bolan." },
+          { "question": "Ko ne treba da koristi presoterapiju?", "answer": "Osobe sa duboke venske trombozom, teškom srčanom insuficijencijom ili akutnim infekcijama nogu — uvek pitajte specijalistu." }
+        ]
+      },
+      "tretman-masaznim-pistoljem": {
+        "title": "Tretman masažnim pištoljem",
+        "shortDescription": "Tvrdi mišići posle treninga ili dugog sedenja? Masažni pištolj otključava čvorove za 5 minuta — mi pišemo protokol, vi koristite kod kuće svaki dan.",
+        "description": "Perkusiona terapija (Theragun-style) razbija miofascijalne adhezije, podstiče cirkulaciju i smanjuje DOMS bolove brze nego klasična masaža. U klinici terapeut zna gde, koliko jako i koliko dugo — to je suština. U shop-u dobijate proveren pištolj sa nastavcima + besplatan PDF/video protokol po mišićnim grupama (kvadricepsi, leđa, list, rame). Profesionalni recovery alat koji ne zahteva odlazak na masažu.",
+        "benefits": ["Brzo uklanjanje mišićnih čvorova", "Smanjenje DOMS-a posle treninga", "Pripremni boost pred trening", "Svakodnevna recovery rutina kod kuće"],
+        "duration": "15-30 min",
+        "process": "Mapiranje napetih zona → Izbor nastavka i intenziteta → Tretman po protokolu → Plan kućne primene",
+        "faq": [
+          { "question": "Smem li sam da koristim masažni pištolj?", "answer": "Da — uz protokol. Pravilo: nikad direktno na koštane prominencije, nerve i unutrašnji deo bedra. PDF pokazuje sigurne zone i trajanje." },
+          { "question": "Koliko dugo na jednoj mišićnoj grupi?", "answer": "60-90 sekundi po grupi. Više ne donosi više — samo iritaciju tkiva." },
+          { "question": "Pre ili posle treninga?", "answer": "Pre treninga: 30 sekundi po grupi za aktivaciju. Posle treninga: 60-90 sekundi za recovery. Ne na bolnu, akutno povređenu zonu." }
         ]
       }
     }
@@ -263,9 +344,22 @@
       "title": "Vizija",
       "description": "Sport Care Med kao prvo mesto gde sportista u Srbiji ide kad povredi nešto — pre Aliexpressa, pre apoteke, pre Google-a."
     },
+    "founder": {
+      "eyebrow": "Osnivač",
+      "name": "Đorđe Ignjatović",
+      "role": "Fizioterapeut · Specijalista sportske i traumatske rehabilitacije",
+      "bio": "Sport Care & Med je osmišljen sa jednim ciljem — da povezuje vrhunske proizvode sportske medicine, stručno znanje i praktičnu primenu u radu sa sportistima, klubovima i savezima. Đorđe Ignjatović je osnivač brenda i vodi to preslikavanje znanja iz vrhunskog sporta u proizvode i protokole koje koristite vi. Dvadeset godina vodi rehabilitacioni tim Rukometnog kluba OTP Pick Szeged u Mađarskoj — jednog od najuspešnijih klubova u regionu — sa iskustvom u radu sa elitnim sportistima, klupskim i reprezentativnim sistemima. Sve što ulazi u naš shop i sve što pišemo kao protokol mora prvo da prođe taj filter: da li bi to dao svom sportisti pred utakmicu? Ako ne — nije za vas.",
+      "credentials": [
+        "20+ god. iskustva",
+        "Vodeći terapeut RK OTP Pick Szeged",
+        "Reprezentativni sistemi",
+        "Sportska traumatologija"
+      ],
+      "photoAlt": "Đorđe Ignjatović — osnivač Sport Care Med"
+    },
     "team": {
-      "title": "Naš tim",
-      "subtitle": "Specijalisti koji biraju svaki proizvod u shop-u i pišu svaki protokol."
+      "title": "Ostatak tima",
+      "subtitle": "Specijalisti uz Đorđa koji svakodnevno biraju proizvode u shop-u i pišu protokole."
     },
     "gallery": {
       "title": "Naš prostor",
@@ -326,33 +420,215 @@
     }
   },
   "b2b": {
-    "title": "B2B Rešenja",
-    "subtitle": "Bulk kit-ovi + protokoli za ceo tim — uz opcionalan klinički backup",
-    "heroText": "Jedan ugovor. Kit za svakog igrača. Manje povreda, manje budžeta na lečenje.",
-    "heroSubtext": "Recovery kit-ovi i PDF protokoli za ceo tim, on-site terapeut po potrebi, klinika u Šapcu kao backup. Cena po igraču dramatično pada.",
+    "title": "B2B Snabdevanje",
+    "subtitle": "Snabdevanje klubova i profesionalnih timova",
+    "heroText": "Specijalne cene. Bulk narudžbine. Paketi za klubove. Direktan ugovor sa sportsko-medicinskim timom.",
+    "heroSubtext": "Opremite ceo tim recovery opremom, taping materijalom, suplementima i prvom pomoći — po cenama koje individualne kupovine ne mogu da prate.",
+    "primaryCta": "Prijava za partnerstvo",
+    "secondaryCta": "Pogledajte pakete",
+    "valueBullets": {
+      "title": "Šta dobija vaš klub",
+      "subtitle": "Četiri stvari koje pravimo da budu očigledne od prvog kontakta.",
+      "items": [
+        {
+          "title": "SPECIJALNE CENE",
+          "description": "B2B rabati 15–35% u odnosu na maloprodajne cene — što više igrača, veći popust."
+        },
+        {
+          "title": "BULK NARUDŽBINE",
+          "description": "Naručite jednom za celu sezonu. Mi pakujemo, isporučujemo i fakturišemo na klub."
+        },
+        {
+          "title": "PAKETI ZA KLUBOVE",
+          "description": "Gotovi kit-ovi: recovery, taping, prva pomoć, suplementi, zagrevanje. Ili sastavite svoj."
+        },
+        {
+          "title": "KONTAKT ZA SARADNJU",
+          "description": "Jedan kontakt za sve — ponuda, ugovor, isporuka, dopuna. Bez lutanja po dobavljačima."
+        }
+      ]
+    },
+    "kitsSection": {
+      "title": "Paketi opreme za klubove",
+      "subtitle": "Pet gotovih kit-ova koji pokrivaju ono što tim svake nedelje troši. Cena po jedinici dramatično pada sa veličinom narudžbine."
+    },
+    "clinicBackup": {
+      "title": "Treba vam i klinička podrška?",
+      "subtitle": "Pored snabdevanja opremom, naš sportsko-medicinski tim može da pokrije i hands-on rad sa igračima — kao opcionalni dodatak ugovoru.",
+      "cta": "Pogledajte kliničke pakete za timove"
+    },
+    "finalCta": {
+      "title": "Spremni za saradnju?",
+      "subtitle": "Pošaljite osnovne podatke o klubu i u roku od 24h dobijate ponudu prilagođenu broju igrača i sezoni.",
+      "button": "Prijavite klub"
+    },
     "packages": {
-      "title": "Paketi za timove",
-      "subtitle": "Birajte: samo kit, kit + on-site, ili kompletan klub-paket.",
-      "rehabilitation": {
-        "title": "Timska rehabilitacija",
-        "description": "Kit + protokol za svakog povređenog igrača, plus klinička koordinacija."
-      },
-      "onsite": {
-        "title": "Fizioterapija na terenu",
-        "description": "Naš terapeut dolazi na treninge i utakmice — sa kompletnom torbom kit-ova."
-      },
-      "prevention": {
-        "title": "Programi prevencije povreda",
-        "description": "FIFA 11+ protokol + bulk prevencioni kit + edukacija trenera. Manje povreda, više igrača na terenu."
-      },
-      "testing": {
-        "title": "Testiranje performansi za timove",
-        "description": "FMS, snaga, eksplozivnost — testiramo sve igrače u jednom danu, dobijate plan i listu opreme."
-      }
+      "title": "Paketi opreme za klubove",
+      "subtitle": "Birajte gotov paket ili kombinujte više njih za ceo tim."
     },
     "learnMore": "Saznajte više",
     "viewAll": "Pogledajte sve B2B pakete",
     "forTeams": "Za timove",
+    "forClubs": "Za klubove",
+    "kits": {
+      "klupski-recovery-kit": {
+        "title": "Klupski Recovery Kit",
+        "shortDescription": "Foam roller, masažni pištolj, ledne obloge i krio gel — sve što tim treba posle treninga, u jednoj kutiji po igraču.",
+        "description": "Posle teškog treninga ili utakmice igrači rade recovery — ili bi trebalo da rade. Kit pakujemo po igraču: foam roller, mini masažni pištolj sa nastavcima, dve ledne obloge za višestruku upotrebu, krio gel sprej i kratak vodič za rutinu od 10 minuta. Klub naručuje za ceo tim u jednoj porudžbini, mi šaljemo upakovano i obeleženo. Bulk cena pada do 30% ispod maloprodaje, a igrač zna šta i kako koristi.",
+        "includes": [
+          "Foam roller (45 cm, EVA pena)",
+          "Mini masažni pištolj sa 4 nastavka",
+          "2 ledne obloge za višestruku upotrebu",
+          "Krio gel sprej (400 ml)",
+          "Recovery vodič — 10-minutna rutina (PDF)",
+          "Pakovanje označeno imenom igrača"
+        ],
+        "bulkPricing": "od 8.900 RSD/igrač pri 25+ jedinica",
+        "tiers": [
+          { "qty": "10–24 igrača", "price": "10.500 RSD/igrač", "discount": "15%" },
+          { "qty": "25–49 igrača", "price": "8.900 RSD/igrač", "discount": "22%" },
+          { "qty": "50+ igrača", "price": "7.700 RSD/igrač", "discount": "30%" }
+        ],
+        "leadTime": "Isporuka 5–7 radnih dana",
+        "idealFor": ["Fudbalski klubovi", "Košarkaški klubovi", "Rukometni timovi", "Atletski klubovi"],
+        "stats": [
+          { "value": "30%", "label": "popusta vs. maloprodaja" },
+          { "value": "5–7", "label": "dana isporuka" },
+          { "value": "1", "label": "kontakt za sve" }
+        ],
+        "faq": [
+          { "question": "Možemo li dobiti uzorak pre velike narudžbine?", "answer": "Da. Šaljemo jedan kompletan kit kao uzorak za testiranje pre potvrde porudžbine od 25+ komada." },
+          { "question": "Da li menjamo sastav kit-a?", "answer": "Možete dodati ili izostaviti pojedine artikle. Cena se prilagođava transparentno po artiklu." },
+          { "question": "Kako fakturišete?", "answer": "Jedna faktura na klub, sa otpremnicom po imenu igrača. Plaćanje 30 dana po isporuci." }
+        ]
+      },
+      "taping-bandaging-paket": {
+        "title": "Taping & Bandaging Paket",
+        "shortDescription": "Kinezio trake, krute trake, pre-wrap, makaze — sve što terapeut potroši za sezonu, u bulk cenama.",
+        "description": "Trake i bandaže su potrošna roba — klub ih uvek nedostaje, terapeut ih kupuje na sitno po apotekama, cena udvostručava. Naše bulk pakovanje pokriva ceo polusezonski period: kinezio trake u 4 boje, rigid taping trake, pre-wrap rolne, sportske makaze i adhezivni sprej. Sve u jednoj kutiji po terapeutu ili teretani.",
+        "includes": [
+          "Kinezio trake — 24 rolne (4 boje × 6)",
+          "Rigid sportska traka — 24 rolne (3.8 cm)",
+          "Pre-wrap pena — 12 rolni",
+          "Sportske makaze (2 kom)",
+          "Adhezivni sprej (3 boce)",
+          "Vodič za osnovne taping tehnike (PDF)"
+        ],
+        "bulkPricing": "od 24.500 RSD po pakovanju za polusezonu",
+        "tiers": [
+          { "qty": "1 pakovanje", "price": "28.000 RSD", "discount": "15%" },
+          { "qty": "2–4 pakovanja", "price": "24.500 RSD", "discount": "22%" },
+          { "qty": "5+ pakovanja", "price": "21.500 RSD", "discount": "30%" }
+        ],
+        "leadTime": "Isporuka 3–5 radnih dana",
+        "idealFor": ["Fudbalski klubovi", "Borilački sportovi", "Atletski klubovi", "Sportske akademije"],
+        "stats": [
+          { "value": "30%", "label": "ispod apotekarske cene" },
+          { "value": "6 mes.", "label": "pokriva polusezonu" },
+          { "value": "3–5", "label": "dana isporuka" }
+        ],
+        "faq": [
+          { "question": "Koje brendove koristite?", "answer": "Radimo sa proverenim evropskim proizvođačima sportskih traka. Konkretni brend zavisi od dostupnosti — javljamo unapred sa svakim pakovanjem." },
+          { "question": "Možemo li poručiti samo kinezio trake?", "answer": "Da, svaki artikal može da se naruči pojedinačno u bulk količinama. Cena ostaje povoljnija od pojedinačne maloprodaje." },
+          { "question": "Da li radite custom boje ili logotip kluba?", "answer": "Logotip na pakovanju — da. Custom boje traka — moguće preko narudžbine od 50+ rolni, javite se za detalje." }
+        ]
+      },
+      "prva-pomoc-paket": {
+        "title": "Paket za Prvu Pomoć na Terenu",
+        "shortDescription": "Sprejevi, hladni paketi, zavoji, šine — torba za prvu pomoć pakovana po standardu sportskih saveza.",
+        "description": "Pravilo svakog saveza: na svakom treningu i utakmici mora da postoji opremljena torba za prvu pomoć. Mi pakujemo torbu po protokolu, etiketiramo sadržaj, dajemo rok trajanja i listu za dopune. Klub više ne mora da brine šta je nestalo — jednom godišnje šaljemo dopunu, refilujemo ono što je potrošeno.",
+        "includes": [
+          "Profesionalna sportska torba (vodootporna)",
+          "Hladni instant paketi (10 kom)",
+          "Elastični zavoji različitih veličina",
+          "Sterilni gaze i flasteri",
+          "Šine za imobilizaciju (prst, podlaktica, noga)",
+          "Krio sprej i sprej za rane",
+          "Rukavice, makaze, pinceta",
+          "Lista sadržaja sa rokovima trajanja"
+        ],
+        "bulkPricing": "od 18.500 RSD po torbi",
+        "tiers": [
+          { "qty": "1–2 torbe", "price": "22.000 RSD", "discount": "15%" },
+          { "qty": "3–5 torbi", "price": "18.500 RSD", "discount": "22%" },
+          { "qty": "6+ torbi", "price": "15.900 RSD", "discount": "30%" }
+        ],
+        "leadTime": "Isporuka 5–7 radnih dana",
+        "idealFor": ["Fudbalski klubovi", "Sve omladinske akademije", "Atletski klubovi", "Borilački sportovi"],
+        "stats": [
+          { "value": "100%", "label": "po standardu saveza" },
+          { "value": "1×", "label": "godišnji refill" },
+          { "value": "30%", "label": "ispod sastavljanja u apoteci" }
+        ],
+        "faq": [
+          { "question": "Da li torba ispunjava zahteve fudbalskog saveza?", "answer": "Da. Sastav je usklađen sa standardnim listama opreme za prvu pomoć FSS i regionalnih saveza." },
+          { "question": "Šta ako nešto istekne u toku sezone?", "answer": "Šaljemo dopunu pojedinačno na zahtev, ili paušalno jednom godišnje refilujemo sve potrošeno i isteklo." },
+          { "question": "Imamo li obuku za korišćenje?", "answer": "Uz svaku torbu dolazi kratak vodič i lista sadržaja. Za pun kurs prve pomoći radimo poseban modul — javite se za detalje." }
+        ]
+      },
+      "suplementi-paket": {
+        "title": "Klupski Suplementi Paket",
+        "shortDescription": "Magnezijum, elektroliti, recovery napici, proteini — testirano i bez WADA listi.",
+        "description": "Suplementi za tim su minsko polje: previše brendova, previše obećanja, rizik od nedozvoljenih supstanci. Mi radimo sa proverenim evropskim proizvođačima koji imaju Informed Sport / Cologne List sertifikaciju. Paket pakujemo po igraču za ceo mesec — magnezijum za noćni oporavak, elektroliti za trening, recovery shake za posle utakmice, opciono protein.",
+        "includes": [
+          "Magnezijum bisglicinat (30 dana)",
+          "Elektrolitni napici (30 kesica)",
+          "Recovery shake (10 doza)",
+          "Vitamin D3 + K2 (30 dana)",
+          "Opciono: whey protein (1 kg)",
+          "Sertifikati o sastavu i poreklu"
+        ],
+        "bulkPricing": "od 6.500 RSD/igrač/mesec pri 25+ igrača",
+        "tiers": [
+          { "qty": "10–24 igrača", "price": "7.800 RSD/igrač", "discount": "15%" },
+          { "qty": "25–49 igrača", "price": "6.500 RSD/igrač", "discount": "22%" },
+          { "qty": "50+ igrača", "price": "5.600 RSD/igrač", "discount": "30%" }
+        ],
+        "leadTime": "Mesečna pretplata, isporuka 5–7 dana",
+        "idealFor": ["Profesionalni timovi", "Polu-profesionalni klubovi", "Atletski klubovi", "Borilački sportovi"],
+        "stats": [
+          { "value": "100%", "label": "WADA-safe sertifikati" },
+          { "value": "30 dana", "label": "po pakovanju" },
+          { "value": "30%", "label": "ispod individualnih cena" }
+        ],
+        "faq": [
+          { "question": "Imate li dokaz o sastavu i sertifikate?", "answer": "Svaki proizvod dolazi sa lab analizom i Informed Sport ili Cologne List sertifikatom. Šaljemo unapred na zahtev." },
+          { "question": "Možemo li menjati sastav paketa?", "answer": "Da. Možete izostaviti protein, dodati kreatin, prilagoditi vitaminski profil. Cena se transparentno prilagođava." },
+          { "question": "Plaćanje mesečno ili po sezoni?", "answer": "Oba. Mesečna pretplata bez obaveze, ili sezonski ugovor sa dodatnih 5% popusta." }
+        ]
+      },
+      "oprema-za-zagrevanje": {
+        "title": "Paket za Zagrevanje i Mobilnost",
+        "shortDescription": "Mini bandovi, otpor trake, lopte za mobilnost — sve što trener kondicije koristi za rutinu pre treninga.",
+        "description": "FIFA 11+, dinamičko zagrevanje, prevencija — sve traži opremu koju klub mora imati u sali. Naš paket pakuje sve potrebno za grupni rad sa 25 igrača: mini bandovi u 3 nivoa otpora, dugačke otpor trake, lacrosse loptice za mobilnost, balansne ploče. Trajna oprema, jednom kupljeno za nekoliko sezona.",
+        "includes": [
+          "Mini bandovi 3 nivoa otpora (25 setova)",
+          "Dugačke otpor trake (10 kom)",
+          "Lacrosse lopte za mobilnost (25 kom)",
+          "Balansne ploče (5 kom)",
+          "Konusi i markeri (komplet od 50)",
+          "Vodič: FIFA 11+ rutine (PDF)"
+        ],
+        "bulkPricing": "od 42.000 RSD po klupskom paketu",
+        "tiers": [
+          { "qty": "1 paket (25 igrača)", "price": "48.000 RSD", "discount": "15%" },
+          { "qty": "2 paketa (50 igrača)", "price": "42.000 RSD", "discount": "22%" },
+          { "qty": "3+ paketa", "price": "36.000 RSD/paket", "discount": "30%" }
+        ],
+        "leadTime": "Isporuka 7–10 radnih dana",
+        "idealFor": ["Sve omladinske akademije", "Profesionalni klubovi", "Atletski klubovi", "Fitness centri"],
+        "stats": [
+          { "value": "25", "label": "igrača po paketu" },
+          { "value": "3+ sez.", "label": "trajnost opreme" },
+          { "value": "30%", "label": "popusta vs. maloprodaja" }
+        ],
+        "faq": [
+          { "question": "Da li paket pokriva FIFA 11+ protokol?", "answer": "Da. Sva oprema je odabrana tako da pokriva sve vežbe FIFA 11+ rutine, plus dodatne mobility vežbe." },
+          { "question": "Imamo manju grupu od 25 igrača — vredi li paket?", "answer": "Vredi — oprema je trajna i ostaje klubu. Za manje grupe možemo prilagoditi pakovanje (manji broj komada, niža cena)." },
+          { "question": "Imate li edukaciju za trenere?", "answer": "Uz paket dolazi PDF vodič. Za pun seminar (FIFA 11+ trening za trenere) imamo poseban modul — javite se za detalje." }
+        ]
+      }
+    },
     "services": {
       "timska-rehabilitacija": {
         "title": "Timska rehabilitacija",
@@ -484,32 +760,29 @@
       }
     },
     "roi": {
-      "title": "Koliko štedite sa bulk kit-om",
-      "subtitle": "Uporedite trošak ad-hoc lečenja igrača sa cenom kit-a + protokola za ceo tim.",
-      "teamSize": "Broj članova tima",
-      "avgInjuries": "Prosečan broj povreda po sezoni",
-      "sessionsPerInjury": "Prosečan broj tretmana po povredi",
-      "individualCost": "Trošak individualnih poseta",
-      "b2bCost": "B2B ugovor (mesečno)",
+      "title": "Koliko štedite na bulk cenama",
+      "subtitle": "Uporedite koliko bi vas koštalo da svaki igrač sam kupi opremu po maloprodaji — sa cenom kad jedna porudžbina pokrije ceo tim.",
+      "teamSize": "Broj igrača",
+      "productsPerPlayer": "Artikala po igraču godišnje",
+      "avgRetailPrice": "Prosečna maloprodajna cena artikla (RSD)",
+      "retailTotal": "Trošak po maloprodaji",
+      "bulkTotal": "B2B bulk cena",
       "annualSavings": "Godišnja ušteda",
       "savingsPercent": "Ušteda",
-      "perSession": "po tretmanu",
-      "perMonth": "mesečno",
+      "discountTier": "Vaš popust",
       "perYear": "godišnje",
-      "plusValue": "Plus uključena prevencija i pokrivanje na terenu u vrednosti od",
-      "cta": "Uštedite {savings} — Zatražite ponudu",
+      "cta": "Uštedite {savings} — Pošaljite upit",
       "players": "igrača",
-      "injuries": "povreda",
-      "sessions": "tretmana"
+      "items": "artikala"
     },
     "outcomes": {
-      "title": "Brojevi iza naših B2B paketa",
-      "subtitle": "Šta klubovi dobijaju kad zamene ad-hoc lečenje sa sistematskim kit + protokol pristupom.",
+      "title": "Brojevi iza našeg B2B snabdevanja",
+      "subtitle": "Šta dobijaju klubovi koji jednom porudžbinom pokrivaju ono što inače kupuju 50 puta na sitno.",
       "stats": [
-        { "value": "50+", "label": "timova koristi naše usluge" },
-        { "value": "800+", "label": "sportista pod našom brigom" },
-        { "value": "92%", "label": "stopa uspešnog povratka" },
-        { "value": "30%", "label": "manje povreda u timu" }
+        { "value": "50+", "label": "klubova snabdevamo redovno" },
+        { "value": "12.000+", "label": "isporučenih artikala godišnje" },
+        { "value": "30%", "label": "prosečna ušteda vs. maloprodaja" },
+        { "value": "5–7", "label": "dana prosečna isporuka" }
       ],
       "caseStudies": {
         "title": "Studije slučaja",
@@ -517,42 +790,43 @@
           {
             "team": "FK Šabac Omladinci",
             "sport": "Fudbal",
-            "challenge": "Veliki broj povreda tokom sezone i dugi periodi oporavka igrača",
-            "solution": "Implementiran kompletni program prevencije + timska rehabilitacija",
-            "result": "40% manje povreda u sezoni, prosečno 2 nedelje kraći oporavak"
+            "challenge": "Kondicijski trener kupovao trake i ledne pakete na sitno po apotekama svake nedelje",
+            "solution": "Klupski Recovery Kit + Taping Paket za polusezonu, jedna porudžbina, jedna faktura",
+            "result": "32% niža godišnja potrošnja na potrošnu opremu, nula 'nestalo nam je' situacija"
           },
           {
             "team": "KK Šabac",
             "sport": "Košarka",
-            "challenge": "Nedostatak kontinuirane fizioterapeutske podrške",
-            "solution": "Fizioterapija na terenu + kompletni recovery program za 12 igrača",
-            "result": "Svi povređeni igrači vratili se pre planiranog roka"
+            "challenge": "Bez konzistentnog snabdevanja recovery opremom — igrači improvizovali kod kuće",
+            "solution": "Klupski Recovery Kit za 12 igrača, mesečna dopuna potrošnih artikala",
+            "result": "Svi igrači sa istom opremom, recovery rutina ušla u svakodnevni trening"
           },
           {
             "team": "Atletski klub Šabac",
             "sport": "Atletika",
-            "challenge": "Potreba za sveobuhvatnim testiranjem mladih sportista",
-            "solution": "Screening 35 sportista, identifikovano 8 visokih rizika",
-            "result": "Preventivnim programom sprečeno 5 potencijalnih povreda"
+            "challenge": "Suplementi kupovani individualno, nepouzdani brendovi, rizik od kontaminacije",
+            "solution": "Klupski Suplementi Paket sa Informed Sport sertifikatima za 35 sportista",
+            "result": "Sertifikovani sastav za sve takmičare, 28% niža mesečna potrošnja po sportisti"
           }
         ]
       }
     },
     "proposal": {
-      "title": "Sastavite paket za vaš tim",
-      "subtitle": "Izaberite usluge i kit-ove, unesite podatke o timu i dobijte procenu.",
-      "step1Title": "Izaberite usluge",
-      "step1Subtitle": "Označite pakete koji vas interesuju",
-      "step2Title": "Podaci o timu",
-      "step2Subtitle": "Pomozite nam da prilagodimo ponudu",
+      "title": "Sastavite ponudu za vaš klub",
+      "subtitle": "Izaberite kit-ove, unesite veličinu tima i sezonu — dobijate procenu cene i godišnje uštede.",
+      "step1Title": "Izaberite kit-ove",
+      "step1Subtitle": "Označite pakete koje vas interesuju",
+      "step2Title": "Podaci o klubu",
+      "step2Subtitle": "Pomozite nam da prilagodimo bulk cenu",
       "step3Title": "Pregled ponude",
       "step3Subtitle": "Vaša personalizovana procena",
       "step4Title": "Kontakt podaci",
-      "step4Subtitle": "Pošaljite upit i dobijte detaljnu ponudu",
-      "selectServices": "Izabrane usluge",
-      "fromPrice": "od {price} RSD/mesec",
+      "step4Subtitle": "Pošaljite upit i dobijte detaljnu ponudu u roku od 24h",
+      "selectKits": "Izabrani kit-ovi",
+      "fromPrice": "od {price} RSD/igrač",
+      "fromPriceFlat": "od {price} RSD",
       "sportType": "Sport / Vrsta organizacije",
-      "teamSize": "Broj članova tima",
+      "teamSize": "Broj igrača",
       "seasonDuration": "Trajanje sezone (meseci)",
       "competitionLevel": "Nivo takmičenja",
       "levels": {
@@ -561,14 +835,14 @@
         "semipro": "Polu-profesionalni",
         "professional": "Profesionalni"
       },
-      "estimatedMonthly": "Procenjena mesečna cena",
+      "estimatedOrder": "Procenjena cena porudžbine",
       "estimatedAnnual": "Procenjena godišnja vrednost",
-      "estimatedRoi": "Procenjena godišnja ušteda",
+      "estimatedSavings": "Procenjena godišnja ušteda",
       "seasonCoverage": "Pokrivanje sezone",
       "months": "meseci",
       "proposalSummary": "Rezime ponude",
-      "selectedPackages": "Izabrani paketi",
-      "organization": "Naziv organizacije",
+      "selectedPackages": "Izabrani kit-ovi",
+      "organization": "Naziv kluba / organizacije",
       "contactPerson": "Kontakt osoba",
       "email": "Email adresa",
       "phone": "Broj telefona",
@@ -583,12 +857,12 @@
     },
     "quote": {
       "title": "Pošaljite upit za ponudu",
-      "organization": "Naziv organizacije",
+      "organization": "Naziv kluba / organizacije",
       "contactPerson": "Kontakt osoba",
       "email": "Email adresa",
       "phone": "Broj telefona",
       "sportType": "Sport / Vrsta organizacije",
-      "teamSize": "Broj članova tima",
+      "teamSize": "Broj igrača",
       "message": "Opišite vaše potrebe",
       "submit": "Pošaljite upit",
       "sending": "Slanje...",
@@ -596,8 +870,8 @@
       "error": "Došlo je do greške. Pokušajte ponovo."
     },
     "clients": {
-      "title": "Naši klijenti",
-      "subtitle": "Timovi i organizacije koji nam veruju"
+      "title": "Klubovi koje snabdevamo",
+      "subtitle": "Timovi i organizacije sa kojima imamo aktivne B2B ugovore"
     }
   },
   "footer": {
