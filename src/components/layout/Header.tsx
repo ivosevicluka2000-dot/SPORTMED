@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
@@ -127,7 +128,7 @@ export default function Header() {
       : "bg-white/95 backdrop-blur-md border-b border-gray-100/80";
 
   const textColor = !scrolled && isHome && !mobileOpen ? "text-white/80" : "text-gray-500";
-  const logoColor = !scrolled && isHome && !mobileOpen ? "text-white" : "text-navy";
+  const onTransparent = !scrolled && isHome && !mobileOpen;
   const activeColor = "text-teal";
 
   return (
@@ -136,16 +137,15 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 md:h-24">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-teal rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <div className="hidden sm:block">
-                <span className={cn("font-heading font-semibold text-xl tracking-tight transition-colors duration-300", logoColor)}>
-                  Sport Care
-                </span>
-                <span className="text-teal font-heading font-semibold text-xl"> Med</span>
-              </div>
+            <Link href="/" className="flex items-center" aria-label="Sport Care Med">
+              <Image
+                src={onTransparent ? "/logo-light.png" : "/logo.png"}
+                alt="Sport Care Med"
+                width={380}
+                height={73}
+                priority
+                className="h-9 md:h-10 w-auto"
+              />
             </Link>
 
             {/* Desktop nav */}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Phone, Mail, MapPin } from "lucide-react";
@@ -24,15 +25,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-teal rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <div>
-                <span className="font-heading font-semibold text-xl">Sport Care</span>
-                <span className="text-teal font-heading font-semibold text-xl"> Med</span>
-              </div>
-            </div>
+            <Link href="/" className="inline-block mb-6" aria-label="Sport Care Med">
+              <Image
+                src="/logo-light.png"
+                alt="Sport Care Med"
+                width={380}
+                height={73}
+                className="h-10 w-auto"
+              />
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               {t("description")}
             </p>
