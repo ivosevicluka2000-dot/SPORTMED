@@ -3,7 +3,6 @@ import Hero from "@/components/sections/Hero";
 import HomeTiles from "@/components/sections/HomeTiles";
 import ServicesOverview from "@/components/sections/ServicesOverview";
 import WhyUs from "@/components/sections/WhyUs";
-import Testimonials from "@/components/sections/Testimonials";
 import CaseStudies from "@/components/sections/CaseStudies";
 import Partners from "@/components/sections/Partners";
 import LocationPreview from "@/components/sections/LocationPreview";
@@ -30,7 +29,6 @@ export default function HomePage() {
       <HomeTiles />
       <ServicesOverview />
       <WhyUs />
-      <Testimonials />
       <CaseStudies />
       <Partners />
       <LocationPreview />
