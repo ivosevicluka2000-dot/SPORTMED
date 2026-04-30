@@ -8,12 +8,10 @@ export default function Partners() {
   const t = useTranslations("partners");
 
   const partners = [
-    "Partner 1",
-    "Partner 2",
-    "Partner 3",
-    "Partner 4",
-    "Partner 5",
-    "Partner 6",
+    "RK Metaloplastika Šabac",
+    "ŽRK Medicinar",
+    "ORK Mačva",
+    "Kajak klub Zorka",
   ];
 
   return (
@@ -25,18 +23,18 @@ export default function Partners() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6"
+        className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6"
       >
         {partners.map((partner, index) => (
           <div
             key={partner}
-            className="flex items-center justify-center h-12 px-6"
+            className="flex items-center justify-center h-14"
           >
-            <span className="text-gray-300 font-medium text-sm tracking-wide">
+            <span className="text-gray-500 font-semibold text-sm md:text-base tracking-[0.18em] uppercase whitespace-nowrap">
               {partner}
             </span>
             {index < partners.length - 1 && (
-              <div className="hidden lg:block w-px h-5 bg-gray-200 ml-12" />
+              <div className="hidden lg:block w-px h-6 bg-gray-200 ml-10" />
             )}
           </div>
         ))}
