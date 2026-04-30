@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Navy — deepened for richness */
-  --color-navy: #070F1E;
-  --color-navy-light: #0F1A2E;
-  --color-navy-dark: #040A14;
-  --color-navy-50: #F0F2F7;
+  /* Navy — slate gray palette */
+  --color-navy: #4F636A;
+  --color-navy-light: #5F757D;
+  --color-navy-dark: #3E4F55;
+  --color-navy-50: #EEF1F2;
 
   /* Teal — soft sky blue accent */
   --color-teal: #9ECDE8;
@@ -35,8 +35,8 @@
   --font-heading: "Playfair Display", Georgia, "Times New Roman", serif;
 
   /* Shadows */
-  --shadow-soft: 0 2px 15px -3px rgba(7, 15, 30, 0.06), 0 1px 6px -1px rgba(7, 15, 30, 0.04);
-  --shadow-elevated: 0 10px 40px -10px rgba(7, 15, 30, 0.1), 0 4px 15px -3px rgba(7, 15, 30, 0.05);
+  --shadow-soft: 0 2px 15px -3px rgba(79, 99, 106, 0.06), 0 1px 6px -1px rgba(79, 99, 106, 0.04);
+  --shadow-elevated: 0 10px 40px -10px rgba(79, 99, 106, 0.1), 0 4px 15px -3px rgba(79, 99, 106, 0.05);
 }
 
 @layer base {
@@ -46,7 +46,7 @@
 
   ::selection {
     background-color: rgba(0, 152, 180, 0.15);
-    color: #070F1E;
+    color: #4F636A;
   }
 
   body {

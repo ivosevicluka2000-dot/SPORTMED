@@ -39,6 +39,27 @@
     "cta": "Pogledajte prodavnicu",
     "learnMore": "Preuzmite besplatan vodič"
   },
+  "homeTiles": {
+    "learnMore": "Saznajte više",
+    "items": {
+      "premiumProduct": {
+        "title": "Premium proizvodi",
+        "subtitle": "Recovery kitovi i suplementi koje bira naš sportsko-medicinski tim."
+      },
+      "b2bSolutions": {
+        "title": "B2B rešenja",
+        "subtitle": "Programi nege, fizioterapije na terenu i oporavka za klubove i timove."
+      },
+      "education": {
+        "title": "Edukacija",
+        "subtitle": "Protokoli, vodiči i članci za pametniji trening i brži oporavak."
+      },
+      "clinicRehab": {
+        "title": "Klinika i rehabilitacija",
+        "subtitle": "Praktični tretmani rehabilitacije i oporavka u našoj klinici u Šapcu."
+      }
+    }
+  },
   "services": {
     "title": "Šta vam pomažemo da rešite",
     "subtitle": "Za svaku povredu — kit, protokol i, ako baš zatreba, klinika. Bez praznog hoda.",

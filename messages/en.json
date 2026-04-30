@@ -39,6 +39,27 @@
     "cta": "Shop the kit",
     "learnMore": "Get the free guide"
   },
+  "homeTiles": {
+    "learnMore": "Explore",
+    "items": {
+      "premiumProduct": {
+        "title": "Premium Product",
+        "subtitle": "Recovery kits and supplements selected by our sports-medicine team."
+      },
+      "b2bSolutions": {
+        "title": "B2B Solutions",
+        "subtitle": "Tailored care, on-field physio and recovery programs for clubs and teams."
+      },
+      "education": {
+        "title": "Education",
+        "subtitle": "Protocols, guides and articles to train smarter and recover faster."
+      },
+      "clinicRehab": {
+        "title": "Clinic & Rehab",
+        "subtitle": "Hands-on rehab and recovery treatments at our clinic in Šabac."
+      }
+    }
+  },
   "services": {
     "title": "What we help you fix",
     "subtitle": "For every injury — a kit, a protocol and, if you really need it, the clinic. No wasted steps.",

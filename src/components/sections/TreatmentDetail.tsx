@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { motion } from "framer-motion";
@@ -8,7 +9,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import ServiceFaq from "@/components/sections/ServiceFaq";
 import StickyServiceCta from "@/components/sections/StickyServiceCta";
-import { treatments } from "@/lib/utils";
+import { treatments, treatmentImages } from "@/lib/utils";
 import {
   ArrowLeft,
   ArrowRight,
@@ -244,18 +245,29 @@ export default function TreatmentDetail({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {relatedTreatments.map((rt) => (
               <Link key={rt.slug} href={{ pathname: "/usluge/[slug]", params: { slug: rt.slug } }}>
-                <div className="group border border-gray-100 rounded-xl p-6 hover:shadow-[var(--shadow-soft)] transition-shadow bg-white">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full border border-teal/30 flex items-center justify-center text-teal group-hover:border-teal transition-colors flex-shrink-0">
-                      {iconMapSmall[rt.icon]}
+                <div className="group border border-gray-100 rounded-xl overflow-hidden hover:shadow-[var(--shadow-soft)] transition-shadow bg-white">
+                  <div className="flex items-stretch gap-4">
+                    <div className="relative w-28 sm:w-32 flex-shrink-0 bg-gray-100 overflow-hidden">
+                      <Image
+                        src={treatmentImages[rt.slug as keyof typeof treatmentImages]}
+                        alt={t(`items.${rt.slug}.title`)}
+                        fill
+                        sizes="128px"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     </div>
-                    <div>
-                      <h3 className="font-heading font-semibold text-navy mb-1">
-                        {t(`items.${rt.slug}.title`)}
-                      </h3>
-                      <p className="text-sm text-gray-400">
-                        {t(`items.${rt.slug}.shortDescription`)}
-                      </p>
+                    <div className="flex items-start gap-4 p-5 pl-0">
+                      <div className="w-10 h-10 rounded-full border border-teal/30 flex items-center justify-center text-teal group-hover:border-teal transition-colors flex-shrink-0">
+                        {iconMapSmall[rt.icon]}
+                      </div>
+                      <div>
+                        <h3 className="font-heading font-semibold text-navy mb-1">
+                          {t(`items.${rt.slug}.title`)}
+                        </h3>
+                        <p className="text-sm text-gray-400">
+                          {t(`items.${rt.slug}.shortDescription`)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

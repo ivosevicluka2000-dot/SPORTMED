@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Hero from "@/components/sections/Hero";
+import HomeTiles from "@/components/sections/HomeTiles";
 import ServicesOverview from "@/components/sections/ServicesOverview";
 import WhyUs from "@/components/sections/WhyUs";
 import Testimonials from "@/components/sections/Testimonials";
@@ -26,6 +27,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <HomeTiles />
       <ServicesOverview />
       <WhyUs />
       <Testimonials />
