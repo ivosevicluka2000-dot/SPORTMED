@@ -1,153 +1,108 @@
 # Sport Care Med — Admin Guide
 
-A quick walkthrough of the admin panel (Sanity Studio) at `/studio`.
+The admin panel lives at `/admin` (e.g. `https://your-domain.tld/sr/admin`).
+It is fully bilingual (Serbian + English) and backed by Supabase.
 
 ---
 
-## 1. Logging in
+## 1. First-time setup
 
-1. Open `https://your-domain.tld/studio` in your browser.
-2. Click **"Continue with Google"** (or "Continue with email" for a magic-link).
-3. Use the email address that was invited as **Administrator** in
-   [sanity.io/manage](https://sanity.io/manage).
-   - If you do not have an invitation yet, ask the developer to add you.
-4. After login the sidebar shows: **Blog posts**, **Authors**, **Blog
-   categories**, **Discount codes**, **Leads**, **Newsletter**. That is the
-   entire admin surface — there is no separate user database to maintain.
+1. Sign up for an account at `/sr/nalog/registracija` (or `/en/nalog/registracija`).
+2. Confirm your email by clicking the link sent by Supabase.
+3. Promote your account to **admin** by running this in the Supabase SQL editor:
 
-> 💡 Visitors of the public site never see the login screen. Studio is only
-> reachable at `/studio` and is excluded from search engines (`robots.ts`
-> + `noindex`).
+   ```sql
+   update profiles set role = 'admin' where id = '<YOUR_USER_ID>';
+   ```
 
----
+   You can find your user id under Supabase → **Authentication → Users**.
+4. Log in at `/sr/nalog/prijava`. You will now see an **Admin** link in the
+   header menu, and `/sr/admin` will load the dashboard.
 
-## 2. Writing a blog post (Serbian + English)
-
-1. Sidebar → **Blog posts** → **Create new** (top-right ✚).
-2. Fill in for **Serbian** (default tab):
-   - **Title (sr)** — appears in `/blog`
-   - **Slug (sr)** — auto-generated, edit if you want a custom URL
-   - **Excerpt (sr)** — short summary used on listings and SEO
-   - **Body (sr)** — the article content (rich text)
-3. Switch to the **English** tab (or scroll to the English fields) and fill
-   the same fields in English. Both languages are required for the post to
-   appear on `/en/blog`.
-4. Pick a **Category** and **Author** from the dropdowns.
-5. Upload a **Cover image** (recommended ≥ 1600×900, JPG or PNG).
-6. Click **Publish** in the bottom-right.
-7. Verify:
-   - Serbian: open `https://your-domain.tld/blog/<slug-sr>`
-   - English: open `https://your-domain.tld/en/blog/<slug-en>`
-
-> Drafts are saved automatically. Use **Publish** when the post is ready
-> for the public site. **Unpublish** removes it from the live site without
-> deleting it.
+> ⚠️ Anyone without `role='admin'` will see a *Forbidden* page on `/admin`.
 
 ---
 
-## 3. Adding a discount code
+## 2. Dashboard (`/admin`)
 
-1. Sidebar → **Discount codes** → ✚.
-2. Fill in:
-   - **Code** — what the customer types at checkout (e.g. `SUMMER10`).
-     Always uppercase, no spaces.
-   - **Type** — `percent` (e.g. 10 = 10% off) or `fixed` (e.g. 500 = 500 RSD off).
-   - **Value** — the number itself.
-   - **Active** — toggle **on** to enable the code immediately.
-   - *(Optional)* **Valid from / Valid until** — schedule the code.
-   - *(Optional)* **Max uses** — total number of orders that may use this
-     code. Leave empty for unlimited.
-   - *(Optional)* **Min order amount** — minimum subtotal (RSD) required.
-3. **Publish**.
-4. Test on the storefront: add an item to cart → go to checkout → enter the
-   code. You should see the discount applied.
-5. Each successful order automatically increments **Used count** so you can
-   see how popular a code is. When **Used count ≥ Max uses**, the server
-   rejects further attempts even if the customer types it correctly.
-
-> To deactivate a code without deleting it, set **Active** → off and
-> publish again.
+Shows quick counts: products, orders, blog posts, new leads. Use the
+sidebar to jump into any section.
 
 ---
 
-## 4. Viewing leads (contact, B2B, popups)
+## 3. Products (`/admin/products`)
 
-The **Leads** section is the spreadsheet-style inbox for every form on the
-site (contact form, B2B inquiry, lead-capture popup, exit-intent popup).
-There are **no email notifications** for leads — open this list to check.
+- **New product** → bilingual name + description, slug, price, optional
+  compare-at price, stock count, category, type (physical / PDF), images
+  uploaded directly to Supabase Storage (`product-images` bucket),
+  Featured / Active toggles.
+- Edit any product by clicking it in the list. **Delete** appears at the
+  bottom of the edit page (with a confirm prompt).
+- All bilingual fields have **SR** / **EN** tabs — both are saved on every
+  submit, so you cannot accidentally clear the other language.
 
-Sidebar → **Leads** opens a sub-menu:
+## 4. Categories (`/admin/categories`)
 
-| View | What it shows |
-| ---- | ------------- |
-| **New** | Leads you have not handled yet (status = `new`). Start here. |
-| **Contacted** | Leads you reached out to but did not close yet. |
-| **Closed** | Done deals or rejections — kept for the record. |
-| **All leads** | Everything, newest first. |
-| **By source: Contact form** | Only leads coming from the main contact form. |
-| **By source: B2B** | Only B2B inquiries. |
-| **By source: Popups** | Lead-capture + exit-intent popups. |
-| **⬇ Export to CSV** | Downloads every lead as a UTF-8 CSV (opens in Excel & Google Sheets). |
+Same pattern as products — bilingual title and description, single image,
+sort order. Categories drive the storefront filter sidebar.
 
-### Marking a lead as contacted
+## 5. Discount codes (`/admin/discounts`)
 
-1. Open the lead by clicking its row.
-2. Add any context in **Internal notes**.
-3. Change **Status** from `New` → `Contacted` (or `Closed`).
-4. Click **Publish**.
+Create % or fixed-amount codes with optional date window, max uses, and
+minimum order amount. The `used_count` is updated automatically when an
+order is confirmed.
 
-The lead now disappears from the **New** view and shows up under
-**Contacted**/**Closed**.
+## 6. Orders (`/admin/orders`)
 
-> Tip: The badge of available leads is the count under the **New** view —
-> click it once a day to see the new requests.
+Read-only list of all orders. Open any order to see the customer info,
+line items, payment method, totals, and **change the status**:
+`pending → awaiting_payment → confirmed → paid → processing → shipped →
+delivered`, or `cancelled` / `failed`.
 
----
+Status changes are reflected in the customer's account dashboard
+(`/sr/nalog`) and trigger discount usage tracking on first confirmation.
 
-## 5. Newsletter subscribers
+## 7. Blog posts (`/admin/blog`)
 
-Sidebar → **Newsletter** opens a sub-menu:
+Each blog post is a **single language** (SR or EN) row. To publish the
+same article in both languages:
 
-| View | What it shows |
-| ---- | ------------- |
-| **Active subscribers** | People currently receiving the newsletter. |
-| **Unsubscribed** | People who opted out (kept on file to avoid re-adding). |
-| **All subscribers** | Everything. |
-| **⬇ Export to CSV** | Download the full list (use this to import into your email tool). |
+1. Create the SR version first.
+2. Open it for editing — top-right shows **+ Translation group (EN)**.
+3. Click it → the EN editor opens pre-linked via the same
+   `translation_group` UUID. Public language switcher will swap to it.
 
-You receive a notification email *every time* somebody subscribes, so you
-do not need to refresh this page constantly. To remove a subscriber
-permanently, open them and click **Delete** (top-right ⋯ menu) — but
-prefer toggling **Unsubscribed** = on so you keep an audit trail.
+**Body** is Markdown. Use the **Preview** toggle to see rendered output.
+Headings (`##`), lists, links, images and code blocks are all supported.
 
----
+`Publish date` empty = draft (not visible publicly).
 
-## 6. CSV export tips
+## 8. Authors (`/admin/authors`)
 
-- Both **Leads** and **Newsletter** have a **⬇ Export to CSV** entry as the
-  last item in the sub-menu.
-- Click it, then press **Download CSV**. The file downloads as
-  `leads-YYYY-MM-DD.csv` (or `newsletter-subscribers-YYYY-MM-DD.csv`).
-- The file is UTF-8 with a BOM, so Cyrillic and special characters open
-  correctly in Excel and Google Sheets.
-- The CSV always reflects the latest data — there is no stale cache.
+Author profile with bilingual bio, role label, and avatar (uploaded to
+`blog-images` bucket). Linked to blog posts via the **Author** dropdown.
 
----
+## 9. Leads (`/admin/leads`)
 
-## 7. Quick troubleshooting
+All form submissions (contact, B2B inquiries, popups). Expand any row to
+see the message, set status (`new` / `contacted` / `closed`) and add
+internal notes. Use **Export CSV** for bulk download.
 
-| Symptom | What to do |
-| ------- | ---------- |
-| Login button does nothing | Make sure your email is invited in [sanity.io/manage](https://sanity.io/manage) → Members. |
-| Blog post not visible on site | Confirm it is **Published** (not draft) and that **both** Serbian and English fields are filled in. |
-| Discount code rejected at checkout | Check **Active**, **Valid from/until**, **Used count < Max uses**, and **Min order amount**. |
-| Form submitted but no lead in Studio | Hard-refresh Studio (Ctrl/Cmd-R). Then check **All leads**. If still missing, contact the developer. |
-| CSV opens with garbled letters | You opened it via "Open" in old Excel. Use **Data → From Text/CSV → 65001: UTF-8** instead. |
+## 10. Newsletter (`/admin/newsletter`)
+
+Subscribers list + CSV export.
 
 ---
 
-## 8. Who to ask
+## Tips
 
-- **Editorial / content questions** → marketing lead.
-- **Technical issues** (errors, missing data, broken pages) → developer.
-- **Sanity account / billing** → owner of the [sanity.io/manage](https://sanity.io/manage) workspace.
+- **Storefront updates immediately** — every save calls
+  `revalidatePath('/', 'layout')`.
+- **Image uploads** go straight to Supabase Storage. URLs are stored on
+  the row; you can swap or remove images at any time.
+- **Bilingual content is stored as `jsonb {sr, en}`** on a single row for
+  products / categories / authors. Blog posts use one row per language
+  joined by `translation_group`.
+- **All admin routes are server-side guarded** by `requireAdmin()` and
+  RLS policies. Even with the service role key, no admin action runs
+  without verifying the caller's profile role.

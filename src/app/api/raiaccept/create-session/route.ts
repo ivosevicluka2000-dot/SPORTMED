@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticate, createOrder, createPaymentSession } from "@/lib/raiaccept";
-import { client } from "@/lib/sanity";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 import {
   validateCartItems,
   calcOrderTotals,
@@ -123,37 +124,43 @@ export async function POST(req: NextRequest) {
       language
     );
 
-    if (client) {
-      await client.create({
-        _type: "order",
-        orderNumber,
-        items: validated.map((item, idx) => ({
-          _key: `${item.productId}-${idx}`,
-          product: item.productId.startsWith("mock-")
-            ? undefined
-            : { _type: "reference", _ref: item.productId },
-          productName: item.productName,
+    {
+      let userId: string | null = null;
+      try {
+        const auth = await createServerClient();
+        const { data } = await auth.auth.getUser();
+        userId = data.user?.id ?? null;
+      } catch {
+        userId = null;
+      }
+      const admin = createAdminClient();
+      const { error: insertErr } = await admin.from("orders").insert({
+        order_number: orderNumber,
+        user_id: userId,
+        items: validated.map((item) => ({
+          product_id: item.productId,
+          product_name: item.productName,
           quantity: item.quantity,
           price: item.price,
         })),
         subtotal: totals.subtotal,
-        discountCode: discountCode || undefined,
-        discountAmount: totals.discountAmount,
-        totalAmount: totals.totalAmount,
-        shippingCost: shippingCost || 0,
-        customer: {
-          name: customer.name,
-          email: customer.email,
-          phone: customer.phone,
-          address: customer.address,
-          city: customer.city,
-          postalCode: customer.postalCode,
-        },
-        paymentMethod: "card",
-        raiAcceptOrderId: orderResponse.orderIdentification,
+        discount_code: discountCode || null,
+        discount_amount: totals.discountAmount,
+        shipping_cost: shippingCost || 0,
+        total_amount: totals.totalAmount,
+        customer_name: customer.name,
+        customer_email: customer.email,
+        customer_phone: customer.phone,
+        customer_address: customer.address,
+        customer_city: customer.city,
+        customer_postal_code: customer.postalCode,
+        payment_method: "card",
+        rai_accept_order_id: orderResponse.orderIdentification,
         status: "pending",
-        createdAt: new Date().toISOString(),
       });
+      if (insertErr) {
+        console.error("Failed to insert order:", insertErr);
+      }
     }
 
     return NextResponse.json({

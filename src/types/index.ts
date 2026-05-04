@@ -45,7 +45,7 @@ export interface BlogPost {
   title: string;
   slug: { current: string };
   excerpt: string;
-  body?: unknown[];
+  body?: string;
   mainImage?: string;
   publishedAt: string;
   readingTime: number;

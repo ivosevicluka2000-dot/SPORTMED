@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client, writeClient } from "@/lib/sanity";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 import {
   validateCartItems,
   calcOrderTotals,
@@ -65,8 +66,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Resolve discount server-side. Reject the request if the customer
-    // submitted a code that no longer validates (expired, used up, etc.).
     const subtotal = validated.reduce((s, i) => s + i.price * i.quantity, 0);
     let discountResult = null as Awaited<ReturnType<typeof validateDiscount>> | null;
     let appliedCode: string | undefined;
@@ -88,54 +87,56 @@ export async function POST(req: NextRequest) {
     );
     const orderNumber = `SCM-${Date.now().toString(36).toUpperCase()}`;
 
-    if (client) {
-      await client.create({
-        _type: "order",
-        orderNumber,
-        items: validated.map((item, idx) => ({
-          _key: `${item.productId}-${idx}`,
-          product: item.productId.startsWith("mock-")
-            ? undefined
-            : { _type: "reference", _ref: item.productId },
-          productName: item.productName,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        subtotal: totals.subtotal,
-        discountCode: appliedCode,
-        discountAmount: totals.discountAmount,
-        totalAmount: totals.totalAmount,
-        shippingCost: shippingCost || 0,
-        customer: {
-          name: customer.name,
-          email: customer.email,
-          phone: customer.phone,
-          address: customer.address,
-          city: customer.city,
-          postalCode: customer.postalCode,
-        },
-        paymentMethod: paymentMethod || "cod",
-        status: paymentMethod === "cod" ? "confirmed" : "pending",
-        createdAt: new Date().toISOString(),
-      });
+    // Attach to logged-in user when available so order shows in dashboard.
+    let userId: string | null = null;
+    try {
+      const auth = await createServerClient();
+      const { data } = await auth.auth.getUser();
+      userId = data.user?.id ?? null;
+    } catch {
+      userId = null;
     }
 
-    // For COD orders the sale is final at this point — bump the discount
-    // usage counter immediately. Card orders are bumped from the
-    // RaiAccept webhook once the payment is confirmed.
-    if (
-      paymentMethod === "cod" &&
-      discountResult?.valid &&
-      discountResult.discount?._id &&
-      writeClient
-    ) {
+    const admin = createAdminClient();
+    const { error: insertErr } = await admin.from("orders").insert({
+      order_number: orderNumber,
+      user_id: userId,
+      items: validated.map((item) => ({
+        product_id: item.productId,
+        product_name: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      subtotal: totals.subtotal,
+      discount_code: appliedCode ?? null,
+      discount_amount: totals.discountAmount,
+      shipping_cost: shippingCost || 0,
+      total_amount: totals.totalAmount,
+      customer_name: customer.name,
+      customer_email: customer.email,
+      customer_phone: customer.phone,
+      customer_address: customer.address,
+      customer_city: customer.city,
+      customer_postal_code: customer.postalCode,
+      payment_method: paymentMethod || "cod",
+      status: paymentMethod === "cod" ? "confirmed" : "pending",
+    });
+
+    if (insertErr) {
+      console.error("Failed to insert order:", insertErr);
+      return NextResponse.json(
+        { error: "Failed to create order" },
+        { status: 500 }
+      );
+    }
+
+    // For COD the sale is final immediately — bump discount usage now.
+    // Card orders are bumped from the RaiAccept webhook on PAID.
+    if (paymentMethod === "cod" && appliedCode) {
       try {
-        await writeClient
-          .patch(discountResult.discount._id)
-          .inc({ usedCount: 1 })
-          .commit();
+        await admin.rpc("increment_discount_usage", { p_code: appliedCode });
       } catch (err) {
-        console.error("Failed to increment discount usedCount:", err);
+        console.error("Failed to increment discount usage:", err);
       }
     }
 
@@ -151,4 +152,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

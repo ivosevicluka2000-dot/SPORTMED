@@ -1,6 +1,4 @@
-import { client } from "@/lib/sanity";
-import { getMockProducts } from "@/lib/mock-products";
-import type { Product } from "@/types";
+import { createClient } from "@/lib/supabase/server";
 
 export interface ClientCartItem {
   productId: string;
@@ -19,9 +17,8 @@ export interface ValidatedItem {
 }
 
 /**
- * Re-fetch authoritative price + stock for each cart item from the server.
+ * Re-fetch authoritative price + stock for each cart item from Supabase.
  * Throws if any product is missing, out of stock, or quantity exceeds stock.
- * Mock product IDs are prefixed with "mock-" — those resolve from mock-products.
  */
 export async function validateCartItems(
   items: ClientCartItem[],
@@ -30,65 +27,57 @@ export async function validateCartItems(
   if (!items?.length) throw new Error("No items provided");
   if (items.length > 50) throw new Error("Too many items");
 
-  // Split mock vs sanity ids
-  const mockIds = items.filter((i) => i.productId.startsWith("mock-")).map((i) => i.productId);
-  const sanityIds = items.filter((i) => !i.productId.startsWith("mock-")).map((i) => i.productId);
+  const ids = Array.from(new Set(items.map((i) => i.productId)));
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("id, name, price, stock, product_type, active")
+    .in("id", ids);
 
-  const mockMap = new Map<string, Product>();
-  if (mockIds.length) {
-    const mockProducts = getMockProducts(locale);
-    for (const p of mockProducts) {
-      mockMap.set(p._id, p);
-    }
-  }
+  if (error) throw new Error("Failed to validate products");
 
-  const sanityMap = new Map<string, Product>();
-  if (sanityIds.length && client) {
-    const fetched = await client.fetch<Product[]>(
-      `*[_type == "product" && _id in $ids]{
-        _id,
-        "name": coalesce(name[$locale], name.sr),
-        "slug": slug.current,
-        price,
-        stock,
-        type
-      }`,
-      { ids: sanityIds, locale }
-    );
-    for (const p of fetched) {
-      sanityMap.set(p._id, p);
-    }
-  }
+  type Row = {
+    id: string;
+    name: Record<string, string> | null;
+    price: number;
+    stock: number;
+    product_type: "physical" | "pdf";
+    active: boolean;
+  };
+  const map = new Map<string, Row>();
+  for (const r of (data as Row[]) ?? []) map.set(r.id, r);
+
+  const pickName = (n: Record<string, string> | null): string => {
+    if (!n) return "";
+    return n[locale] ?? n.sr ?? n.en ?? "";
+  };
 
   const validated: ValidatedItem[] = [];
   for (const item of items) {
-    const product = item.productId.startsWith("mock-")
-      ? mockMap.get(item.productId)
-      : sanityMap.get(item.productId);
-
-    if (!product) {
+    const product = map.get(item.productId);
+    if (!product || !product.active) {
       throw new Error(`Product not found: ${item.productId}`);
     }
+    const name = pickName(product.name);
     if (item.quantity < 1 || !Number.isInteger(item.quantity)) {
-      throw new Error(`Invalid quantity for ${product.name}`);
+      throw new Error(`Invalid quantity for ${name}`);
     }
-    const isPdf = product.type === "pdf" || product.price === 0;
+    const isPdf = product.product_type === "pdf" || product.price === 0;
     if (isPdf) {
-      // PDFs cannot be checked out via paid checkout
-      throw new Error(`Free downloads cannot be purchased: ${product.name}`);
+      throw new Error(`Free downloads cannot be purchased: ${name}`);
     }
     if (product.stock <= 0) {
-      throw new Error(`Out of stock: ${product.name}`);
+      throw new Error(`Out of stock: ${name}`);
     }
     if (item.quantity > product.stock) {
-      throw new Error(`Only ${product.stock} of ${product.name} available`);
+      throw new Error(`Only ${product.stock} of ${name} available`);
     }
 
     validated.push({
-      productId: product._id,
-      productName: product.name,
+      productId: product.id,
+      productName: name,
       quantity: item.quantity,
-      price: product.price, // authoritative
+      price: product.price,
       stock: product.stock,
       isPdf,
     });

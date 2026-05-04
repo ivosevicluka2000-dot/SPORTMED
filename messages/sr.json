@@ -1259,5 +1259,242 @@
         }
       }
     }
+  },
+  "account": {
+    "nav": {
+      "login": "Prijava",
+      "signup": "Registracija",
+      "logout": "Odjavi se",
+      "dashboard": "Moj nalog",
+      "orders": "Moje porudžbine"
+    },
+    "login": {
+      "title": "Prijava",
+      "subtitle": "Prijavite se da biste videli svoje porudžbine.",
+      "email": "E-mail",
+      "password": "Lozinka",
+      "submit": "Prijavi se",
+      "submitting": "Prijavljivanje...",
+      "forgot": "Zaboravljena lozinka?",
+      "noAccount": "Nemate nalog?",
+      "signupLink": "Registrujte se",
+      "errorInvalid": "Pogrešan e-mail ili lozinka.",
+      "errorGeneric": "Došlo je do greške. Pokušajte ponovo."
+    },
+    "signup": {
+      "title": "Kreirajte nalog",
+      "subtitle": "Pratite svoje porudžbine i koristite pogodnosti.",
+      "fullName": "Ime i prezime",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "password": "Lozinka (min. 8 karaktera)",
+      "submit": "Registruj se",
+      "submitting": "Kreiranje naloga...",
+      "haveAccount": "Već imate nalog?",
+      "loginLink": "Prijavite se",
+      "checkEmail": "Proverite e-mail i kliknite na link za potvrdu.",
+      "errorEmailTaken": "Ovaj e-mail je već registrovan.",
+      "errorWeakPassword": "Lozinka mora imati najmanje 8 karaktera.",
+      "errorGeneric": "Došlo je do greške. Pokušajte ponovo."
+    },
+    "reset": {
+      "title": "Resetovanje lozinke",
+      "subtitle": "Unesite e-mail da dobijete link za resetovanje.",
+      "email": "E-mail",
+      "submit": "Pošalji link",
+      "submitting": "Slanje...",
+      "sent": "Ako nalog postoji, poslali smo vam e-mail sa linkom.",
+      "backToLogin": "Nazad na prijavu"
+    },
+    "dashboard": {
+      "greeting": "Dobrodošli, {name}",
+      "yourOrders": "Vaše porudžbine",
+      "noOrders": "Još nemate nijednu porudžbinu.",
+      "shopNow": "Idite u prodavnicu",
+      "claimGuest": "Učitaj prošle porudžbine sa ovog e-maila",
+      "claimed": "{count, plural, =0 {Nema novih porudžbina za učitavanje.} =1 {Učitana je 1 porudžbina.} other {Učitano je # porudžbina.}}",
+      "orderNumber": "Porudžbina",
+      "orderDate": "Datum",
+      "orderTotal": "Ukupno",
+      "orderStatus": "Status",
+      "viewOrder": "Detalji"
+    },
+    "order": {
+      "title": "Porudžbina {number}",
+      "items": "Stavke",
+      "customer": "Podaci za isporuku",
+      "totals": "Ukupno",
+      "subtotal": "Međuzbir",
+      "discount": "Popust",
+      "shipping": "Dostava",
+      "total": "Ukupno za naplatu",
+      "backToOrders": "Nazad na porudžbine",
+      "notFound": "Porudžbina nije pronađena."
+    },
+    "status": {
+      "pending": "Na čekanju",
+      "awaiting_payment": "Čeka plaćanje",
+      "confirmed": "Potvrđena",
+      "paid": "Plaćena",
+      "processing": "U obradi",
+      "shipped": "Poslata",
+      "delivered": "Isporučena",
+      "cancelled": "Otkazana",
+      "failed": "Neuspešna"
+    }
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Pregled",
+      "products": "Proizvodi",
+      "categories": "Kategorije",
+      "discounts": "Popusti",
+      "orders": "Porudžbine",
+      "blog": "Blog",
+      "authors": "Autori",
+      "leads": "Upiti",
+      "newsletter": "Newsletter",
+      "signOut": "Odjavi se"
+    },
+    "common": {
+      "new": "Novo",
+      "edit": "Izmeni",
+      "delete": "Obriši",
+      "save": "Sačuvaj",
+      "saving": "Čuvanje...",
+      "cancel": "Otkaži",
+      "confirmDelete": "Da li ste sigurni da želite da obrišete?",
+      "saved": "Sačuvano.",
+      "created": "Kreirano.",
+      "deleted": "Obrisano.",
+      "error": "Greška",
+      "languageSr": "Srpski",
+      "languageEn": "Engleski",
+      "search": "Pretraga",
+      "actions": "Akcije",
+      "yes": "Da",
+      "no": "Ne",
+      "backToList": "Nazad na listu"
+    },
+    "dashboard": {
+      "title": "Admin pregled",
+      "hello": "Zdravo, {name}",
+      "totals": "Ukupno",
+      "products": "Proizvodi",
+      "orders": "Porudžbine",
+      "posts": "Blog postovi",
+      "leads": "Novi upiti"
+    },
+    "products": {
+      "title": "Proizvodi",
+      "newTitle": "Novi proizvod",
+      "editTitle": "Izmena proizvoda",
+      "name": "Naziv",
+      "slug": "URL slug",
+      "description": "Opis",
+      "price": "Cena (RSD)",
+      "compareAtPrice": "Stara cena (RSD)",
+      "category": "Kategorija",
+      "stock": "Zalihe",
+      "featured": "Istaknut",
+      "active": "Aktivan",
+      "images": "Slike",
+      "productType": "Tip",
+      "typePhysical": "Fizički",
+      "typePdf": "PDF vodič",
+      "uploadImages": "Dodaj slike",
+      "removeImage": "Ukloni",
+      "empty": "Još nema proizvoda. Kliknite Novo da dodate prvi."
+    },
+    "categories": {
+      "title": "Kategorije proizvoda",
+      "newTitle": "Nova kategorija",
+      "editTitle": "Izmena kategorije",
+      "slug": "URL slug",
+      "title_field": "Naziv",
+      "description": "Opis",
+      "empty": "Nema kategorija."
+    },
+    "discounts": {
+      "title": "Kodovi za popust",
+      "newTitle": "Novi kod",
+      "editTitle": "Izmena koda",
+      "code": "Kod",
+      "type": "Tip",
+      "typePercent": "Procenat (%)",
+      "typeFixed": "Fiksni iznos (RSD)",
+      "value": "Vrednost",
+      "validFrom": "Važi od",
+      "validUntil": "Važi do",
+      "maxUses": "Maks. broj korišćenja",
+      "usedCount": "Iskorišćeno",
+      "minOrderAmount": "Min. iznos porudžbine (RSD)",
+      "active": "Aktivan",
+      "empty": "Nema kodova za popust."
+    },
+    "orders": {
+      "title": "Porudžbine",
+      "orderNumber": "Br. porudžbine",
+      "customer": "Kupac",
+      "total": "Ukupno",
+      "status": "Status",
+      "date": "Datum",
+      "updateStatus": "Promeni status",
+      "empty": "Nema porudžbina."
+    },
+    "blog": {
+      "title": "Blog postovi",
+      "newTitle": "Novi post",
+      "editTitle": "Izmena posta",
+      "language": "Jezik",
+      "slug": "URL slug",
+      "postTitle": "Naslov",
+      "excerpt": "Sažetak",
+      "body": "Sadržaj (Markdown)",
+      "preview": "Pregled",
+      "author": "Autor",
+      "categories": "Kategorije",
+      "relatedPosts": "Srodni postovi",
+      "coverImage": "Naslovna slika",
+      "publishedAt": "Datum objave (prazno = nacrt)",
+      "readingTime": "Vreme čitanja (min)",
+      "translationGroup": "Grupa prevoda",
+      "empty": "Nema postova."
+    },
+    "authors": {
+      "title": "Autori bloga",
+      "newTitle": "Novi autor",
+      "editTitle": "Izmena autora",
+      "name": "Ime",
+      "role": "Pozicija",
+      "image": "Slika",
+      "bio": "Biografija",
+      "empty": "Nema autora."
+    },
+    "leads": {
+      "title": "Upiti",
+      "source": "Izvor",
+      "name": "Ime",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "message": "Poruka",
+      "status": "Status",
+      "notes": "Beleške",
+      "date": "Datum",
+      "export": "Preuzmi CSV",
+      "empty": "Nema upita."
+    },
+    "newsletter": {
+      "title": "Newsletter pretplatnici",
+      "email": "E-mail",
+      "date": "Datum",
+      "unsubscribed": "Odjavljen",
+      "export": "Preuzmi CSV",
+      "empty": "Nema pretplatnika."
+    },
+    "forbidden": {
+      "title": "Pristup zabranjen",
+      "body": "Vaš nalog nema admin privilegije."
+    }
   }
 }

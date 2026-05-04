@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
-import { writeClient } from "@/lib/sanity";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail, getAdminEmail } from "@/lib/email";
 
 const newsletterSchema = z.object({
@@ -31,39 +31,29 @@ export async function POST(request: NextRequest) {
 
     let isNewSubscriber = false;
 
-    if (writeClient) {
-      try {
-        const existing = await writeClient.fetch<{ _id: string; unsubscribed?: boolean } | null>(
-          `*[_type == "newsletterSubscriber" && lower(email) == $email][0]{_id, unsubscribed}`,
-          { email }
-        );
-        if (existing?._id) {
-          // Resubscribing an opt-out counts as a re-add; otherwise no-op.
-          if (existing.unsubscribed) {
-            await writeClient
-              .patch(existing._id)
-              .set({ unsubscribed: false, createdAt: new Date().toISOString() })
-              .commit();
-            isNewSubscriber = true;
-          }
-        } else {
-          await writeClient.create({
-            _type: "newsletterSubscriber",
-            email,
-            locale,
-            unsubscribed: false,
-            createdAt: new Date().toISOString(),
-          });
+    try {
+      const admin = createAdminClient();
+      const { data: existing } = await admin
+        .from("newsletter_subscribers")
+        .select("id, unsubscribed")
+        .eq("email", email)
+        .maybeSingle();
+      if (existing) {
+        if (existing.unsubscribed) {
+          await admin
+            .from("newsletter_subscribers")
+            .update({ unsubscribed: false, locale })
+            .eq("id", existing.id);
           isNewSubscriber = true;
         }
-      } catch (err) {
-        console.error("[newsletter] Sanity upsert failed:", err);
-        // Continue and respond success to avoid leaking errors to the client.
+      } else {
+        await admin
+          .from("newsletter_subscribers")
+          .insert({ email, locale, unsubscribed: false });
+        isNewSubscriber = true;
       }
-    } else {
-      console.warn(
-        "[newsletter] SANITY_API_WRITE_TOKEN not configured; skipping persistence"
-      );
+    } catch (err) {
+      console.error("[newsletter] Supabase upsert failed:", err);
     }
 
     if (isNewSubscriber) {
@@ -77,7 +67,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Always return success — never reveal whether the email was already known.
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {

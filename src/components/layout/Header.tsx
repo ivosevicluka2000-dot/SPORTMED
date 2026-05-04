@@ -7,6 +7,7 @@ import { Link, usePathname } from "@/i18n/routing";
 import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "./LanguageSwitcher";
+import UserMenu from "./UserMenu";
 import { cn } from "@/lib/utils";
 import { rehabTreatments, recoveryTreatments } from "@/lib/utils";
 
@@ -394,6 +395,7 @@ export default function Header() {
                   </span>
                 )}
               </Link>
+              <UserMenu textColorClass={textColor} />
               <LanguageSwitcher />
               <button
                 className={cn("lg:hidden p-2 cursor-pointer transition-colors", textColor, "hover:text-teal")}

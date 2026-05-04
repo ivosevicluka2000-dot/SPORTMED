@@ -1259,5 +1259,242 @@
         }
       }
     }
+  },
+  "account": {
+    "nav": {
+      "login": "Sign in",
+      "signup": "Sign up",
+      "logout": "Sign out",
+      "dashboard": "My account",
+      "orders": "My orders"
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Sign in to view your orders.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "forgot": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "errorInvalid": "Invalid email or password.",
+      "errorGeneric": "Something went wrong. Please try again."
+    },
+    "signup": {
+      "title": "Create an account",
+      "subtitle": "Track your orders and access perks.",
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "password": "Password (min. 8 characters)",
+      "submit": "Sign up",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "checkEmail": "Check your email and click the confirmation link.",
+      "errorEmailTaken": "This email is already registered.",
+      "errorWeakPassword": "Password must be at least 8 characters.",
+      "errorGeneric": "Something went wrong. Please try again."
+    },
+    "reset": {
+      "title": "Reset password",
+      "subtitle": "Enter your email and we'll send you a reset link.",
+      "email": "Email",
+      "submit": "Send link",
+      "submitting": "Sending...",
+      "sent": "If an account exists, we sent you an email with a link.",
+      "backToLogin": "Back to sign in"
+    },
+    "dashboard": {
+      "greeting": "Welcome, {name}",
+      "yourOrders": "Your orders",
+      "noOrders": "You don't have any orders yet.",
+      "shopNow": "Go to shop",
+      "claimGuest": "Claim past orders from this email",
+      "claimed": "{count, plural, =0 {No new orders to claim.} =1 {Claimed 1 order.} other {Claimed # orders.}}",
+      "orderNumber": "Order",
+      "orderDate": "Date",
+      "orderTotal": "Total",
+      "orderStatus": "Status",
+      "viewOrder": "Details"
+    },
+    "order": {
+      "title": "Order {number}",
+      "items": "Items",
+      "customer": "Shipping details",
+      "totals": "Totals",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "total": "Total",
+      "backToOrders": "Back to orders",
+      "notFound": "Order not found."
+    },
+    "status": {
+      "pending": "Pending",
+      "awaiting_payment": "Awaiting payment",
+      "confirmed": "Confirmed",
+      "paid": "Paid",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "failed": "Failed"
+    }
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Overview",
+      "products": "Products",
+      "categories": "Categories",
+      "discounts": "Discount codes",
+      "orders": "Orders",
+      "blog": "Blog",
+      "authors": "Authors",
+      "leads": "Leads",
+      "newsletter": "Newsletter",
+      "signOut": "Sign out"
+    },
+    "common": {
+      "new": "New",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "confirmDelete": "Are you sure you want to delete?",
+      "saved": "Saved.",
+      "created": "Created.",
+      "deleted": "Deleted.",
+      "error": "Error",
+      "languageSr": "Serbian",
+      "languageEn": "English",
+      "search": "Search",
+      "actions": "Actions",
+      "yes": "Yes",
+      "no": "No",
+      "backToList": "Back to list"
+    },
+    "dashboard": {
+      "title": "Admin overview",
+      "hello": "Hello, {name}",
+      "totals": "Totals",
+      "products": "Products",
+      "orders": "Orders",
+      "posts": "Blog posts",
+      "leads": "New leads"
+    },
+    "products": {
+      "title": "Products",
+      "newTitle": "New product",
+      "editTitle": "Edit product",
+      "name": "Name",
+      "slug": "URL slug",
+      "description": "Description",
+      "price": "Price (RSD)",
+      "compareAtPrice": "Compare-at price (RSD)",
+      "category": "Category",
+      "stock": "Stock",
+      "featured": "Featured",
+      "active": "Active",
+      "images": "Images",
+      "productType": "Type",
+      "typePhysical": "Physical",
+      "typePdf": "PDF guide",
+      "uploadImages": "Upload images",
+      "removeImage": "Remove",
+      "empty": "No products yet. Click New to add the first one."
+    },
+    "categories": {
+      "title": "Product categories",
+      "newTitle": "New category",
+      "editTitle": "Edit category",
+      "slug": "URL slug",
+      "title_field": "Title",
+      "description": "Description",
+      "empty": "No categories."
+    },
+    "discounts": {
+      "title": "Discount codes",
+      "newTitle": "New code",
+      "editTitle": "Edit code",
+      "code": "Code",
+      "type": "Type",
+      "typePercent": "Percent (%)",
+      "typeFixed": "Fixed amount (RSD)",
+      "value": "Value",
+      "validFrom": "Valid from",
+      "validUntil": "Valid until",
+      "maxUses": "Max uses",
+      "usedCount": "Used",
+      "minOrderAmount": "Min order amount (RSD)",
+      "active": "Active",
+      "empty": "No discount codes."
+    },
+    "orders": {
+      "title": "Orders",
+      "orderNumber": "Order #",
+      "customer": "Customer",
+      "total": "Total",
+      "status": "Status",
+      "date": "Date",
+      "updateStatus": "Update status",
+      "empty": "No orders."
+    },
+    "blog": {
+      "title": "Blog posts",
+      "newTitle": "New post",
+      "editTitle": "Edit post",
+      "language": "Language",
+      "slug": "URL slug",
+      "postTitle": "Title",
+      "excerpt": "Excerpt",
+      "body": "Body (Markdown)",
+      "preview": "Preview",
+      "author": "Author",
+      "categories": "Categories",
+      "relatedPosts": "Related posts",
+      "coverImage": "Cover image",
+      "publishedAt": "Publish date (empty = draft)",
+      "readingTime": "Reading time (min)",
+      "translationGroup": "Translation group",
+      "empty": "No posts."
+    },
+    "authors": {
+      "title": "Blog authors",
+      "newTitle": "New author",
+      "editTitle": "Edit author",
+      "name": "Name",
+      "role": "Role",
+      "image": "Image",
+      "bio": "Bio",
+      "empty": "No authors."
+    },
+    "leads": {
+      "title": "Leads",
+      "source": "Source",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "status": "Status",
+      "notes": "Notes",
+      "date": "Date",
+      "export": "Export CSV",
+      "empty": "No leads."
+    },
+    "newsletter": {
+      "title": "Newsletter subscribers",
+      "email": "Email",
+      "date": "Date",
+      "unsubscribed": "Unsubscribed",
+      "export": "Export CSV",
+      "empty": "No subscribers."
+    },
+    "forbidden": {
+      "title": "Forbidden",
+      "body": "Your account does not have admin privileges."
+    }
   }
 }

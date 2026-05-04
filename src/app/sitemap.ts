@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { treatments, b2bAllItems } from "@/lib/utils";
-import { getAllBlogSlugs } from "@/lib/queries";
-import { getMockProductSlugs } from "@/lib/mock-products";
+import { getAllBlogSlugs, getAllProductSlugs } from "@/lib/queries";
 
 const baseUrl = "https://sportcaremed.rs";
 
@@ -63,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Product pages for each locale
-  const productSlugs = getMockProductSlugs();
+  const productSlugs = await getAllProductSlugs();
   for (const locale of locales) {
     for (const { slug } of productSlugs) {
       entries.push({

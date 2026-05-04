@@ -1,4 +1,4 @@
-import { writeClient } from "./sanity";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export interface LeadInput {
   source: "contact" | "b2b" | "lead-capture-popup" | "exit-intent";
@@ -16,30 +16,27 @@ export interface LeadInput {
 }
 
 /**
- * Persist a lead document to Sanity. Failures are logged but do not throw,
+ * Persist a lead row to Supabase. Failures are logged but do not throw,
  * so the originating form submission still succeeds for the user even if
- * the CMS write is temporarily unavailable.
+ * the database write is temporarily unavailable.
  */
 export async function createLead(input: LeadInput): Promise<boolean> {
-  if (!writeClient) {
-    console.warn(
-      "[leads] SANITY_API_WRITE_TOKEN not configured; skipping lead persistence"
-    );
-    return false;
-  }
   try {
-    await writeClient.create({
-      _type: "lead",
+    const admin = createAdminClient();
+    const { error } = await admin.from("leads").insert({
       source: input.source,
-      name: input.name,
-      phone: input.phone,
-      email: input.email,
-      service: input.service,
-      message: input.message,
-      metadata: input.metadata,
+      name: input.name ?? null,
+      phone: input.phone ?? null,
+      email: input.email ?? null,
+      service: input.service ?? null,
+      message: input.message ?? null,
+      metadata: input.metadata ?? null,
       status: "new",
-      createdAt: new Date().toISOString(),
     });
+    if (error) {
+      console.error("[leads] Insert failed:", error);
+      return false;
+    }
     return true;
   } catch (err) {
     console.error("[leads] Failed to persist lead:", err);

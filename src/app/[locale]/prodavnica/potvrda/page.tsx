@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { CheckCircle, ShoppingBag, Home, AlertTriangle, Clock } from "lucide-react";
-import { client } from "@/lib/sanity";
+import { createAdminClient } from "@/lib/supabase/admin";
 import ClearCartOnConfirmation from "@/components/shop/ClearCartOnConfirmation";
 
 export const dynamic = "force-dynamic";
@@ -15,13 +15,20 @@ interface OrderRecord {
 
 async function fetchOrder(orderNumber: string): Promise<OrderRecord | null> {
   if (!orderNumber || !/^[A-Z0-9_-]{3,40}$/i.test(orderNumber)) return null;
-  if (!client) return null;
   try {
-    const result = await client.fetch<OrderRecord | null>(
-      `*[_type == "order" && orderNumber == $on][0]{ orderNumber, status, totalAmount, paymentMethod }`,
-      { on: orderNumber }
-    );
-    return result ?? null;
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("orders")
+      .select("order_number, status, total_amount, payment_method")
+      .eq("order_number", orderNumber)
+      .maybeSingle();
+    if (!data) return null;
+    return {
+      orderNumber: data.order_number,
+      status: data.status ?? undefined,
+      totalAmount: data.total_amount ?? undefined,
+      paymentMethod: data.payment_method ?? undefined,
+    };
   } catch {
     return null;
   }
@@ -38,19 +45,17 @@ export default async function ConfirmationPage({
   const orderRecord = orderNumber ? await fetchOrder(orderNumber) : null;
   const status = orderRecord?.status ?? "unknown";
 
-  // If Sanity is not configured (dev), fall back to optimistic success when an order param is present
-  const sanityUnavailable = !client && Boolean(orderNumber);
-
-  // Show success only when payment is completed OR pending COD (cash on delivery)
+  // Show success when order exists and status indicates a successful sale.
   const isSuccess =
-    sanityUnavailable ||
-    (orderRecord != null &&
-      (status === "paid" ||
-        status === "completed" ||
-        status === "processing" ||
-        (orderRecord.paymentMethod === "cod" && status !== "failed" && status !== "cancelled")));
+    orderRecord != null &&
+    (status === "confirmed" ||
+      status === "paid" ||
+      status === "processing" ||
+      status === "shipped" ||
+      status === "delivered" ||
+      (orderRecord.paymentMethod === "cod" && status !== "failed" && status !== "cancelled"));
   const isPending = orderRecord != null && (status === "pending" || status === "awaiting_payment");
-  const isFailed = !sanityUnavailable && (!orderRecord || status === "failed" || status === "cancelled");
+  const isFailed = !orderRecord || status === "failed" || status === "cancelled";
 
   return (
     <section className="py-20 md:py-28">
