@@ -1380,11 +1380,44 @@
     "dashboard": {
       "title": "Admin overview",
       "hello": "Hello, {name}",
-      "totals": "Totals",
+      "totals": "At a glance",
       "products": "Products",
       "orders": "Orders",
       "posts": "Blog posts",
-      "leads": "New leads"
+      "leads": "New leads",
+      "kpi": {
+        "revenue30": "Revenue (30d)",
+        "revenueAll": "Revenue (all-time)",
+        "aov": "Avg. order value",
+        "orders30": "Paid orders (30d)",
+        "vsPrev30": "vs prev. 30d",
+        "newsletter": "Newsletter subs"
+      },
+      "chart": {
+        "title": "Revenue — last 14 days",
+        "subtitle": "Daily totals from confirmed orders",
+        "peak": "Peak day"
+      },
+      "topProducts": {
+        "title": "Top products (60d)",
+        "empty": "No sales yet."
+      },
+      "statuses": {
+        "title": "Order statuses (30d)",
+        "empty": "No orders in the last 30 days."
+      },
+      "recent": {
+        "title": "Recent orders",
+        "viewAll": "View all",
+        "customer": "Customer",
+        "status": "Status",
+        "total": "Total",
+        "empty": "No orders yet."
+      },
+      "lowStock": {
+        "title": "Low stock",
+        "empty": "All products are well stocked."
+      }
     },
     "products": {
       "title": "Products",

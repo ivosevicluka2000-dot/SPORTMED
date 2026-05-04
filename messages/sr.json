@@ -1380,11 +1380,44 @@
     "dashboard": {
       "title": "Admin pregled",
       "hello": "Zdravo, {name}",
-      "totals": "Ukupno",
+      "totals": "Pregled",
       "products": "Proizvodi",
       "orders": "Porudžbine",
       "posts": "Blog postovi",
-      "leads": "Novi upiti"
+      "leads": "Novi upiti",
+      "kpi": {
+        "revenue30": "Prihod (30d)",
+        "revenueAll": "Ukupan prihod",
+        "aov": "Pros. vrednost porudžbine",
+        "orders30": "Plaćene porudžbine (30d)",
+        "vsPrev30": "vs prethodnih 30d",
+        "newsletter": "Newsletter pretplate"
+      },
+      "chart": {
+        "title": "Prihod — poslednjih 14 dana",
+        "subtitle": "Dnevni zbir potvrđenih porudžbina",
+        "peak": "Najbolji dan"
+      },
+      "topProducts": {
+        "title": "Top proizvodi (60d)",
+        "empty": "Još nema prodaje."
+      },
+      "statuses": {
+        "title": "Statusi porudžbina (30d)",
+        "empty": "Nema porudžbina u poslednjih 30 dana."
+      },
+      "recent": {
+        "title": "Najnovije porudžbine",
+        "viewAll": "Sve porudžbine",
+        "customer": "Kupac",
+        "status": "Status",
+        "total": "Ukupno",
+        "empty": "Još nema porudžbina."
+      },
+      "lowStock": {
+        "title": "Mali stok",
+        "empty": "Svi proizvodi su dobro stokirani."
+      }
     },
     "products": {
       "title": "Proizvodi",
