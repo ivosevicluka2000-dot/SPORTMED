@@ -16,7 +16,7 @@
   },
   "metadata": {
     "title": "Sport Care Med — Recovery gear, supplements & protocols for athletes",
-    "description": "Recovery kit, supplements and protocols used by a working sports-medicine team in Šabac. Get back on the field faster — no guesswork."
+    "description": "Recovery kit, supplements and protocols used by an experienced sports-medicine team. Get back on the field faster — no guesswork."
   },
   "nav": {
     "home": "Home",
@@ -35,12 +35,13 @@
   },
   "hero": {
     "title": "Get back on the field faster with the right gear and the right protocol",
-    "subtitle": "Recovery Starter Kit + a free PDF protocol matched to your injury. Picked and used by a working sports-medicine team in Šabac.",
+    "subtitle": "Recovery Starter Kit + a free PDF protocol matched to your injury. Picked and used by an experienced sports-medicine team.",
     "cta": "Shop the kit",
     "learnMore": "Get the free guide"
   },
   "homeTiles": {
     "learnMore": "Explore",
+    "featured": "Featured",
     "items": {
       "premiumProduct": {
         "title": "Premium Product",
@@ -56,7 +57,7 @@
       },
       "clinicRehab": {
         "title": "Clinic & Rehab",
-        "subtitle": "Hands-on rehab and recovery treatments at our clinic in Šabac."
+        "subtitle": "Hands-on rehab and recovery treatments at our clinic."
       }
     }
   },
@@ -87,8 +88,8 @@
     "items": {
       "fizikalna-terapija": {
         "title": "Physical Therapy",
-        "shortDescription": "Pain and swelling don't wait for a clinic appointment. Recovery kit + free protocol for your injury — at home. The clinic in Šabac as backup if you need it.",
-        "description": "Knee pain after training, chronic back pain, swelling after an injury? The goal is simple: kill the pain, kill the swelling, get you back to full motion — fast, with no resets. Electrotherapy, ultrasound, laser and cryotherapy live in our clinic; the same principle at home comes through the Recovery Starter Kit and a free PDF protocol matched to your specific injury. Start with the free protocol, equip yourself with what actually helps, and if you need a hands-on assessment — come see us in Šabac.",
+        "shortDescription": "Pain and swelling don't wait for a clinic appointment. Recovery kit + free protocol for your injury — at home. Our clinic as backup if you need it.",
+        "description": "Knee pain after training, chronic back pain, swelling after an injury? The goal is simple: kill the pain, kill the swelling, get you back to full motion — fast, with no resets. Electrotherapy, ultrasound, laser and cryotherapy live in our clinic; the same principle at home comes through the Recovery Starter Kit and a free PDF protocol matched to your specific injury. Start with the free protocol, equip yourself with what actually helps, and if you need a hands-on assessment — come see us at the clinic.",
         "benefits": ["Pain reduction", "Accelerated recovery", "Improved mobility", "Reduced swelling and inflammation"],
         "duration": "30-60 min",
         "process": "Initial assessment \u2192 Treatment plan \u2192 Sessions \u2192 Progress evaluation",
@@ -101,7 +102,7 @@
       "manuelna-terapija": {
         "title": "Manual Therapy",
         "shortDescription": "Stiff back, neck or shoulders? Release most of it at home — with the same tools and protocol our therapists use.",
-        "description": "Manual mobilization and manipulation work — but you don't need a session every week to feel it. The Recovery Starter Kit (foam roller, lacrosse ball, massage stick) plus a free PDF protocol for self-mobilizing the neck, back and shoulders gets you ~80% of the in-clinic effect at home. For stubborn blockages and complex cases — book a hands-on session at our Šabac clinic.",
+        "description": "Manual mobilization and manipulation work — but you don't need a session every week to feel it. The Recovery Starter Kit (foam roller, lacrosse ball, massage stick) plus a free PDF protocol for self-mobilizing the neck, back and shoulders gets you ~80% of the in-clinic effect at home. For stubborn blockages and complex cases — book a hands-on session at our clinic.",
         "benefits": ["Improved range of motion", "Reduced muscle spasm", "Posture correction", "Pain reduction"],
         "duration": "30-45 min",
         "process": "Functional assessment \u2192 Diagnosis \u2192 Manual treatment \u2192 Home exercises",
@@ -114,7 +115,7 @@
       "kineziterapija": {
         "title": "Kinesitherapy",
         "shortDescription": "Get moving with a proven progressive exercise program — free PDF + gear that fits in a corner of your room.",
-        "description": "Movement heals. But random YouTube exercises lead to plateaus or new injuries. We give you a structured progressive program for your injury: a set of resistance bands + foam roller + free PDF with a weekly plan and video demos. You train at home, we track progress. If progress stalls — book an assessment at our Šabac clinic.",
+        "description": "Movement heals. But random YouTube exercises lead to plateaus or new injuries. We give you a structured progressive program for your injury: a set of resistance bands + foam roller + free PDF with a weekly plan and video demos. You train at home, we track progress. If progress stalls — book an assessment at our clinic.",
         "benefits": ["Muscle strengthening", "Improved coordination", "Injury prevention", "Functional recovery"],
         "duration": "45-60 min",
         "process": "Functional status assessment \u2192 Individual program \u2192 Guided exercises \u2192 Progression",
@@ -127,7 +128,7 @@
       "dijagnostika": {
         "title": "Diagnostics",
         "shortDescription": "Before you spend months and money on the wrong treatment — find out exactly what's going on.",
-        "description": "The biggest cost in recovery isn't therapy — it's the wrong diagnosis. Before you buy anything, run our free Recovery Estimator and the self-assessment PDF. If the result suggests a complex injury, come to our Šabac clinic for a detailed exam — history, functional tests, a clear written plan. No guessing, no wasted spend.",
+        "description": "The biggest cost in recovery isn't therapy — it's the wrong diagnosis. Before you buy anything, run our free Recovery Estimator and the self-assessment PDF. If the result suggests a complex injury, come to our clinic for a detailed exam — history, functional tests, a clear written plan. No guessing, no wasted spend.",
         "benefits": ["Accurate diagnosis", "Early injury screening", "Prevention plan", "Progress monitoring"],
         "duration": "60-90 min",
         "process": "Medical history \u2192 Clinical exam \u2192 Functional testing \u2192 Report and plan",
@@ -140,7 +141,7 @@
       "sportska-rehabilitacija": {
         "title": "Sports Rehabilitation",
         "shortDescription": "From injury to first match — a complete return-to-play protocol, kit, and clinical support when you need it.",
-        "description": "Returning to sport doesn't just mean 'no pain'. It means 100% strength with zero fear of re-injury. Our return-to-play system combines: rehab phases with measurable goals, a Recovery Starter Kit with sport-specific tapes and supports, a free PDF protocol for your sport, plus clinical support in Šabac when hands-on work is needed. Fewer setbacks, faster comeback.",
+        "description": "Returning to sport doesn't just mean 'no pain'. It means 100% strength with zero fear of re-injury. Our return-to-play system combines: rehab phases with measurable goals, a Recovery Starter Kit with sport-specific tapes and supports, a free PDF protocol for your sport, plus clinical support when hands-on work is needed. Fewer setbacks, faster comeback.",
         "benefits": ["Faster return to sport", "Reduced re-injury risk", "Performance optimization", "Individual approach"],
         "duration": "60 min",
         "process": "Injury evaluation \u2192 Recovery phase \u2192 Functional training \u2192 Return-to-play protocol",
@@ -153,7 +154,7 @@
       "masaza": {
         "title": "Massage",
         "shortDescription": "After training or a brutal week — release tight muscles yourself, with the same tools our therapists use.",
-        "description": "Sports massage works — but you can't book one every day. The Recovery Starter Kit (foam roller, massage stick, vibrating roller) plus a free PDF for self-myofascial release gets you ~80% of the sports-massage effect, at home, whenever you need it. For chronic blockages and competition prep, book a session with us in Šabac.",
+        "description": "Sports massage works — but you can't book one every day. The Recovery Starter Kit (foam roller, massage stick, vibrating roller) plus a free PDF for self-myofascial release gets you ~80% of the sports-massage effect, at home, whenever you need it. For chronic blockages and competition prep, book a session with us at the clinic.",
         "benefits": ["Muscle relaxation", "Improved circulation", "Stress reduction", "Faster recovery"],
         "duration": "30-60 min",
         "process": "Consultation \u2192 Technique selection \u2192 Treatment \u2192 Maintenance advice",
@@ -179,7 +180,7 @@
       "testiranje-merenja": {
         "title": "Testing & Measurements",
         "shortDescription": "Pre-season, post-injury, or just to know where you stand — functional assessment, plan, and the exact gear list you need.",
-        "description": "Without measurement you train blind. We run FMS, strength, power and biomechanics testing in Šabac and give you a clear written report — so you know exactly which kit and which protocol to take next. Guides and gear adapt to your results, so you only spend on what actually helps.",
+        "description": "Without measurement you train blind. We run FMS, strength, power and biomechanics testing and give you a clear written report — so you know exactly which kit and which protocol to take next. Guides and gear adapt to your results, so you only spend on what actually helps.",
         "benefits": ["Strength and weakness analysis", "Injury prevention", "Training optimization", "Progress tracking"],
         "duration": "60-90 min",
         "process": "Testing protocol \u2192 Measurements \u2192 Results analysis \u2192 Training recommendations",
@@ -262,7 +263,7 @@
     "items": {
       "expertise": {
         "title": "Picked by specialists",
-        "description": "Every product tested in clinical work with real athletes in Šabac."
+        "description": "Every product tested in clinical work with real athletes."
       },
       "equipment": {
         "title": "Built around proven protocols",
@@ -274,7 +275,7 @@
       },
       "results": {
         "title": "Backed by a real clinic",
-        "description": "You're not alone with a box — our sports-medicine team in Šabac is reachable if you need hands-on help."
+        "description": "You're not alone with a box — our sports-medicine team is reachable if you need hands-on help."
       }
     }
   },
@@ -351,7 +352,7 @@
     "subtitle": "A sports-medicine team that built a recovery brand",
     "story": {
       "title": "Our Story",
-      "description": "We're sports-medicine specialists from Šabac. For years we watched patients walk out the door with advice but no tools. So we built the kit. And the protocol. And the shop. Now any athlete in Serbia can use what our patients use — no waiting, no trip to Šabac."
+      "description": "We're sports-medicine specialists with years of experience. For years we watched patients walk out the door with advice but no tools. So we built the kit. And the protocol. And the shop. Now any athlete in Serbia can use what our patients use — no waiting, no trip to the clinic."
     },
     "mission": {
       "title": "Mission",
@@ -380,11 +381,11 @@
     },
     "gallery": {
       "title": "Our Facility",
-      "subtitle": "The clinic in Šabac — where we test everything we ship."
+      "subtitle": "Our clinic — where we test everything we ship."
     }
   },
   "location": {
-    "title": "Visit our team in Šabac",
+    "title": "Visit our team",
     "subtitle": "Modern sports medicine clinic with full equipment for assessment, therapy and rehabilitation — hands-on care for complex cases.",
     "address": "Address",
     "workingHours": "Working Hours",
@@ -650,7 +651,7 @@
       "timska-rehabilitacija": {
         "title": "Team Rehabilitation",
         "shortDescription": "Kit + protocol + clinical coordination for every injured player — no wandering from one therapist to another.",
-        "description": "A player gets injured — and the circus starts: which therapist, which pharmacy, what to take home. We cut that. Every injured player immediately gets their kit (rehab gear + PDF protocol), we coordinate with your coach and S&C staff, and when hands-on work is needed — a therapist from our team comes to your facility or the player comes to Šabac. Faster return to play, lower total cost per injury.",
+        "description": "A player gets injured — and the circus starts: which therapist, which pharmacy, what to take home. We cut that. Every injured player immediately gets their kit (rehab gear + PDF protocol), we coordinate with your coach and S&C staff, and when hands-on work is needed — a therapist from our team comes to your facility or the player comes to our clinic. Faster return to play, lower total cost per injury.",
         "includes": [
           "Individual rehabilitation plans for each player",
           "Regular check-ups and progress monitoring",
@@ -892,7 +893,7 @@
     }
   },
   "footer": {
-    "description": "Recovery gear, supplements and protocols — picked and used by a working sports-medicine team in Šabac.",
+    "description": "Recovery gear, supplements and protocols — picked and used by an experienced sports-medicine team.",
     "quickLinks": "Quick Links",
     "workingHours": "Working Hours",
     "weekdays": "Mon - Fri: 08:00 - 20:00",
@@ -1227,7 +1228,7 @@
         },
         "contact": {
           "title": "Contact",
-          "body": "For data protection inquiries contact info@sportcaremed.com or write to the clinic address in Šabac."
+          "body": "For data protection inquiries contact info@sportcaremed.com or write to the clinic address."
         }
       }
     },

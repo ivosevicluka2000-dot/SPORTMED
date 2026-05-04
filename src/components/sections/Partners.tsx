@@ -1,18 +1,41 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Section, { SectionHeader } from "@/components/ui/Section";
 import { useTranslations } from "next-intl";
 
+type Partner = {
+  name: string;
+  logo: string;
+  href: string;
+};
+
+const partners: Partner[] = [
+  {
+    name: "RK Metaloplastika Šabac",
+    logo: "/partners/rk-metaloplastika.png",
+    href: "https://www.rkmetaloplastika.com/",
+  },
+  {
+    name: "ŽRK Medicinar",
+    logo: "/partners/zrk-medicinar.png",
+    href: "https://zrkmedicinar.rs/",
+  },
+  {
+    name: "ORK Mačva",
+    logo: "/partners/ork-macva.png",
+    href: "https://www.srbijasport.net/club/5473-macva/results",
+  },
+  {
+    name: "KK Zorka",
+    logo: "/partners/kk-zorka.png",
+    href: "https://www.kkzorka.rs/",
+  },
+];
+
 export default function Partners() {
   const t = useTranslations("partners");
-
-  const partners = [
-    "RK Metaloplastika Šabac",
-    "ŽRK Medicinar",
-    "ORK Mačva",
-    "Kajak klub Zorka",
-  ];
 
   return (
     <Section className="bg-ivory">
@@ -23,20 +46,30 @@ export default function Partners() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6"
+        className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 items-center"
       >
-        {partners.map((partner, index) => (
-          <div
-            key={partner}
-            className="flex items-center justify-center h-14"
+        {partners.map((partner) => (
+          <a
+            key={partner.name}
+            href={partner.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={partner.name}
+            className="group flex flex-col items-center justify-center gap-3 p-4 rounded-xl bg-white border border-gray-100 hover:border-teal/40 hover:shadow-[var(--shadow-soft)] transition-all"
           >
-            <span className="text-gray-500 font-semibold text-sm md:text-base tracking-[0.18em] uppercase whitespace-nowrap">
-              {partner}
+            <div className="relative w-full h-20 md:h-24">
+              <Image
+                src={partner.logo}
+                alt={partner.name}
+                fill
+                sizes="(min-width: 768px) 25vw, 50vw"
+                className="object-contain grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+              />
+            </div>
+            <span className="text-[11px] md:text-xs font-medium uppercase tracking-[0.15em] text-gray-500 group-hover:text-navy text-center transition-colors">
+              {partner.name}
             </span>
-            {index < partners.length - 1 && (
-              <div className="hidden lg:block w-px h-6 bg-gray-200 ml-10" />
-            )}
-          </div>
+          </a>
         ))}
       </motion.div>
     </Section>

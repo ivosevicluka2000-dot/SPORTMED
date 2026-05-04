@@ -380,12 +380,20 @@ export default function ContactContent() {
                   <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-1">
                     {t("info.phone")}
                   </h3>
-                  <a
-                    href="tel:+381691982215"
-                    className="text-navy font-medium hover:text-teal transition-colors"
-                  >
-                    +381 69 1982215
-                  </a>
+                  <div className="flex flex-col">
+                    <a
+                      href="tel:+381691982215"
+                      className="text-navy font-medium hover:text-teal transition-colors"
+                    >
+                      +381 69 1982215
+                    </a>
+                    <a
+                      href="tel:+36203115201"
+                      className="text-navy font-medium hover:text-teal transition-colors"
+                    >
+                      +36 20 3115201
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
