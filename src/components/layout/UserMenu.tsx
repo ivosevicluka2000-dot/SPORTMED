@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { User as UserIcon, LogOut, Package, ChevronDown } from "lucide-react";
+import { User as UserIcon, LogOut, Package, ChevronDown, Shield } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import SignOutButton from "@/components/account/SignOutButton";
 import { cn } from "@/lib/utils";
@@ -15,17 +15,33 @@ interface Props {
 export default function UserMenu({ textColorClass }: Props) {
   const t = useTranslations("account.nav");
   const [email, setEmail] = useState<string | null | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
     let active = true;
+
+    const loadRole = async (userId: string) => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .maybeSingle();
+      if (active) setIsAdmin(data?.role === "admin");
+    };
+
     supabase.auth.getUser().then(({ data }) => {
-      if (active) setEmail(data.user?.email ?? null);
+      if (!active) return;
+      setEmail(data.user?.email ?? null);
+      if (data.user?.id) loadRole(data.user.id);
+      else setIsAdmin(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       setEmail(session?.user?.email ?? null);
+      if (session?.user?.id) loadRole(session.user.id);
+      else setIsAdmin(false);
     });
     return () => {
       active = false;
@@ -97,6 +113,17 @@ export default function UserMenu({ textColorClass }: Props) {
             <Package className="w-4 h-4" />
             {t("orders")}
           </Link>
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm text-teal hover:bg-gray-50 font-medium"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+            >
+              <Shield className="w-4 h-4" />
+              {t("admin")}
+            </Link>
+          )}
           <div className="border-t border-gray-100">
             <SignOutButton
               className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 text-left"

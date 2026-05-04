@@ -1266,7 +1266,8 @@
       "signup": "Sign up",
       "logout": "Sign out",
       "dashboard": "My account",
-      "orders": "My orders"
+      "orders": "My orders",
+      "admin": "Admin panel"
     },
     "login": {
       "title": "Sign in",

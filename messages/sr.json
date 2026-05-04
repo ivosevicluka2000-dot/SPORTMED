@@ -1266,7 +1266,8 @@
       "signup": "Registracija",
       "logout": "Odjavi se",
       "dashboard": "Moj nalog",
-      "orders": "Moje porudžbine"
+      "orders": "Moje porudžbine",
+      "admin": "Admin panel"
     },
     "login": {
       "title": "Prijava",
