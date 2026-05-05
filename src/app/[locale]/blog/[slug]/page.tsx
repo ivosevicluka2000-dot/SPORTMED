@@ -4,6 +4,10 @@ import { getBlogPost, getAllBlogSlugs } from "@/lib/queries";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 import type { Metadata } from "next";
 
+// Revalidate every 60s so newly published posts show up even if a manual
+// `revalidatePath` from the admin action is missed.
+export const revalidate = 60;
+
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };

@@ -119,6 +119,28 @@ export default function BlogPostContent({
             className="prose prose-lg max-w-none"
           >
             {post.body && <PortableTextRenderer value={post.body} />}
+
+            {post.images && post.images.length > 0 && (
+              <div className="not-prose mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {post.images.map((src, i) => (
+                  <a
+                    key={src + i}
+                    href={src}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative block aspect-square rounded-lg overflow-hidden border border-gray-100 bg-ivory"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt={`${post.title} — ${i + 1}`}
+                      className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </a>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Sidebar */}

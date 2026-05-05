@@ -7,6 +7,10 @@ import ProductDetail from "@/components/shop/ProductDetail";
 import OftenBoughtTogether from "@/components/shop/OftenBoughtTogether";
 import type { Product } from "@/types";
 
+// Revalidate every 60s so newly created products show up even if a manual
+// `revalidatePath` from the admin action is missed.
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const slugs = await getAllProductSlugs();
   return [

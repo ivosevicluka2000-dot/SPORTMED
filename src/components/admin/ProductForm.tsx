@@ -171,6 +171,9 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
               defaultChecked={product?.active ?? true}
             />
             {t("products.active")}
+            <span className="text-xs text-gray-400">
+              ({t("products.activeHint")})
+            </span>
           </label>
         </div>
 

@@ -30,6 +30,7 @@ interface BlogPostRow {
   excerpt: string;
   body_markdown: string | null;
   main_image_url: string | null;
+  images: string[] | null;
   published_at: string | null;
   reading_time: number;
   author_id: string | null;
@@ -85,6 +86,7 @@ function rowToBlogPost(
     excerpt: r.excerpt,
     body: withBody ? r.body_markdown ?? "" : undefined,
     mainImage: r.main_image_url ?? undefined,
+    images: r.images ?? [],
     publishedAt: r.published_at ?? "",
     readingTime: r.reading_time,
     language: r.language,
@@ -124,7 +126,7 @@ export async function getBlogPosts(locale: string): Promise<BlogPost[]> {
   const { data, error } = await supabase
     .from("blog_posts")
     .select(
-      "id, slug, language, title, excerpt, body_markdown, main_image_url, published_at, reading_time, author_id, category_ids, related_post_ids"
+      "id, slug, language, title, excerpt, body_markdown, main_image_url, images, published_at, reading_time, author_id, category_ids, related_post_ids"
     )
     .eq("language", locale)
     .not("published_at", "is", null)
@@ -160,7 +162,7 @@ export async function getBlogPostsByCategory(
   const { data } = await supabase
     .from("blog_posts")
     .select(
-      "id, slug, language, title, excerpt, body_markdown, main_image_url, published_at, reading_time, author_id, category_ids, related_post_ids"
+      "id, slug, language, title, excerpt, body_markdown, main_image_url, images, published_at, reading_time, author_id, category_ids, related_post_ids"
     )
     .eq("language", locale)
     .contains("category_ids", [cat.id])
@@ -190,7 +192,7 @@ export async function getBlogPost(
   const { data } = await supabase
     .from("blog_posts")
     .select(
-      "id, slug, language, title, excerpt, body_markdown, main_image_url, published_at, reading_time, author_id, category_ids, related_post_ids"
+      "id, slug, language, title, excerpt, body_markdown, main_image_url, images, published_at, reading_time, author_id, category_ids, related_post_ids"
     )
     .eq("language", locale)
     .eq("slug", slug)
@@ -209,7 +211,7 @@ export async function getBlogPost(
     const { data: related } = await supabase
       .from("blog_posts")
       .select(
-        "id, slug, language, title, excerpt, body_markdown, main_image_url, published_at, reading_time, author_id, category_ids, related_post_ids"
+        "id, slug, language, title, excerpt, body_markdown, main_image_url, images, published_at, reading_time, author_id, category_ids, related_post_ids"
       )
       .in("id", relIds)
       .not("published_at", "is", null)

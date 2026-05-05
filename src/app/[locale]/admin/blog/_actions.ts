@@ -23,6 +23,15 @@ function firstUrl(v: FormDataEntryValue | null): string | null {
   }
   return str || null;
 }
+function urlArray(v: FormDataEntryValue | null): string[] {
+  if (typeof v !== "string" || !v) return [];
+  try {
+    const parsed = JSON.parse(v);
+    return Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
 function multi(formData: FormData, name: string): string[] {
   return formData
     .getAll(name)
@@ -56,6 +65,7 @@ export async function upsertBlogPostAction(formData: FormData): Promise<void> {
     excerpt,
     body_markdown: s(formData.get("body_markdown")),
     main_image_url: firstUrl(formData.get("main_image_url")),
+    images: urlArray(formData.get("images")),
     author_id: s(formData.get("author_id")) || null,
     category_ids: multi(formData, "category_ids"),
     related_post_ids: multi(formData, "related_post_ids"),

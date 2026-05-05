@@ -45,10 +45,16 @@ export default function ImageUploader({
           contentType: file.type,
         });
       if (upErr) {
-        setError(upErr.message);
+        // Common case: bucket doesn't exist (run supabase migration 0002) or
+        // RLS blocks the upload (user isn't signed in as admin).
+        setError(`${upErr.message} (bucket: ${bucket})`);
         return;
       }
       const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      if (!data?.publicUrl) {
+        setError(`Upload succeeded but no public URL for bucket "${bucket}". Check that the bucket is marked public.`);
+        return;
+      }
       uploaded.push(data.publicUrl);
     }
     startTransition(() => {

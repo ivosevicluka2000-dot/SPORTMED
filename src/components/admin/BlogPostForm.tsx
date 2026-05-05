@@ -20,6 +20,7 @@ interface BlogPostFormProps {
     excerpt: string;
     body_markdown: string;
     main_image_url: string | null;
+    images: string[] | null;
     author_id: string | null;
     category_ids: string[];
     related_post_ids: string[];
@@ -39,6 +40,10 @@ function toLocalInput(iso: string | null): string {
   const d = new Date(iso);
   const tz = d.getTimezoneOffset() * 60000;
   return new Date(d.getTime() - tz).toISOString().slice(0, 16);
+}
+
+function nowLocalInput(): string {
+  return toLocalInput(new Date().toISOString());
 }
 
 export default function BlogPostForm({
@@ -168,9 +173,21 @@ export default function BlogPostForm({
           </label>
           <ImageUploader
             name="main_image_url"
-            bucket="blog-covers"
+            bucket="blog-images"
             multiple={false}
             initial={post?.main_image_url ? [post.main_image_url] : []}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-navy mb-1">
+            {t("blog.galleryImages")}
+          </label>
+          <ImageUploader
+            name="images"
+            bucket="blog-images"
+            multiple
+            initial={post?.images ?? []}
           />
         </div>
 
@@ -252,7 +269,11 @@ export default function BlogPostForm({
           <input
             type="datetime-local"
             name="published_at"
-            defaultValue={toLocalInput(post?.published_at ?? null)}
+            defaultValue={
+              post
+                ? toLocalInput(post.published_at ?? null)
+                : nowLocalInput()
+            }
             className={inputClass}
           />
         </div>
