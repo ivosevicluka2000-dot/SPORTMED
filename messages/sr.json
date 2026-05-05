@@ -1439,6 +1439,8 @@
       "typePdf": "PDF vodič",
       "uploadImages": "Dodaj slike",
       "removeImage": "Ukloni",
+      "uploadInvalidType": "Dozvoljene su samo slike.",
+      "uploadTooLarge": "Datoteka je prevelika. Maksimalno {max} MB.",
       "empty": "Još nema proizvoda. Kliknite Novo da dodate prvi."
     },
     "categories": {

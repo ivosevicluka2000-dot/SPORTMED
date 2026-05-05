@@ -46,27 +46,38 @@ function dateOrNull(v: FormDataEntryValue | null): string | null {
   return isNaN(d.getTime()) ? null : d.toISOString();
 }
 
-export async function upsertBlogPostAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+export type ActionState = { error?: string } | undefined;
+
+export async function upsertBlogPostAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { error: "Not authorized" };
+  }
   const id = s(formData.get("id")) || null;
   const locale = (s(formData.get("locale")) || "sr") as Locale;
   const language = s(formData.get("language"));
-  if (language !== "sr" && language !== "en") throw new Error("Language required");
+  if (language !== "sr" && language !== "en")
+    return { error: "Language is required" };
 
   const slug = s(formData.get("slug"));
   const title = s(formData.get("title"));
   const excerpt = s(formData.get("excerpt"));
-  if (!slug || !title || !excerpt) throw new Error("Required fields missing");
+  if (!slug || !title || !excerpt)
+    return { error: "Slug, title and excerpt are required" };
 
-  const status = s(formData.get(\"status\"));
+  const status = s(formData.get("status"));
   let publishedAt: string | null;
-  if (status === \"draft\") {
+  if (status === "draft") {
     publishedAt = null;
-  } else if (status === \"schedule\") {
-    publishedAt = dateOrNull(formData.get(\"published_at\"));
-    if (!publishedAt) throw new Error(\"Schedule date required\");
+  } else if (status === "schedule") {
+    publishedAt = dateOrNull(formData.get("published_at"));
+    if (!publishedAt) return { error: "Schedule date is required" };
   } else {
-    // \"now\" (default)
+    // "now" (default)
     publishedAt = new Date().toISOString();
   }
 
@@ -75,26 +86,29 @@ export async function upsertBlogPostAction(formData: FormData): Promise<void> {
     language,
     title,
     excerpt,
-    body_markdown: s(formData.get(\"body_markdown\")),
-    main_image_url: firstUrl(formData.get(\"main_image_url\")),
-    images: urlArray(formData.get(\"images\")),
-    author_id: s(formData.get(\"author_id\")) || null,
-    category_ids: multi(formData, \"category_ids\"),
-    related_post_ids: multi(formData, \"related_post_ids\"),
-    reading_time: Math.max(1, Math.round(num(formData.get(\"reading_time\"), 1))),
+    body_markdown: s(formData.get("body_markdown")),
+    main_image_url: firstUrl(formData.get("main_image_url")),
+    images: urlArray(formData.get("images")),
+    author_id: s(formData.get("author_id")) || null,
+    category_ids: multi(formData, "category_ids"),
+    related_post_ids: multi(formData, "related_post_ids"),
+    reading_time: Math.max(1, Math.round(num(formData.get("reading_time"), 1))),
     published_at: publishedAt,
   };
 
   const admin = adminClient();
   if (id) {
-    const { error } = await admin.from("blog_posts").update(payloadBase).eq("id", id);
-    if (error) throw error;
+    const { error } = await admin
+      .from("blog_posts")
+      .update(payloadBase)
+      .eq("id", id);
+    if (error) return { error: error.message };
   } else {
     const translationGroup = s(formData.get("translation_group"));
     const insertPayload: Record<string, unknown> = { ...payloadBase };
     if (translationGroup) insertPayload.translation_group = translationGroup;
     const { error } = await admin.from("blog_posts").insert(insertPayload);
-    if (error) throw error;
+    if (error) return { error: error.message };
   }
   revalidatePath("/", "layout");
   redirect(getPathname({ locale, href: "/admin/blog" }));

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticate, getOrderDetails } from "@/lib/raiaccept";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendOrderConfirmation } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   if (
@@ -28,8 +29,10 @@ export async function POST(req: NextRequest) {
     const admin = createAdminClient();
     const { data: orderRow } = await admin
       .from("orders")
-      .select("id, status, discount_code")
-      .eq("rai_accept_order_id", orderIdentification)
+      .select(
+        "id, order_number, status, discount_code, discount_amount, customer, items, subtotal, shipping_cost, total_amount, payment_method"
+      )
+      .eq("raiaccept_order_id", orderIdentification)
       .maybeSingle();
     if (!orderRow) {
       console.error("Order not found for RaiAccept ID:", orderIdentification);
@@ -52,10 +55,16 @@ export async function POST(req: NextRequest) {
         newStatus = "pending";
     }
 
-    await admin
+    const { error: updateErr } = await admin
       .from("orders")
       .update({ status: newStatus })
       .eq("id", orderRow.id);
+    if (updateErr) {
+      console.error(
+        `[raiaccept-webhook] Failed to update order ${orderRow.id} (raiaccept ${orderIdentification}) to ${newStatus}:`,
+        updateErr
+      );
+    }
 
     // Bump discount usage exactly once per order on the transition to confirmed.
     if (
@@ -70,6 +79,42 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         console.error("Failed to increment discount usage:", err);
       }
+    // Send order confirmation email exactly once on the PAID transition.
+    if (newStatus === "confirmed" && orderRow.status !== "confirmed") {
+      const customer = (orderRow.customer ?? {}) as {
+        name?: string;
+        email?: string;
+        locale?: string;
+      };
+      if (customer.email) {
+        void sendOrderConfirmation(
+          {
+            orderNumber: orderRow.order_number,
+            locale: customer.locale === "en" ? "en" : "sr",
+            customer: { name: customer.name ?? "", email: customer.email },
+            items: (orderRow.items ?? []) as Array<{
+              product_name: string;
+              quantity: number;
+              price: number;
+            }>,
+            subtotal: orderRow.subtotal,
+            discountAmount: orderRow.discount_amount ?? 0,
+            discountCode: orderRow.discount_code ?? null,
+            shippingCost: orderRow.shipping_cost ?? 0,
+            totalAmount: orderRow.total_amount,
+            paymentMethod: orderRow.payment_method ?? "card",
+            status: newStatus,
+          },
+          { notifyAdmin: true }
+        ).catch((err) =>
+          console.error(
+            `[raiaccept-webhook] confirmation email failed for order ${orderRow.order_number}:`,
+            err
+          )
+        );
+      }
+    }
+
     }
 
     return NextResponse.json({ received: true });

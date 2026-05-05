@@ -4,6 +4,10 @@ import { getAllBlogSlugs, getAllProductSlugs } from "@/lib/queries";
 
 const baseUrl = "https://sportcaremed.rs";
 
+// Re-generate the sitemap at most once per hour so newly published
+// products and blog posts surface to crawlers without a redeploy.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["sr", "en"];
 

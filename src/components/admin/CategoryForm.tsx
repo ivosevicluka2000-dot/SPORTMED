@@ -1,5 +1,6 @@
 "use client";
 
+import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import BilingualField from "@/components/admin/BilingualField";
 import ImageUploader from "@/components/admin/ImageUploader";
@@ -23,13 +24,14 @@ interface CategoryFormProps {
 export default function CategoryForm({ category }: CategoryFormProps) {
   const t = useTranslations("admin");
   const locale = useLocale();
+  const [state, formAction, pending] = useActionState(upsertCategoryAction, undefined);
   const inputClass =
     "w-full px-3 py-2 rounded-md border border-gray-200 focus:border-teal focus:outline-none text-sm";
 
   return (
     <div className="space-y-6">
       <form
-        action={upsertCategoryAction}
+        action={formAction}
         className="space-y-5 bg-white border border-gray-200 rounded-xl p-6"
       >
         {category?.id && <input type="hidden" name="id" value={category.id} />}
@@ -94,13 +96,19 @@ export default function CategoryForm({ category }: CategoryFormProps) {
           </div>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 flex items-center gap-3">
           <button
             type="submit"
-            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90"
+            disabled={pending}
+            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90 disabled:opacity-60"
           >
-            {t("common.save")}
+            {pending ? t("common.saving") : t("common.save")}
           </button>
+          {state?.error && (
+            <p className="text-sm text-red-600">
+              {t("common.error")}: {state.error}
+            </p>
+          )}
         </div>
       </form>
 

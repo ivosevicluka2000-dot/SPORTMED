@@ -25,12 +25,21 @@ function arr(v: FormDataEntryValue | null): string[] {
   }
 }
 
-export async function upsertProductAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+export type ActionState = { error?: string } | undefined;
+
+export async function upsertProductAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { error: "Not authorized" };
+  }
   const id = s(formData.get("id")) || null;
   const slug = s(formData.get("slug"));
   const locale = (s(formData.get("locale")) || "sr") as Locale;
-  if (!slug) throw new Error("Slug required");
+  if (!slug) return { error: "Slug is required" };
 
   const payload = {
     slug,
@@ -54,10 +63,10 @@ export async function upsertProductAction(formData: FormData): Promise<void> {
   const admin = adminClient();
   if (id) {
     const { error } = await admin.from("products").update(payload).eq("id", id);
-    if (error) throw error;
+    if (error) return { error: error.message };
   } else {
     const { error } = await admin.from("products").insert(payload);
-    if (error) throw error;
+    if (error) return { error: error.message };
   }
   revalidatePath("/", "layout");
   redirect(getPathname({ locale, href: "/admin/products" }));

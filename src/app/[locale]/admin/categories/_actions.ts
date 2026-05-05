@@ -24,12 +24,21 @@ function firstUrl(v: FormDataEntryValue | null): string | null {
   return str || null;
 }
 
-export async function upsertCategoryAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+export type ActionState = { error?: string } | undefined;
+
+export async function upsertCategoryAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { error: "Not authorized" };
+  }
   const id = s(formData.get("id")) || null;
   const slug = s(formData.get("slug"));
   const locale = (s(formData.get("locale")) || "sr") as Locale;
-  if (!slug) throw new Error("Slug required");
+  if (!slug) return { error: "Slug is required" };
 
   const payload = {
     slug,
@@ -48,10 +57,10 @@ export async function upsertCategoryAction(formData: FormData): Promise<void> {
       .from("product_categories")
       .update(payload)
       .eq("id", id);
-    if (error) throw error;
+    if (error) return { error: error.message };
   } else {
     const { error } = await admin.from("product_categories").insert(payload);
-    if (error) throw error;
+    if (error) return { error: error.message };
   }
   revalidatePath("/", "layout");
   redirect(getPathname({ locale, href: "/admin/categories" }));

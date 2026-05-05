@@ -11,15 +11,14 @@ export default async function AdminOrdersPage() {
   const { data } = await admin
     .from("orders")
     .select(
-      "id, order_number, customer_name, customer_email, total_amount, status, created_at"
+      "id, order_number, customer, total_amount, status, created_at"
     )
     .order("created_at", { ascending: false })
     .limit(200);
   type Row = {
     id: string;
     order_number: string;
-    customer_name: string;
-    customer_email: string;
+    customer: { name?: string; email?: string } | null;
     total_amount: number;
     status: string;
     created_at: string;
@@ -52,8 +51,8 @@ export default async function AdminOrdersPage() {
                     {o.order_number}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="text-navy">{o.customer_name}</div>
-                    <div className="text-xs text-gray-500">{o.customer_email}</div>
+                    <div className="text-navy">{o.customer?.name ?? ""}</div>
+                    <div className="text-xs text-gray-500">{o.customer?.email ?? ""}</div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     {o.total_amount.toLocaleString("sr-RS")} RSD

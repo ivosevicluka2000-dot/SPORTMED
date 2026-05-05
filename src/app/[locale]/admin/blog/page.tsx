@@ -51,6 +51,9 @@ export default async function AdminBlogPage() {
             </thead>
             <tbody>
               {rows.map((p) => {
+                // Server component renders once per request; lint rule meant for
+                // client components doesn't apply here.
+                // eslint-disable-next-line react-hooks/purity
                 const now = Date.now();
                 const ts = p.published_at ? new Date(p.published_at).getTime() : null;
                 const statusKey =

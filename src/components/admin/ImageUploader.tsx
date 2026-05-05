@@ -11,6 +11,8 @@ interface ImageUploaderProps {
   name: string;
   initial?: string[];
   multiple?: boolean;
+  /** Max file size in MB. Defaults to 5. */
+  maxSizeMB?: number;
 }
 
 /**
@@ -23,11 +25,13 @@ export default function ImageUploader({
   name,
   initial = [],
   multiple = true,
+  maxSizeMB = 5,
 }: ImageUploaderProps) {
   const t = useTranslations("admin");
   const [urls, setUrls] = useState<string[]>(initial);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const maxBytes = maxSizeMB * 1024 * 1024;
 
   async function uploadFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -35,6 +39,14 @@ export default function ImageUploader({
     const supabase = createClient();
     const uploaded: string[] = [];
     for (const file of Array.from(files)) {
+      if (!file.type.startsWith("image/")) {
+        setError(t("products.uploadInvalidType"));
+        return;
+      }
+      if (file.size > maxBytes) {
+        setError(t("products.uploadTooLarge", { max: maxSizeMB }));
+        return;
+      }
       const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
       const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error: upErr } = await supabase.storage

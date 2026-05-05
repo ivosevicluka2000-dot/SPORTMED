@@ -1,5 +1,6 @@
 "use client";
 
+import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import DeleteForm from "@/components/admin/DeleteForm";
 import {
@@ -30,13 +31,14 @@ function toDateInput(iso: string | null): string {
 export default function DiscountForm({ discount }: DiscountFormProps) {
   const t = useTranslations("admin");
   const locale = useLocale();
+  const [state, formAction, pending] = useActionState(upsertDiscountAction, undefined);
   const inputClass =
     "w-full px-3 py-2 rounded-md border border-gray-200 focus:border-teal focus:outline-none text-sm";
 
   return (
     <div className="space-y-6">
       <form
-        action={upsertDiscountAction}
+        action={formAction}
         className="space-y-5 bg-white border border-gray-200 rounded-xl p-6"
       >
         {discount?.id && <input type="hidden" name="id" value={discount.id} />}
@@ -155,13 +157,19 @@ export default function DiscountForm({ discount }: DiscountFormProps) {
           {t("discounts.active")}
         </label>
 
-        <div className="pt-2">
+        <div className="pt-2 flex items-center gap-3">
           <button
             type="submit"
-            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90"
+            disabled={pending}
+            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90 disabled:opacity-60"
           >
-            {t("common.save")}
+            {pending ? t("common.saving") : t("common.save")}
           </button>
+          {state?.error && (
+            <p className="text-sm text-red-600">
+              {t("common.error")}: {state.error}
+            </p>
+          )}
         </div>
       </form>
 

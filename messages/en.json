@@ -1439,6 +1439,8 @@
       "typePdf": "PDF guide",
       "uploadImages": "Upload images",
       "removeImage": "Remove",
+      "uploadInvalidType": "Only image files are allowed.",
+      "uploadTooLarge": "File is too large. Max {max} MB.",
       "empty": "No products yet. Click New to add the first one."
     },
     "categories": {

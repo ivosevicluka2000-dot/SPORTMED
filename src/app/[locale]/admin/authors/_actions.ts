@@ -21,12 +21,21 @@ function firstUrl(v: FormDataEntryValue | null): string | null {
   return str || null;
 }
 
-export async function upsertAuthorAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+export type ActionState = { error?: string } | undefined;
+
+export async function upsertAuthorAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { error: "Not authorized" };
+  }
   const id = s(formData.get("id")) || null;
   const locale = (s(formData.get("locale")) || "sr") as Locale;
   const name = s(formData.get("name"));
-  if (!name) throw new Error("Name required");
+  if (!name) return { error: "Name is required" };
 
   const payload = {
     name,
@@ -38,10 +47,10 @@ export async function upsertAuthorAction(formData: FormData): Promise<void> {
   const admin = adminClient();
   if (id) {
     const { error } = await admin.from("blog_authors").update(payload).eq("id", id);
-    if (error) throw error;
+    if (error) return { error: error.message };
   } else {
     const { error } = await admin.from("blog_authors").insert(payload);
-    if (error) throw error;
+    if (error) return { error: error.message };
   }
   revalidatePath("/", "layout");
   redirect(getPathname({ locale, href: "/admin/authors" }));

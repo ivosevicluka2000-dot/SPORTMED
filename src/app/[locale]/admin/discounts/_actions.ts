@@ -22,16 +22,26 @@ function dateOrNull(v: FormDataEntryValue | null): string | null {
   return isNaN(d.getTime()) ? null : d.toISOString();
 }
 
-export async function upsertDiscountAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+export type ActionState = { error?: string } | undefined;
+
+export async function upsertDiscountAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { error: "Not authorized" };
+  }
   const id = s(formData.get("id")) || null;
   const code = s(formData.get("code")).toUpperCase();
   const locale = (s(formData.get("locale")) || "sr") as Locale;
-  if (!code) throw new Error("Code required");
+  if (!code) return { error: "Code is required" };
 
   const payload = {
     code,
-    type: s(formData.get("type")) === "fixed" ? "fixed" : "percent",
+    discount_type:
+      s(formData.get("type")) === "fixed" ? "fixed" : "percent",
     value: Math.round(num(formData.get("value"))),
     valid_from: dateOrNull(formData.get("valid_from")),
     valid_until: dateOrNull(formData.get("valid_until")),
@@ -50,10 +60,10 @@ export async function upsertDiscountAction(formData: FormData): Promise<void> {
       .from("discount_codes")
       .update(payload)
       .eq("id", id);
-    if (error) throw error;
+    if (error) return { error: error.message };
   } else {
     const { error } = await admin.from("discount_codes").insert(payload);
-    if (error) throw error;
+    if (error) return { error: error.message };
   }
   revalidatePath("/", "layout");
   redirect(getPathname({ locale, href: "/admin/discounts" }));

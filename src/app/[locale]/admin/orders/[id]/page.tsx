@@ -19,11 +19,10 @@ const STATUSES = [
 ] as const;
 
 interface OrderItem {
-  productId?: string;
-  name?: string;
+  product_id?: string;
+  product_name?: string;
   quantity: number;
-  unitPrice: number;
-  lineTotal?: number;
+  price: number;
 }
 
 export default async function AdminOrderDetailPage({
@@ -59,11 +58,11 @@ export default async function AdminOrderDetailPage({
           <dl className="text-sm space-y-1">
             <div>
               <dt className="inline text-gray-500">Name: </dt>
-              <dd className="inline text-navy">{data.customer_name}</dd>
+              <dd className="inline text-navy">{customer.name ?? ""}</dd>
             </div>
             <div>
               <dt className="inline text-gray-500">Email: </dt>
-              <dd className="inline text-navy">{data.customer_email}</dd>
+              <dd className="inline text-navy">{customer.email ?? ""}</dd>
             </div>
             {customer.phone && (
               <div>
@@ -75,7 +74,7 @@ export default async function AdminOrderDetailPage({
               <div>
                 <dt className="inline text-gray-500">Address: </dt>
                 <dd className="inline text-navy">
-                  {customer.address}, {customer.city} {customer.postalCode}
+                  {customer.address}, {customer.city} {customer.postal_code}
                 </dd>
               </div>
             )}
@@ -143,16 +142,13 @@ export default async function AdminOrderDetailPage({
           <tbody>
             {items.map((it, i) => (
               <tr key={i} className="border-t border-gray-100">
-                <td className="py-2">{it.name ?? it.productId}</td>
+                <td className="py-2">{it.product_name ?? it.product_id}</td>
                 <td className="py-2 text-right">{it.quantity}</td>
                 <td className="py-2 text-right">
-                  {it.unitPrice.toLocaleString("sr-RS")} RSD
+                  {it.price.toLocaleString("sr-RS")} RSD
                 </td>
                 <td className="py-2 text-right">
-                  {(it.lineTotal ?? it.unitPrice * it.quantity).toLocaleString(
-                    "sr-RS"
-                  )}{" "}
-                  RSD
+                  {(it.price * it.quantity).toLocaleString("sr-RS")} RSD
                 </td>
               </tr>
             ))}

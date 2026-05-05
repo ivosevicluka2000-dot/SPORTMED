@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import ImageUploader from "@/components/admin/ImageUploader";
 import DeleteForm from "@/components/admin/DeleteForm";
@@ -57,24 +57,25 @@ export default function BlogPostForm({
   const locale = useLocale();
   const [body, setBody] = useState(post?.body_markdown ?? "");
   const [showPreview, setShowPreview] = useState(false);
-  const initialStatus: \"draft\" | \"now\" | \"schedule\" = (() => {
-    if (!post) return \"now\";
-    if (!post.published_at) return \"draft\";
-    return new Date(post.published_at).getTime() > Date.now() ? \"schedule\" : \"now\";
-  })();
-  const [status, setStatus] = useState<\"draft\" | \"now\" | \"schedule\">(initialStatus);
+  const [status, setStatus] = useState<"draft" | "now" | "schedule">(() => {
+    if (!post) return "now";
+    if (!post.published_at) return "draft";
+    return new Date(post.published_at).getTime() > Date.now() ? "schedule" : "now";
+  });
   const [scheduledAt, setScheduledAt] = useState<string>(() => {
     if (post?.published_at && new Date(post.published_at).getTime() > Date.now()) {
       return toLocalInput(post.published_at);
     }
     return nowLocalInput();
-  });  const inputClass =
+  });
+  const [state, formAction, pending] = useActionState(upsertBlogPostAction, undefined);
+  const inputClass =
     "w-full px-3 py-2 rounded-md border border-gray-200 focus:border-teal focus:outline-none text-sm";
 
   return (
     <div className="space-y-6">
       <form
-        action={upsertBlogPostAction}
+        action={formAction}
         className="space-y-5 bg-white border border-gray-200 rounded-xl p-6"
       >
         {post?.id && <input type="hidden" name="id" value={post.id} />}
@@ -274,19 +275,19 @@ export default function BlogPostForm({
         </div>
 
         <div>
-          <label className=\"block text-sm font-medium text-navy mb-2\">
-            {t(\"blog.status\")}
+          <label className="block text-sm font-medium text-navy mb-2">
+            {t("blog.status")}
           </label>
-          <div className=\"flex flex-wrap gap-4 text-sm\">
+          <div className="flex flex-wrap gap-4 text-sm">
             {([
-              [\"draft\", t(\"blog.statusDraft\")],
-              [\"now\", t(\"blog.statusPublishNow\")],
-              [\"schedule\", t(\"blog.statusSchedule\")],
+              ["draft", t("blog.statusDraft")],
+              ["now", t("blog.statusPublishNow")],
+              ["schedule", t("blog.statusSchedule")],
             ] as const).map(([value, label]) => (
-              <label key={value} className=\"flex items-center gap-2 cursor-pointer\">
+              <label key={value} className="flex items-center gap-2 cursor-pointer">
                 <input
-                  type=\"radio\"
-                  name=\"status\"
+                  type="radio"
+                  name="status"
                   value={value}
                   checked={status === value}
                   onChange={() => setStatus(value)}
@@ -295,29 +296,35 @@ export default function BlogPostForm({
               </label>
             ))}
           </div>
-          {status === \"schedule\" && (
-            <div className=\"mt-3\">
+          {status === "schedule" && (
+            <div className="mt-3">
               <input
-                type=\"datetime-local\"
-                name=\"published_at\"
+                type="datetime-local"
+                name="published_at"
                 value={scheduledAt}
                 onChange={(e) => setScheduledAt(e.target.value)}
                 min={nowLocalInput()}
                 required
                 className={inputClass}
               />
-              <p className=\"text-xs text-gray-500 mt-1\">{t(\"blog.scheduleHint\")}</p>
+              <p className="text-xs text-gray-500 mt-1">{t("blog.scheduleHint")}</p>
             </div>
           )}
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 flex items-center gap-3">
           <button
             type="submit"
-            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90"
+            disabled={pending}
+            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90 disabled:opacity-60"
           >
-            {t("common.save")}
+            {pending ? t("common.saving") : t("common.save")}
           </button>
+          {state?.error && (
+            <p className="text-sm text-red-600">
+              {t("common.error")}: {state.error}
+            </p>
+          )}
         </div>
       </form>
 

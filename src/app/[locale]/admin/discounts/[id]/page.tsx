@@ -16,7 +16,7 @@ export default async function EditDiscountPage({
   const { data } = await admin
     .from("discount_codes")
     .select(
-      "id, code, type, value, valid_from, valid_until, max_uses, used_count, min_order_amount, active"
+      "id, code, type:discount_type, value, valid_from, valid_until, max_uses, used_count, min_order_amount, active"
     )
     .eq("id", id)
     .maybeSingle();

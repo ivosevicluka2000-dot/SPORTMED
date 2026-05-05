@@ -1,5 +1,6 @@
 "use client";
 
+import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import BilingualField from "@/components/admin/BilingualField";
 import ImageUploader from "@/components/admin/ImageUploader";
@@ -27,12 +28,13 @@ interface ProductFormProps {
 export default function ProductForm({ product, categories }: ProductFormProps) {
   const t = useTranslations("admin");
   const locale = useLocale();
+  const [state, formAction, pending] = useActionState(upsertProductAction, undefined);
   const inputClass =
     "w-full px-3 py-2 rounded-md border border-gray-200 focus:border-teal focus:outline-none text-sm";
 
   return (
     <div className="space-y-6">
-      <form action={upsertProductAction} className="space-y-5 bg-white border border-gray-200 rounded-xl p-6">
+      <form action={formAction} className="space-y-5 bg-white border border-gray-200 rounded-xl p-6">
         {product?.id && <input type="hidden" name="id" value={product.id} />}
         <input type="hidden" name="locale" value={locale} />
 
@@ -180,10 +182,16 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
         <div className="flex items-center gap-3 pt-2">
           <button
             type="submit"
-            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90"
+            disabled={pending}
+            className="bg-navy text-white px-5 py-2 rounded-md text-sm hover:bg-navy/90 disabled:opacity-60"
           >
-            {t("common.save")}
+            {pending ? t("common.saving") : t("common.save")}
           </button>
+          {state?.error && (
+            <p className="text-sm text-red-600">
+              {t("common.error")}: {state.error}
+            </p>
+          )}
         </div>
       </form>
 

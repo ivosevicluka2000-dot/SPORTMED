@@ -9,7 +9,9 @@ export default async function AdminDiscountsPage() {
   const admin = createAdminClient();
   const { data } = await admin
     .from("discount_codes")
-    .select("id, code, type, value, used_count, max_uses, active, valid_until")
+    .select(
+      "id, code, type:discount_type, value, used_count, max_uses, active, valid_until"
+    )
     .order("created_at", { ascending: false });
   type Row = {
     id: string;

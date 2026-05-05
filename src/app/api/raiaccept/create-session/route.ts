@@ -58,13 +58,21 @@ export async function POST(req: NextRequest) {
       (sum, i) => sum + i.price * i.quantity,
       0,
     );
-    const discountResult = discountCode
-      ? await validateDiscount(discountCode, subtotal)
+    let discountResult: Awaited<ReturnType<typeof validateDiscount>> | null = null;
+    let appliedCode: string | null = null;
+    if (discountCode && discountCode.trim()) {
+      discountResult = await validateDiscount(discountCode, subtotal);
+      if (!discountResult.valid) {
+        return NextResponse.json(
+          { error: "Discount code is not valid", reason: discountResult.reason },
+          { status: 400 }
+        );
+      }
+      appliedCode = discountResult.discount?.code ?? null;
+    }
+    const discount = discountResult?.valid
+      ? { amount: discountResult.amount, percent: discountResult.percent }
       : null;
-    const discount =
-      discountResult && discountResult.valid
-        ? { amount: discountResult.amount, percent: discountResult.percent }
-        : null;
     const totals = calcOrderTotals(validated, discount, shippingCost || 0);
     const orderNumber = `SCM-${Date.now().toString(36).toUpperCase()}`;
 
@@ -82,7 +90,7 @@ export async function POST(req: NextRequest) {
     }));
     if (totals.discountAmount > 0) {
       raiItems.push({
-        description: `Popust ${discountCode ?? ""} (-${totals.discountPercent}%)`,
+        description: `Popust ${appliedCode ?? ""} (-${totals.discountPercent}%)`,
         numberOfItems: 1,
         price: -totals.discountAmount,
       });
@@ -114,6 +122,12 @@ export async function POST(req: NextRequest) {
       notificationUrl: process.env.RAIACCEPT_NOTIFICATION_URL || undefined,
     };
 
+    if (!process.env.RAIACCEPT_NOTIFICATION_URL) {
+      console.warn(
+        `[raiaccept] RAIACCEPT_NOTIFICATION_URL is not set — order ${orderNumber} will not receive automatic payment status updates.`
+      );
+    }
+
     const token = await authenticate();
     const orderResponse = await createOrder(token, orderParams);
     const language = locale === "en" ? "en" : "sr";
@@ -144,18 +158,21 @@ export async function POST(req: NextRequest) {
           price: item.price,
         })),
         subtotal: totals.subtotal,
-        discount_code: discountCode || null,
+        discount_code: appliedCode,
         discount_amount: totals.discountAmount,
         shipping_cost: shippingCost || 0,
         total_amount: totals.totalAmount,
-        customer_name: customer.name,
-        customer_email: customer.email,
-        customer_phone: customer.phone,
-        customer_address: customer.address,
-        customer_city: customer.city,
-        customer_postal_code: customer.postalCode,
+        customer: {
+          name: customer.name,
+          email: customer.email,
+          phone: customer.phone,
+          address: customer.address,
+          city: customer.city,
+          postal_code: customer.postalCode,
+          locale: locale === "en" ? "en" : "sr",
+        },
         payment_method: "card",
-        rai_accept_order_id: orderResponse.orderIdentification,
+        raiaccept_order_id: orderResponse.orderIdentification,
         status: "pending",
       });
       if (insertErr) {

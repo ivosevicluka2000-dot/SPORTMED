@@ -8,6 +8,7 @@ import {
 } from "@/lib/order-validation";
 import { validateDiscount } from "@/lib/queries";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
+import { sendOrderConfirmation } from "@/lib/email";
 
 interface CustomerInput {
   name: string;
@@ -98,28 +99,33 @@ export async function POST(req: NextRequest) {
     }
 
     const admin = createAdminClient();
+    const orderStatus = paymentMethod === "cod" ? "confirmed" : "pending";
+    const orderItems = validated.map((item) => ({
+      product_id: item.productId,
+      product_name: item.productName,
+      quantity: item.quantity,
+      price: item.price,
+    }));
     const { error: insertErr } = await admin.from("orders").insert({
       order_number: orderNumber,
       user_id: userId,
-      items: validated.map((item) => ({
-        product_id: item.productId,
-        product_name: item.productName,
-        quantity: item.quantity,
-        price: item.price,
-      })),
+      items: orderItems,
       subtotal: totals.subtotal,
       discount_code: appliedCode ?? null,
       discount_amount: totals.discountAmount,
       shipping_cost: shippingCost || 0,
       total_amount: totals.totalAmount,
-      customer_name: customer.name,
-      customer_email: customer.email,
-      customer_phone: customer.phone,
-      customer_address: customer.address,
-      customer_city: customer.city,
-      customer_postal_code: customer.postalCode,
+      customer: {
+        name: customer.name,
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
+        city: customer.city,
+        postal_code: customer.postalCode,
+        locale: locale === "en" ? "en" : "sr",
+      },
       payment_method: paymentMethod || "cod",
-      status: paymentMethod === "cod" ? "confirmed" : "pending",
+      status: orderStatus,
     });
 
     if (insertErr) {
@@ -138,6 +144,29 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         console.error("Failed to increment discount usage:", err);
       }
+    }
+
+    // Fire-and-forget order confirmation email. COD orders go out now;
+    // card orders are emailed from the RaiAccept webhook on PAID.
+    if (paymentMethod === "cod" && customer.email) {
+      void sendOrderConfirmation(
+        {
+          orderNumber,
+          locale: locale === "en" ? "en" : "sr",
+          customer: { name: customer.name, email: customer.email },
+          items: orderItems,
+          subtotal: totals.subtotal,
+          discountAmount: totals.discountAmount,
+          discountCode: appliedCode ?? null,
+          shippingCost: shippingCost || 0,
+          totalAmount: totals.totalAmount,
+          paymentMethod: "cod",
+          status: orderStatus,
+        },
+        { notifyAdmin: true }
+      ).catch((err) =>
+        console.error("[orders] confirmation email failed:", err)
+      );
     }
 
     return NextResponse.json({
