@@ -45,32 +45,56 @@ export default async function AdminBlogPage() {
                 <th className="text-left px-4 py-3">{t("blog.slug")}</th>
                 <th className="text-left px-4 py-3">{t("blog.language")}</th>
                 <th className="text-left px-4 py-3">{t("blog.publishedAt")}</th>
+                <th className="text-left px-4 py-3">{t("blog.status")}</th>
                 <th className="text-right px-4 py-3">{t("common.actions")}</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((p) => (
-                <tr key={p.id} className="border-t border-gray-100">
-                  <td className="px-4 py-3 text-navy">{p.title}</td>
-                  <td className="px-4 py-3 text-gray-500 font-mono text-xs">
-                    {p.slug}
-                  </td>
-                  <td className="px-4 py-3">{p.language.toUpperCase()}</td>
-                  <td className="px-4 py-3 text-gray-500">
-                    {p.published_at
-                      ? new Date(p.published_at).toLocaleDateString()
-                      : "—"}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Link
-                      href={{ pathname: "/admin/blog/[id]", params: { id: p.id } }}
-                      className="text-teal hover:underline"
-                    >
-                      {t("common.edit")}
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+              {rows.map((p) => {
+                const now = Date.now();
+                const ts = p.published_at ? new Date(p.published_at).getTime() : null;
+                const statusKey =
+                  ts === null
+                    ? "statusDraft"
+                    : ts > now
+                    ? "statusScheduled"
+                    : "statusPublished";
+                const badgeClass =
+                  ts === null
+                    ? "bg-gray-100 text-gray-600"
+                    : ts > now
+                    ? "bg-amber-100 text-amber-700"
+                    : "bg-emerald-100 text-emerald-700";
+                return (
+                  <tr key={p.id} className="border-t border-gray-100">
+                    <td className="px-4 py-3 text-navy">{p.title}</td>
+                    <td className="px-4 py-3 text-gray-500 font-mono text-xs">
+                      {p.slug}
+                    </td>
+                    <td className="px-4 py-3">{p.language.toUpperCase()}</td>
+                    <td className="px-4 py-3 text-gray-500">
+                      {p.published_at
+                        ? new Date(p.published_at).toLocaleString()
+                        : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${badgeClass}`}
+                      >
+                        {t(`blog.${statusKey}`)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Link
+                        href={{ pathname: "/admin/blog/[id]", params: { id: p.id } }}
+                        className="text-teal hover:underline"
+                      >
+                        {t("common.edit")}
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

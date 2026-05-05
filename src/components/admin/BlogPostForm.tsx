@@ -57,7 +57,18 @@ export default function BlogPostForm({
   const locale = useLocale();
   const [body, setBody] = useState(post?.body_markdown ?? "");
   const [showPreview, setShowPreview] = useState(false);
-  const inputClass =
+  const initialStatus: \"draft\" | \"now\" | \"schedule\" = (() => {
+    if (!post) return \"now\";
+    if (!post.published_at) return \"draft\";
+    return new Date(post.published_at).getTime() > Date.now() ? \"schedule\" : \"now\";
+  })();
+  const [status, setStatus] = useState<\"draft\" | \"now\" | \"schedule\">(initialStatus);
+  const [scheduledAt, setScheduledAt] = useState<string>(() => {
+    if (post?.published_at && new Date(post.published_at).getTime() > Date.now()) {
+      return toLocalInput(post.published_at);
+    }
+    return nowLocalInput();
+  });  const inputClass =
     "w-full px-3 py-2 rounded-md border border-gray-200 focus:border-teal focus:outline-none text-sm";
 
   return (
@@ -263,19 +274,41 @@ export default function BlogPostForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-navy mb-1">
-            {t("blog.publishedAt")}
+          <label className=\"block text-sm font-medium text-navy mb-2\">
+            {t(\"blog.status\")}
           </label>
-          <input
-            type="datetime-local"
-            name="published_at"
-            defaultValue={
-              post
-                ? toLocalInput(post.published_at ?? null)
-                : nowLocalInput()
-            }
-            className={inputClass}
-          />
+          <div className=\"flex flex-wrap gap-4 text-sm\">
+            {([
+              [\"draft\", t(\"blog.statusDraft\")],
+              [\"now\", t(\"blog.statusPublishNow\")],
+              [\"schedule\", t(\"blog.statusSchedule\")],
+            ] as const).map(([value, label]) => (
+              <label key={value} className=\"flex items-center gap-2 cursor-pointer\">
+                <input
+                  type=\"radio\"
+                  name=\"status\"
+                  value={value}
+                  checked={status === value}
+                  onChange={() => setStatus(value)}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          {status === \"schedule\" && (
+            <div className=\"mt-3\">
+              <input
+                type=\"datetime-local\"
+                name=\"published_at\"
+                value={scheduledAt}
+                onChange={(e) => setScheduledAt(e.target.value)}
+                min={nowLocalInput()}
+                required
+                className={inputClass}
+              />
+              <p className=\"text-xs text-gray-500 mt-1\">{t(\"blog.scheduleHint\")}</p>
+            </div>
+          )}
         </div>
 
         <div className="pt-2">

@@ -58,19 +58,31 @@ export async function upsertBlogPostAction(formData: FormData): Promise<void> {
   const excerpt = s(formData.get("excerpt"));
   if (!slug || !title || !excerpt) throw new Error("Required fields missing");
 
+  const status = s(formData.get(\"status\"));
+  let publishedAt: string | null;
+  if (status === \"draft\") {
+    publishedAt = null;
+  } else if (status === \"schedule\") {
+    publishedAt = dateOrNull(formData.get(\"published_at\"));
+    if (!publishedAt) throw new Error(\"Schedule date required\");
+  } else {
+    // \"now\" (default)
+    publishedAt = new Date().toISOString();
+  }
+
   const payloadBase = {
     slug,
     language,
     title,
     excerpt,
-    body_markdown: s(formData.get("body_markdown")),
-    main_image_url: firstUrl(formData.get("main_image_url")),
-    images: urlArray(formData.get("images")),
-    author_id: s(formData.get("author_id")) || null,
-    category_ids: multi(formData, "category_ids"),
-    related_post_ids: multi(formData, "related_post_ids"),
-    reading_time: Math.max(1, Math.round(num(formData.get("reading_time"), 1))),
-    published_at: dateOrNull(formData.get("published_at")),
+    body_markdown: s(formData.get(\"body_markdown\")),
+    main_image_url: firstUrl(formData.get(\"main_image_url\")),
+    images: urlArray(formData.get(\"images\")),
+    author_id: s(formData.get(\"author_id\")) || null,
+    category_ids: multi(formData, \"category_ids\"),
+    related_post_ids: multi(formData, \"related_post_ids\"),
+    reading_time: Math.max(1, Math.round(num(formData.get(\"reading_time\"), 1))),
+    published_at: publishedAt,
   };
 
   const admin = adminClient();
