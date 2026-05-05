@@ -11,7 +11,15 @@ import type { Locale } from "@/i18n/routing";
 
 export const dynamic = "force-dynamic";
 
-const COD_STATUSES = ["pending", "processing", "paid", "cancelled"] as const;
+const COD_STATUSES = [
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+  "paid",
+  "cancelled",
+] as const;
 
 const CARD_STATUSES = [
   "pending",

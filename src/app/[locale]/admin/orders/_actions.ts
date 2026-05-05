@@ -9,7 +9,15 @@ function s(v: FormDataEntryValue | null): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
-const COD_STATUSES = new Set(["pending", "processing", "paid", "cancelled"]);
+const COD_STATUSES = new Set([
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+  "paid",
+  "cancelled",
+]);
 
 const CARD_STATUSES = new Set([
   "pending",
