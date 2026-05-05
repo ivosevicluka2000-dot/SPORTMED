@@ -1,17 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticate, getOrderDetails } from "@/lib/raiaccept";
+import {
+  authenticate,
+  getOrderDetails,
+  isRaiAcceptConfigured,
+} from "@/lib/raiaccept";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendOrderConfirmation } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
-  if (
-    !process.env.RAIACCEPT_API_USERNAME ||
-    !process.env.RAIACCEPT_API_PASSWORD
-  ) {
+  if (!isRaiAcceptConfigured()) {
     return NextResponse.json(
       { error: "Payment service not configured" },
       { status: 503 }
     );
+  }
+  // Optional shared-secret check. RaiAccept does not document an HMAC
+  // signature scheme, so when RAIACCEPT_WEBHOOK_SECRET is set we require it
+  // as either ?secret=... or X-Webhook-Secret header. Skipped when unset.
+  const expectedSecret = process.env.RAIACCEPT_WEBHOOK_SECRET;
+  if (expectedSecret) {
+    const provided =
+      req.nextUrl.searchParams.get("secret") ||
+      req.headers.get("x-webhook-secret");
+    if (provided !== expectedSecret) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
   try {
     const body = await req.json();
@@ -79,6 +92,8 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         console.error("Failed to increment discount usage:", err);
       }
+    }
+
     // Send order confirmation email exactly once on the PAID transition.
     if (newStatus === "confirmed" && orderRow.status !== "confirmed") {
       const customer = (orderRow.customer ?? {}) as {
@@ -113,8 +128,6 @@ export async function POST(req: NextRequest) {
           )
         );
       }
-    }
-
     }
 
     return NextResponse.json({ received: true });

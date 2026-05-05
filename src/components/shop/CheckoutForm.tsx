@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { useForm } from "react-hook-form";
@@ -31,8 +31,26 @@ export default function CheckoutForm() {
   const { items, total, clearCart } = useCart();
   const { discountCode, discountPercent, isActive } = useDiscount();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("cod");
+  const [cardEnabled, setCardEnabled] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Probe whether RaiAccept is configured server-side. Hides the card option
+  // when credentials are missing so users never click a button that 503s.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/raiaccept/status")
+      .then((r) => (r.ok ? r.json() : { enabled: false }))
+      .then((d: { enabled?: boolean }) => {
+        if (!cancelled) setCardEnabled(Boolean(d.enabled));
+      })
+      .catch(() => {
+        if (!cancelled) setCardEnabled(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const discountAmount = isActive ? Math.round(total * (discountPercent / 100)) : 0;
   const subtotalAfterDiscount = total - discountAmount;
@@ -237,21 +255,23 @@ export default function CheckoutForm() {
                 <p className="text-xs text-gray-400">{t("codDescription")}</p>
               </div>
             </button>
-            <button
-              type="button"
-              onClick={() => setPaymentMethod("card")}
-              className={`flex items-center gap-3 p-4 rounded-xl border transition-colors cursor-pointer ${
-                paymentMethod === "card"
-                  ? "border-navy bg-navy/5"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              <CreditCard className="w-5 h-5 text-teal" />
-              <div className="text-left">
-                <p className="font-medium text-navy text-sm">{t("cardPayment")}</p>
-                <p className="text-xs text-gray-400">{t("cardDescription")}</p>
-              </div>
-            </button>
+            {cardEnabled && (
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("card")}
+                className={`flex items-center gap-3 p-4 rounded-xl border transition-colors cursor-pointer ${
+                  paymentMethod === "card"
+                    ? "border-navy bg-navy/5"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <CreditCard className="w-5 h-5 text-teal" />
+                <div className="text-left">
+                  <p className="font-medium text-navy text-sm">{t("cardPayment")}</p>
+                  <p className="text-xs text-gray-400">{t("cardDescription")}</p>
+                </div>
+              </button>
+            )}
           </div>
         </div>
       </div>

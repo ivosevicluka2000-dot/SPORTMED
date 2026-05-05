@@ -1,6 +1,24 @@
-const RAIACCEPT_AUTH_URL = "https://authenticate.raiaccept.com";
-const RAIACCEPT_API_URL = "https://trapi.raiaccept.com";
-const RAIACCEPT_CLIENT_ID = "kr2gs4117arvbnaperqff5dml";
+// Endpoints + Cognito ClientId default to RaiAccept production.
+// All three are env-overridable so a sandbox merchant can paste sandbox URLs
+// from the Merchant portal without a code change.
+const RAIACCEPT_AUTH_URL =
+  process.env.RAIACCEPT_AUTH_URL || "https://authenticate.raiaccept.com";
+const RAIACCEPT_API_URL =
+  process.env.RAIACCEPT_API_URL || "https://trapi.raiaccept.com";
+const RAIACCEPT_CLIENT_ID =
+  process.env.RAIACCEPT_CLIENT_ID || "kr2gs4117arvbnaperqff5dml";
+
+/**
+ * Returns true when the minimum env vars required to talk to RaiAccept are
+ * present. Used by the create-session and webhook routes (and the public
+ * /api/raiaccept/status probe) to fail fast / hide UI when card checkout is
+ * not configured.
+ */
+export function isRaiAcceptConfigured(): boolean {
+  return Boolean(
+    process.env.RAIACCEPT_API_USERNAME && process.env.RAIACCEPT_API_PASSWORD,
+  );
+}
 
 interface RaiAcceptAuthResult {
   AuthenticationResult: {

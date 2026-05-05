@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticate, createOrder, createPaymentSession } from "@/lib/raiaccept";
+import {
+  authenticate,
+  createOrder,
+  createPaymentSession,
+  isRaiAcceptConfigured,
+} from "@/lib/raiaccept";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import {
@@ -19,12 +24,15 @@ interface CustomerInput {
 }
 
 export async function POST(req: NextRequest) {
-  if (
-    !process.env.RAIACCEPT_API_USERNAME ||
-    !process.env.RAIACCEPT_API_PASSWORD
-  ) {
+  if (!isRaiAcceptConfigured()) {
     return NextResponse.json(
       { error: "Payment service not configured" },
+      { status: 503 }
+    );
+  }
+  if (!process.env.NEXT_PUBLIC_BASE_URL) {
+    return NextResponse.json(
+      { error: "NEXT_PUBLIC_BASE_URL is not set; cannot build redirect URLs" },
       { status: 503 }
     );
   }
@@ -76,8 +84,13 @@ export async function POST(req: NextRequest) {
     const totals = calcOrderTotals(validated, discount, shippingCost || 0);
     const orderNumber = `SCM-${Date.now().toString(36).toUpperCase()}`;
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
     const localePrefix = locale && locale !== "sr" ? `/${locale}` : "";
+    // Auto-derive the webhook URL from the base URL so card payments work
+    // out-of-the-box once NEXT_PUBLIC_BASE_URL points at a public host.
+    const notificationUrl =
+      process.env.RAIACCEPT_NOTIFICATION_URL ||
+      `${baseUrl}/api/raiaccept/webhook`;
 
     const nameParts = customer.name.trim().split(/\s+/);
     const firstName = nameParts[0] || "";
@@ -119,14 +132,8 @@ export async function POST(req: NextRequest) {
       successUrl: `${baseUrl}${localePrefix}/prodavnica/potvrda?order=${orderNumber}`,
       failUrl: `${baseUrl}${localePrefix}/prodavnica/checkout?error=payment_failed&order=${orderNumber}`,
       cancelUrl: `${baseUrl}${localePrefix}/prodavnica/checkout?error=payment_cancelled&order=${orderNumber}`,
-      notificationUrl: process.env.RAIACCEPT_NOTIFICATION_URL || undefined,
+      notificationUrl,
     };
-
-    if (!process.env.RAIACCEPT_NOTIFICATION_URL) {
-      console.warn(
-        `[raiaccept] RAIACCEPT_NOTIFICATION_URL is not set — order ${orderNumber} will not receive automatic payment status updates.`
-      );
-    }
 
     const token = await authenticate();
     const orderResponse = await createOrder(token, orderParams);

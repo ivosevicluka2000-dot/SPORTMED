@@ -5,6 +5,7 @@ import { updateOrderStatusAction } from "../_actions";
 import {
   OrderStatusBadge,
   PaymentMethodBadge,
+  STATUS_COLORS,
 } from "@/components/admin/OrderStatusBadge";
 import type { Locale } from "@/i18n/routing";
 
@@ -96,27 +97,34 @@ export default async function AdminOrderDetailPage({
             <span className="text-xs text-gray-500">{t("orders.current")}:</span>
             <OrderStatusBadge status={data.status} />
           </div>
-          <form action={updateOrderStatusAction} className="space-y-3">
-            <input type="hidden" name="id" value={data.id} />
-            <input type="hidden" name="locale" value={locale} />
-            <select
-              name="status"
-              defaultValue={data.status}
-              className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm"
-            >
-              {statusOptions.map((s) => (
-                <option key={s} value={s}>
-                  {tStatus(`status.${s}`)}
-                </option>
-              ))}
-            </select>
-            <button
-              type="submit"
-              className="bg-navy text-white px-4 py-2 rounded-md text-sm hover:bg-navy/90"
-            >
-              {t("common.save")}
-            </button>
-          </form>
+          <div className="flex flex-wrap gap-2">
+            {statusOptions.map((s) => {
+              const isActive = s === data.status;
+              const palette = STATUS_COLORS[s];
+              const cls = isActive ? palette.solid : palette.outline;
+              return (
+                <form key={s} action={updateOrderStatusAction}>
+                  <input type="hidden" name="id" value={data.id} />
+                  <input type="hidden" name="locale" value={locale} />
+                  <input type="hidden" name="status" value={s} />
+                  <button
+                    type="submit"
+                    disabled={isActive}
+                    aria-pressed={isActive}
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ring-1 ring-inset transition-colors cursor-pointer disabled:cursor-default ${cls}`}
+                  >
+                    {!isActive && (
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${palette.dot}`}
+                        aria-hidden
+                      />
+                    )}
+                    {tStatus(`status.${s}`)}
+                  </button>
+                </form>
+              );
+            })}
+          </div>
           <dl className="text-sm space-y-2 mt-4">
             <div className="flex items-center gap-2">
               <dt className="text-gray-500">{t("orders.payment")}:</dt>
