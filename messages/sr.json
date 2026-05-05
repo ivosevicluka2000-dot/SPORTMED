@@ -1475,6 +1475,12 @@
       "customer": "Kupac",
       "total": "Ukupno",
       "status": "Status",
+      "current": "Trenutni",
+      "payment": "Plaćanje",
+      "paymentMethod": {
+        "card": "Karticom",
+        "cod": "Pouzećem"
+      },
       "date": "Datum",
       "updateStatus": "Promeni status",
       "empty": "Nema porudžbina."

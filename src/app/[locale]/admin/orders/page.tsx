@@ -1,17 +1,20 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  OrderStatusBadge,
+  PaymentMethodBadge,
+} from "@/components/admin/OrderStatusBadge";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminOrdersPage() {
   const t = await getTranslations("admin");
-  const tStatus = await getTranslations("account.order");
   const admin = createAdminClient();
   const { data } = await admin
     .from("orders")
     .select(
-      "id, order_number, customer, total_amount, status, created_at"
+      "id, order_number, customer, total_amount, status, payment_method, created_at"
     )
     .order("created_at", { ascending: false })
     .limit(200);
@@ -21,6 +24,7 @@ export default async function AdminOrdersPage() {
     customer: { name?: string; email?: string } | null;
     total_amount: number;
     status: string;
+    payment_method: string | null;
     created_at: string;
   };
   const rows = (data as Row[]) ?? [];
@@ -38,6 +42,7 @@ export default async function AdminOrdersPage() {
               <tr>
                 <th className="text-left px-4 py-3">{t("orders.orderNumber")}</th>
                 <th className="text-left px-4 py-3">{t("orders.customer")}</th>
+                <th className="text-left px-4 py-3">{t("orders.payment")}</th>
                 <th className="text-right px-4 py-3">{t("orders.total")}</th>
                 <th className="text-left px-4 py-3">{t("orders.status")}</th>
                 <th className="text-left px-4 py-3">{t("orders.date")}</th>
@@ -54,11 +59,14 @@ export default async function AdminOrdersPage() {
                     <div className="text-navy">{o.customer?.name ?? ""}</div>
                     <div className="text-xs text-gray-500">{o.customer?.email ?? ""}</div>
                   </td>
+                  <td className="px-4 py-3">
+                    <PaymentMethodBadge method={o.payment_method ?? ""} />
+                  </td>
                   <td className="px-4 py-3 text-right">
                     {o.total_amount.toLocaleString("sr-RS")} RSD
                   </td>
                   <td className="px-4 py-3">
-                    {tStatus(`status.${o.status as "pending"}`)}
+                    <OrderStatusBadge status={o.status} />
                   </td>
                   <td className="px-4 py-3 text-gray-500">
                     {new Date(o.created_at).toLocaleString()}

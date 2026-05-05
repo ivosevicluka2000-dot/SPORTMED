@@ -1475,6 +1475,12 @@
       "customer": "Customer",
       "total": "Total",
       "status": "Status",
+      "current": "Current",
+      "payment": "Payment",
+      "paymentMethod": {
+        "card": "Card",
+        "cod": "Cash on delivery"
+      },
       "date": "Date",
       "updateStatus": "Update status",
       "empty": "No orders."

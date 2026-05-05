@@ -2,11 +2,17 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { updateOrderStatusAction } from "../_actions";
+import {
+  OrderStatusBadge,
+  PaymentMethodBadge,
+} from "@/components/admin/OrderStatusBadge";
 import type { Locale } from "@/i18n/routing";
 
 export const dynamic = "force-dynamic";
 
-const STATUSES = [
+const COD_STATUSES = ["pending", "processing", "paid", "cancelled"] as const;
+
+const CARD_STATUSES = [
   "pending",
   "awaiting_payment",
   "confirmed",
@@ -40,6 +46,9 @@ export default async function AdminOrderDetailPage({
 
   const items: OrderItem[] = Array.isArray(data.items) ? data.items : [];
   const customer = (data.customer ?? {}) as Record<string, string | undefined>;
+  const paymentMethod = (data.payment_method ?? "") as string;
+  const statusOptions =
+    paymentMethod === "cod" ? COD_STATUSES : CARD_STATUSES;
 
   return (
     <div className="space-y-6">
@@ -83,6 +92,10 @@ export default async function AdminOrderDetailPage({
 
         <section className="bg-white border border-gray-200 rounded-xl p-6">
           <h2 className="font-semibold text-navy mb-3">{t("orders.status")}</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xs text-gray-500">{t("orders.current")}:</span>
+            <OrderStatusBadge status={data.status} />
+          </div>
           <form action={updateOrderStatusAction} className="space-y-3">
             <input type="hidden" name="id" value={data.id} />
             <input type="hidden" name="locale" value={locale} />
@@ -91,7 +104,7 @@ export default async function AdminOrderDetailPage({
               defaultValue={data.status}
               className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm"
             >
-              {STATUSES.map((s) => (
+              {statusOptions.map((s) => (
                 <option key={s} value={s}>
                   {tStatus(`status.${s}`)}
                 </option>
@@ -104,10 +117,12 @@ export default async function AdminOrderDetailPage({
               {t("common.save")}
             </button>
           </form>
-          <dl className="text-sm space-y-1 mt-4">
-            <div>
-              <dt className="inline text-gray-500">Payment: </dt>
-              <dd className="inline text-navy">{data.payment_method}</dd>
+          <dl className="text-sm space-y-2 mt-4">
+            <div className="flex items-center gap-2">
+              <dt className="text-gray-500">{t("orders.payment")}:</dt>
+              <dd>
+                <PaymentMethodBadge method={paymentMethod} />
+              </dd>
             </div>
             <div>
               <dt className="inline text-gray-500">Total: </dt>
