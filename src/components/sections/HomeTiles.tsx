@@ -19,27 +19,23 @@ const tiles: Tile[] = [
   {
     key: "premiumProduct",
     href: "/prodavnica",
-    image:
-      "https://images.pexels.com/photos/4397833/pexels-photo-4397833.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    image: "/tiles/shop.jpg",
     featured: true,
   },
   {
     key: "b2bSolutions",
     href: "/b2b",
-    image:
-      "https://images.pexels.com/photos/3621104/pexels-photo-3621104.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    image: "/tiles/b2b-solutions.jpg",
   },
   {
     key: "education",
     href: "/blog",
-    image:
-      "https://images.pexels.com/photos/3838389/pexels-photo-3838389.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    image: "/tiles/blog.jpg",
   },
   {
     key: "clinicRehab",
     href: "/usluge",
-    image:
-      "https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    image: "/tiles/clinic.jpg",
     featured: true,
   },
 ];

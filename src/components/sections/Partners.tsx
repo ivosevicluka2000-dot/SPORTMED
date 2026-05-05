@@ -14,22 +14,22 @@ type Partner = {
 const partners: Partner[] = [
   {
     name: "RK Metaloplastika Šabac",
-    logo: "/partners/rk-metaloplastika.png",
+    logo: "/partners/rk-metaloplastika.jpg",
     href: "https://www.rkmetaloplastika.com/",
   },
   {
     name: "ŽRK Medicinar",
-    logo: "/partners/zrk-medicinar.png",
+    logo: "/partners/zrk-medicinar.jpg",
     href: "https://zrkmedicinar.rs/",
   },
   {
     name: "ORK Mačva",
-    logo: "/partners/ork-macva.png",
+    logo: "/partners/ork-macva.jpg",
     href: "https://www.srbijasport.net/club/5473-macva/results",
   },
   {
     name: "KK Zorka",
-    logo: "/partners/kk-zorka.png",
+    logo: "/partners/kk-zorka.jpg",
     href: "https://www.kkzorka.rs/",
   },
 ];
@@ -57,13 +57,13 @@ export default function Partners() {
             aria-label={partner.name}
             className="group flex flex-col items-center justify-center gap-3 p-4 rounded-xl bg-white border border-gray-100 hover:border-teal/40 hover:shadow-[var(--shadow-soft)] transition-all"
           >
-            <div className="relative w-full h-20 md:h-24">
+            <div className="relative w-full h-28 md:h-32">
               <Image
                 src={partner.logo}
                 alt={partner.name}
                 fill
                 sizes="(min-width: 768px) 25vw, 50vw"
-                className="object-contain grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                className="object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </div>
             <span className="text-[11px] md:text-xs font-medium uppercase tracking-[0.15em] text-gray-500 group-hover:text-navy text-center transition-colors">
