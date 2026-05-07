@@ -333,8 +333,16 @@
     "name": "Vaše ime",
     "phone": "Broj telefona",
     "email": "Email adresa",
-    "service": "Sa čime se borite",
-    "selectService": "Izaberite oblast",
+    "bodyPart": "Koji deo tela vas boli",
+    "selectBodyPart": "Izaberite deo tela",
+    "bodyParts": {
+      "skocni-zglob": "Skočni zglob",
+      "zglob-kolena": "Zglob kolena",
+      "kicmeni-stub": "Kičmeni stub",
+      "zglob-ramena": "Zglob ramena",
+      "misici-zadnje-loze": "Mišići zadnje lože",
+      "ostalo": "Ostalo"
+    },
     "submit": "Pošaljite mi protokol",
     "sending": "Slanje...",
     "success": "Stiže! Protokol + lista proizvoda u vašem inboxu za par minuta.",
@@ -343,9 +351,7 @@
     "exitTitle": "Pre nego što odete — uzmite besplatan protokol",
     "exitSubtitle": "Ostavite email — pošaljemo vam PDF i listu proizvoda za vašu povredu.",
     "stickyTitle": "Uzmite besplatan protokol",
-    "urgency": "Danas poslato {count} protokola",
-    "condition": "Opišite vaš problem",
-    "conditionPlaceholder": "Npr. bol u kolenu, oporavak od povrede..."
+    "urgency": "Danas poslato {count} protokola"
   },
   "about": {
     "title": "O nama",

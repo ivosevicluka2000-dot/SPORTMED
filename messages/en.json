@@ -333,8 +333,16 @@
     "name": "Your name",
     "phone": "Phone number",
     "email": "Email address",
-    "service": "What are you dealing with",
-    "selectService": "Pick an area",
+    "bodyPart": "Which body part hurts",
+    "selectBodyPart": "Pick a body part",
+    "bodyParts": {
+      "skocni-zglob": "Ankle",
+      "zglob-kolena": "Knee",
+      "kicmeni-stub": "Spine",
+      "zglob-ramena": "Shoulder",
+      "misici-zadnje-loze": "Hamstrings",
+      "ostalo": "Other"
+    },
     "submit": "Send me the protocol",
     "sending": "Sending...",
     "success": "On its way! Protocol + product shortlist in your inbox in a few minutes.",
@@ -343,9 +351,7 @@
     "exitTitle": "Before you go — grab the free protocol",
     "exitSubtitle": "Leave your email — we'll send you the PDF and a product shortlist for your injury.",
     "stickyTitle": "Get the free protocol",
-    "urgency": "{count} protocols sent today",
-    "condition": "Describe your problem",
-    "conditionPlaceholder": "E.g. knee pain, injury recovery..."
+    "urgency": "{count} protocols sent today"
   },
   "about": {
     "title": "About Us",

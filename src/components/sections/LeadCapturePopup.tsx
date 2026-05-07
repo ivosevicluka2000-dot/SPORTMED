@@ -1,26 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Phone, Send, CheckCircle, Shield, FileText } from "lucide-react";
-import { treatments } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+
+const BODY_PARTS = [
+  "skocni-zglob",
+  "zglob-kolena",
+  "kicmeni-stub",
+  "zglob-ramena",
+  "misici-zadnje-loze",
+  "ostalo",
+] as const;
 
 export default function LeadCapturePopup() {
   const t = useTranslations("leadCapture");
-  const tServices = useTranslations("services.items");
+  const tBodyParts = useTranslations("leadCapture.bodyParts");
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [service, setService] = useState("");
-  const [condition, setCondition] = useState("");
+  const [bodyPart, setBodyPart] = useState("");
   const [hp, setHp] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+    if (!name.trim() || !email.trim() || !bodyPart) return;
 
     setStatus("sending");
     try {
@@ -32,9 +40,11 @@ export default function LeadCapturePopup() {
           name,
           phone: "",
           email,
-          treatment: service,
-          message: `Zahtev za besplatan PDF protokol — ${service || "Nije izabrano"}${condition ? `\nStanje: ${condition}` : ""}`,
+          bodyPart,
+          treatment: bodyPart,
+          message: `Zahtev za besplatan PDF protokol — ${tBodyParts(bodyPart)}`,
           page: typeof window !== "undefined" ? window.location.pathname : undefined,
+          locale,
           website: hp,
         }),
       });
@@ -42,8 +52,7 @@ export default function LeadCapturePopup() {
         setStatus("success");
         setName("");
         setEmail("");
-        setService("");
-        setCondition("");
+        setBodyPart("");
       } else {
         setStatus("error");
       }
@@ -156,32 +165,21 @@ export default function LeadCapturePopup() {
                       </div>
                       <div>
                         <label className="block text-xs uppercase tracking-wider text-gray-500 mb-1.5">
-                          {t("service")}
+                          {t("bodyPart")}
                         </label>
                         <select
-                          value={service}
-                          onChange={(e) => setService(e.target.value)}
+                          value={bodyPart}
+                          onChange={(e) => setBodyPart(e.target.value)}
+                          required
                           className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors"
                         >
-                          <option value="">{t("selectService")}</option>
-                          {treatments.map((tr) => (
-                            <option key={tr.slug} value={tr.slug}>
-                              {tServices(`${tr.slug}.title`)}
+                          <option value="">{t("selectBodyPart")}</option>
+                          {BODY_PARTS.map((slug) => (
+                            <option key={slug} value={slug}>
+                              {tBodyParts(slug)}
                             </option>
                           ))}
                         </select>
-                      </div>
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-gray-500 mb-1.5">
-                          {t("condition")}
-                        </label>
-                        <textarea
-                          value={condition}
-                          onChange={(e) => setCondition(e.target.value)}
-                          placeholder={t("conditionPlaceholder")}
-                          rows={3}
-                          className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors resize-none"
-                        />
                       </div>
                       <button
                         type="submit"

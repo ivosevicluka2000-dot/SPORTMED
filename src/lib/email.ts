@@ -234,3 +234,93 @@ export async function sendOrderConfirmation(
     return false;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Lead capture: free PDF protocol
+// ---------------------------------------------------------------------------
+
+export type ProtocolBodyPart =
+  | "skocni-zglob"
+  | "zglob-kolena"
+  | "kicmeni-stub"
+  | "zglob-ramena"
+  | "misici-zadnje-loze"
+  | "ostalo";
+
+const PROTOCOL_LABELS: Record<ProtocolBodyPart, { sr: string; en: string }> = {
+  "skocni-zglob": { sr: "Skočni zglob", en: "Ankle" },
+  "zglob-kolena": { sr: "Zglob kolena", en: "Knee" },
+  "kicmeni-stub": { sr: "Kičmeni stub", en: "Spine" },
+  "zglob-ramena": { sr: "Zglob ramena", en: "Shoulder" },
+  "misici-zadnje-loze": { sr: "Mišići zadnje lože", en: "Hamstrings" },
+  ostalo: { sr: "Ostalo", en: "Other" },
+};
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://sportcaremed.rs";
+
+export function getProtocolPdfUrl(bodyPart: ProtocolBodyPart): string {
+  return `${SITE_URL.replace(/\/$/, "")}/protocols/${bodyPart}.pdf`;
+}
+
+const PROTOCOL_T = {
+  sr: {
+    subject: (label: string) => `Vaš besplatan PDF protokol — ${label}`,
+    greeting: (name: string) =>
+      name ? `Poštovani ${name},` : "Poštovani,",
+    intro:
+      "Hvala što ste tražili besplatan protokol oporavka. PDF za izabranu povredu možete preuzeti na linku ispod.",
+    cta: "Preuzmite PDF protokol",
+    note: "Ako imate dodatnih pitanja, samo odgovorite na ovaj email — naš tim će vam se javiti.",
+    footer: "Tim Sport Care Med",
+  },
+  en: {
+    subject: (label: string) => `Your free PDF protocol — ${label}`,
+    greeting: (name: string) => (name ? `Hi ${name},` : "Hi,"),
+    intro:
+      "Thanks for requesting the free recovery protocol. Download the PDF for your selected area at the link below.",
+    cta: "Download the PDF protocol",
+    note: "If you have any questions, just reply to this email — our team will get back to you.",
+    footer: "The Sport Care Med team",
+  },
+} as const;
+
+/**
+ * Send the free PDF protocol email to a lead. Fire-and-forget; never throws.
+ * The PDF itself lives under /public/protocols/{bodyPart}.pdf.
+ */
+export async function sendProtocolEmail(args: {
+  to: string;
+  name?: string;
+  bodyPart: ProtocolBodyPart;
+  locale?: string;
+}): Promise<boolean> {
+  try {
+    const lang = args.locale === "en" ? "en" : "sr";
+    const t = PROTOCOL_T[lang];
+    const label = PROTOCOL_LABELS[args.bodyPart][lang];
+    const pdfUrl = getProtocolPdfUrl(args.bodyPart);
+    const name = (args.name ?? "").trim();
+
+    const subject = t.subject(label);
+    const text =
+      `${t.greeting(name)}\n\n${t.intro}\n\n${pdfUrl}\n\n${t.note}\n\n${t.footer}`;
+    const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222;background:#fafafa;padding:24px">
+  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:8px;padding:24px">
+    <h2 style="margin:0 0 12px">Sport Care Med</h2>
+    <p>${escapeHtml(t.greeting(name))}</p>
+    <p>${escapeHtml(t.intro)}</p>
+    <p style="margin:24px 0">
+      <a href="${escapeHtml(pdfUrl)}" style="display:inline-block;background:#0098b4;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600">${escapeHtml(t.cta)} — ${escapeHtml(label)}</a>
+    </p>
+    <p style="color:#555;font-size:13px">${escapeHtml(t.note)}</p>
+    <p style="margin-top:24px;color:#666">${escapeHtml(t.footer)}</p>
+  </div>
+</body></html>`;
+
+    return await sendEmail({ to: args.to, subject, text, html });
+  } catch (err) {
+    console.error("[email] sendProtocolEmail failed:", err);
+    return false;
+  }
+}
