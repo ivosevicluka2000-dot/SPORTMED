@@ -335,6 +335,8 @@
     "email": "Email address",
     "bodyPart": "Which body part hurts",
     "selectBodyPart": "Pick a body part",
+    "problemDescription": "Describe your problem (optional)",
+    "problemDescriptionPlaceholder": "Briefly describe what's bothering you, when it happens, how long it's lasted...",
     "bodyParts": {
       "skocni-zglob": "Ankle",
       "zglob-kolena": "Knee",

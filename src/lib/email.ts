@@ -3,6 +3,7 @@ interface SendArgs {
   subject: string;
   text: string;
   html?: string;
+  attachments?: Array<{ filename: string; content: string }>;
 }
 
 /**
@@ -15,7 +16,7 @@ interface SendArgs {
  *   EMAIL_FROM      — verified sender, e.g. "Sport Care Med <noreply@…>"
  *   ADMIN_EMAIL     — recipient inbox for notifications
  */
-export async function sendEmail({ to, subject, text, html }: SendArgs): Promise<boolean> {
+export async function sendEmail({ to, subject, text, html, attachments }: SendArgs): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
   if (!apiKey || !from) {
@@ -35,6 +36,7 @@ export async function sendEmail({ to, subject, text, html }: SendArgs): Promise<
         subject,
         text,
         html: html ?? `<pre style="font-family:monospace">${escapeHtml(text)}</pre>`,
+        ...(attachments && attachments.length > 0 ? { attachments } : {}),
       }),
     });
     if (!res.ok) {
@@ -268,20 +270,28 @@ const PROTOCOL_T = {
     subject: (label: string) => `Vaš besplatan PDF protokol — ${label}`,
     greeting: (name: string) =>
       name ? `Poštovani ${name},` : "Poštovani,",
-    intro:
+    introAttached:
+      "Hvala što ste tražili besplatan protokol oporavka. PDF za izabranu povredu se nalazi u prilogu ovog emaila.",
+    introLink:
       "Hvala što ste tražili besplatan protokol oporavka. PDF za izabranu povredu možete preuzeti na linku ispod.",
+    backupLink: "Ako prilog ne radi, preuzmite PDF ovde:",
     cta: "Preuzmite PDF protokol",
     note: "Ako imate dodatnih pitanja, samo odgovorite na ovaj email — naš tim će vam se javiti.",
     footer: "Tim Sport Care Med",
+    toldUs: "Naveli ste:",
   },
   en: {
     subject: (label: string) => `Your free PDF protocol — ${label}`,
     greeting: (name: string) => (name ? `Hi ${name},` : "Hi,"),
-    intro:
+    introAttached:
+      "Thanks for requesting the free recovery protocol. The PDF for your selected area is attached to this email.",
+    introLink:
       "Thanks for requesting the free recovery protocol. Download the PDF for your selected area at the link below.",
+    backupLink: "If the attachment doesn't open, you can also download it here:",
     cta: "Download the PDF protocol",
     note: "If you have any questions, just reply to this email — our team will get back to you.",
     footer: "The Sport Care Med team",
+    toldUs: "You told us:",
   },
 } as const;
 
@@ -294,31 +304,68 @@ export async function sendProtocolEmail(args: {
   name?: string;
   bodyPart: ProtocolBodyPart;
   locale?: string;
+  problemDescription?: string;
 }): Promise<boolean> {
   try {
+    const { readFile } = await import("node:fs/promises");
+    const { join } = await import("node:path");
+
     const lang = args.locale === "en" ? "en" : "sr";
     const t = PROTOCOL_T[lang];
     const label = PROTOCOL_LABELS[args.bodyPart][lang];
     const pdfUrl = getProtocolPdfUrl(args.bodyPart);
     const name = (args.name ?? "").trim();
+    const description = (args.problemDescription ?? "").trim();
 
+    const pdfPath = join(process.cwd(), "public", "protocols", `${args.bodyPart}.pdf`);
+    let pdfBase64: string | undefined;
+    try {
+      const buf = await readFile(pdfPath);
+      pdfBase64 = buf.toString("base64");
+    } catch (err) {
+      console.error("[email] PDF not found, falling back to link:", pdfPath, err);
+    }
+
+    const intro = pdfBase64 ? t.introAttached : t.introLink;
     const subject = t.subject(label);
+
+    const descriptionTextBlock = description
+      ? `\n\n${t.toldUs}\n"${description}"`
+      : "";
+    const linkBlock = pdfBase64
+      ? `\n\n${t.backupLink} ${pdfUrl}`
+      : `\n\n${pdfUrl}`;
     const text =
-      `${t.greeting(name)}\n\n${t.intro}\n\n${pdfUrl}\n\n${t.note}\n\n${t.footer}`;
+      `${t.greeting(name)}\n\n${intro}${descriptionTextBlock}${linkBlock}\n\n${t.note}\n\n${t.footer}`;
+
+    const descriptionHtmlBlock = description
+      ? `<blockquote style="margin:16px 0;padding:12px 16px;border-left:3px solid #0098b4;background:#f5fbfc;color:#444;font-style:italic"><div style="font-size:12px;color:#888;font-style:normal;margin-bottom:4px">${escapeHtml(t.toldUs)}</div>${escapeHtml(description)}</blockquote>`
+      : "";
+    const linkHtmlBlock = pdfBase64
+      ? `<p style="color:#666;font-size:13px;margin:16px 0">${escapeHtml(t.backupLink)} <a href="${escapeHtml(pdfUrl)}" style="color:#0098b4">${escapeHtml(label)} PDF</a></p>`
+      : `<p style="margin:24px 0"><a href="${escapeHtml(pdfUrl)}" style="display:inline-block;background:#0098b4;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600">${escapeHtml(t.cta)} — ${escapeHtml(label)}</a></p>`;
+
     const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222;background:#fafafa;padding:24px">
   <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:8px;padding:24px">
     <h2 style="margin:0 0 12px">Sport Care Med</h2>
     <p>${escapeHtml(t.greeting(name))}</p>
-    <p>${escapeHtml(t.intro)}</p>
-    <p style="margin:24px 0">
-      <a href="${escapeHtml(pdfUrl)}" style="display:inline-block;background:#0098b4;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600">${escapeHtml(t.cta)} — ${escapeHtml(label)}</a>
-    </p>
+    <p>${escapeHtml(intro)}</p>
+    ${descriptionHtmlBlock}
+    ${linkHtmlBlock}
     <p style="color:#555;font-size:13px">${escapeHtml(t.note)}</p>
     <p style="margin-top:24px;color:#666">${escapeHtml(t.footer)}</p>
   </div>
 </body></html>`;
 
-    return await sendEmail({ to: args.to, subject, text, html });
+    return await sendEmail({
+      to: args.to,
+      subject,
+      text,
+      html,
+      ...(pdfBase64
+        ? { attachments: [{ filename: `${args.bodyPart}.pdf`, content: pdfBase64 }] }
+        : {}),
+    });
   } catch (err) {
     console.error("[email] sendProtocolEmail failed:", err);
     return false;

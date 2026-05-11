@@ -23,6 +23,7 @@ export default function LeadCapturePopup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [bodyPart, setBodyPart] = useState("");
+  const [problemDescription, setProblemDescription] = useState("");
   const [hp, setHp] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
@@ -42,6 +43,7 @@ export default function LeadCapturePopup() {
           email,
           bodyPart,
           treatment: bodyPart,
+          problemDescription,
           message: `Zahtev za besplatan PDF protokol — ${tBodyParts(bodyPart)}`,
           page: typeof window !== "undefined" ? window.location.pathname : undefined,
           locale,
@@ -53,6 +55,7 @@ export default function LeadCapturePopup() {
         setName("");
         setEmail("");
         setBodyPart("");
+        setProblemDescription("");
       } else {
         setStatus("error");
       }
@@ -180,6 +183,19 @@ export default function LeadCapturePopup() {
                             </option>
                           ))}
                         </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs uppercase tracking-wider text-gray-500 mb-1.5">
+                          {t("problemDescription")}
+                        </label>
+                        <textarea
+                          value={problemDescription}
+                          onChange={(e) => setProblemDescription(e.target.value)}
+                          rows={3}
+                          maxLength={2000}
+                          placeholder={t("problemDescriptionPlaceholder")}
+                          className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors resize-none"
+                        />
                       </div>
                       <button
                         type="submit"

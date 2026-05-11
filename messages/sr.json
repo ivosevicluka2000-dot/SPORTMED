@@ -335,6 +335,8 @@
     "email": "Email adresa",
     "bodyPart": "Koji deo tela vas boli",
     "selectBodyPart": "Izaberite deo tela",
+    "problemDescription": "Opišite problem (opciono)",
+    "problemDescriptionPlaceholder": "Kratko opišite šta vas muči, kada se javlja, koliko traje...",
     "bodyParts": {
       "skocni-zglob": "Skočni zglob",
       "zglob-kolena": "Zglob kolena",
