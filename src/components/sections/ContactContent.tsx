@@ -89,16 +89,27 @@ export default function ContactContent() {
   const onSubmit = async (data: ContactFormData) => {
     setStatus("sending");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
-          ...data,
-          message: `[Stanje: ${data.condition}]${data.message ? `\n\n${data.message}` : ""}`,
-          website: hp,
+          access_key: "66e1584f-915b-4c08-a4a9-53a6cd6b91c0",
+          subject: `Nova poruka sa sajta — ${data.name}`,
+          from_name: "Sport Care Med — Kontakt",
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          condition: data.condition,
+          treatment: data.treatment || "",
+          message: `[Stanje: ${data.condition}]${data.treatment ? `\n[Tretman: ${data.treatment}]` : ""}${data.message ? `\n\n${data.message}` : ""}`,
+          botcheck: hp,
         }),
       });
-      if (res.ok) {
+      const json = await res.json().catch(() => ({ success: false }));
+      if (res.ok && json.success) {
         setStatus("success");
         reset();
       } else {
