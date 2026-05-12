@@ -7,16 +7,6 @@ const LeadCapturePopup = dynamic(
   { ssr: false, loading: () => null }
 );
 
-const ExitIntentPopup = dynamic(
-  () => import("@/components/sections/ExitIntentPopup"),
-  { ssr: false, loading: () => null }
-);
-
 export default function Popups() {
-  return (
-    <>
-      <LeadCapturePopup />
-      <ExitIntentPopup />
-    </>
-  );
+  return <LeadCapturePopup />;
 }

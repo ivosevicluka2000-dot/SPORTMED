@@ -19,12 +19,9 @@ const Instagram = ({ className }: { className?: string }) => (
 const Facebook = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
 );
-import { treatments } from "@/lib/utils";
-
 const contactSchema = z.object({
   bodyPart: z.string().min(1),
   condition: z.string().min(5),
-  treatment: z.string().optional(),
   name: z.string().min(2),
   email: z.string().email(),
   phone: z.string().min(6),
@@ -61,7 +58,6 @@ const stepVariants = {
 
 export default function ContactContent() {
   const t = useTranslations("contact");
-  const tServices = useTranslations("services");
   const tLeadCapture = useTranslations("leadCapture");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [step, setStep] = useState(1);
@@ -115,8 +111,7 @@ export default function ContactContent() {
           phone: data.phone,
           bodyPart: data.bodyPart,
           condition: data.condition,
-          treatment: data.treatment || "",
-          message: `[Deo tela: ${data.bodyPart}]\n[Stanje: ${data.condition}]${data.treatment ? `\n[Tretman: ${data.treatment}]` : ""}${data.message ? `\n\n${data.message}` : ""}`,
+          message: `[Deo tela: ${data.bodyPart}]\n[Stanje: ${data.condition}]${data.message ? `\n\n${data.message}` : ""}`,
           botcheck: hp,
         }),
       });
@@ -271,28 +266,6 @@ export default function ContactContent() {
                                   rows={4}
                                   {...register("condition")}
                                 />
-                                <div className="w-full">
-                                  <label
-                                    htmlFor="treatment"
-                                    className="block text-xs uppercase tracking-wider text-gray-500 mb-2"
-                                  >
-                                    {t("form.treatment")}
-                                  </label>
-                                  <select
-                                    id="treatment"
-                                    {...register("treatment")}
-                                    className="w-full rounded-md border border-gray-200 px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors"
-                                  >
-                                    <option value="">
-                                      {t("form.selectTreatment")}
-                                    </option>
-                                    {treatments.map((tr) => (
-                                      <option key={tr.slug} value={tr.slug}>
-                                        {tServices(`items.${tr.slug}.title`)}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
                               </div>
                             </motion.div>
                           )}
