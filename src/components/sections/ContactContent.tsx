@@ -94,6 +94,7 @@ export default function ContactContent() {
   };
 
   const onSubmit = async (data: ContactFormData) => {
+    if (step !== TOTAL_STEPS) return;
     setStatus("sending");
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
@@ -369,7 +370,8 @@ export default function ContactContent() {
                             </Button>
                           ) : (
                             <Button
-                              type="submit"
+                              type="button"
+                              onClick={handleSubmit(onSubmit)}
                               disabled={status === "sending"}
                             >
                               <Send className="w-4 h-4 mr-2" />
