@@ -419,6 +419,8 @@
       "name": "Full Name",
       "email": "Email Address",
       "phone": "Phone Number",
+      "bodyPart": "Which body part hurts",
+      "selectBodyPart": "Pick a body part",
       "treatment": "What are you dealing with",
       "selectTreatment": "Pick a recovery area",
       "condition": "Describe your condition",

@@ -22,6 +22,7 @@ const Facebook = ({ className }: { className?: string }) => (
 import { treatments } from "@/lib/utils";
 
 const contactSchema = z.object({
+  bodyPart: z.string().min(1),
   condition: z.string().min(5),
   treatment: z.string().optional(),
   name: z.string().min(2),
@@ -31,6 +32,15 @@ const contactSchema = z.object({
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
+
+const BODY_PARTS = [
+  "skocni-zglob",
+  "zglob-kolena",
+  "kicmeni-stub",
+  "zglob-ramena",
+  "misici-zadnje-loze",
+  "ostalo",
+] as const;
 
 const TOTAL_STEPS = 3;
 
@@ -52,6 +62,7 @@ const stepVariants = {
 export default function ContactContent() {
   const t = useTranslations("contact");
   const tServices = useTranslations("services");
+  const tLeadCapture = useTranslations("leadCapture");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
@@ -71,7 +82,7 @@ export default function ContactContent() {
   const goNext = async () => {
     let valid = false;
     if (step === 1) {
-      valid = await trigger(["condition"]);
+      valid = await trigger(["bodyPart", "condition"]);
     } else if (step === 2) {
       valid = await trigger(["name", "email", "phone"]);
     }
@@ -102,9 +113,10 @@ export default function ContactContent() {
           name: data.name,
           email: data.email,
           phone: data.phone,
+          bodyPart: data.bodyPart,
           condition: data.condition,
           treatment: data.treatment || "",
-          message: `[Stanje: ${data.condition}]${data.treatment ? `\n[Tretman: ${data.treatment}]` : ""}${data.message ? `\n\n${data.message}` : ""}`,
+          message: `[Deo tela: ${data.bodyPart}]\n[Stanje: ${data.condition}]${data.treatment ? `\n[Tretman: ${data.treatment}]` : ""}${data.message ? `\n\n${data.message}` : ""}`,
           botcheck: hp,
         }),
       });
@@ -224,6 +236,33 @@ export default function ContactContent() {
                                 {t("form.step1Subtitle")}
                               </p>
                               <div className="space-y-5">
+                                <div className="w-full">
+                                  <label
+                                    htmlFor="bodyPart"
+                                    className="block text-xs uppercase tracking-wider text-gray-500 mb-2"
+                                  >
+                                    {t("form.bodyPart")}
+                                  </label>
+                                  <select
+                                    id="bodyPart"
+                                    {...register("bodyPart")}
+                                    className="w-full rounded-md border border-gray-200 px-4 py-3 text-gray-900 focus:outline-none focus:border-teal focus:ring-1 focus:ring-teal/20 transition-colors"
+                                  >
+                                    <option value="">
+                                      {t("form.selectBodyPart")}
+                                    </option>
+                                    {BODY_PARTS.map((bp) => (
+                                      <option key={bp} value={bp}>
+                                        {tLeadCapture(`bodyParts.${bp}`)}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  {errors.bodyPart?.message && (
+                                    <p className="mt-1 text-sm text-red-500">
+                                      {errors.bodyPart.message}
+                                    </p>
+                                  )}
+                                </div>
                                 <Textarea
                                   id="condition"
                                   label={t("form.condition")}

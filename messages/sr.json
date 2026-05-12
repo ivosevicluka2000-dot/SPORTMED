@@ -419,6 +419,8 @@
       "name": "Ime i prezime",
       "email": "Email adresa",
       "phone": "Broj telefona",
+      "bodyPart": "Koji deo tela vas boli",
+      "selectBodyPart": "Izaberite deo tela",
       "treatment": "Sa čime se borite",
       "selectTreatment": "Izaberite oblast oporavka",
       "condition": "Opišite vaše stanje",
