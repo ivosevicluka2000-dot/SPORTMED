@@ -42,10 +42,13 @@ export function getClientIp(request: Request): string {
 }
 
 /**
- * Return true if a honeypot field (`website`) is non-empty -> likely a bot.
+ * Return true if a honeypot field is non-empty -> likely a bot.
+ * `faxNumber` is intentionally unlikely to be browser-autofilled; keep
+ * `website` as a legacy alias for older clients and simple bot payloads.
  */
 export function isHoneypotTriggered(body: unknown): boolean {
   if (!body || typeof body !== "object") return false;
-  const value = (body as Record<string, unknown>).website;
-  return typeof value === "string" && value.trim().length > 0;
+  const data = body as Record<string, unknown>;
+  const values = [data.faxNumber, data.website];
+  return values.some((value) => typeof value === "string" && value.trim().length > 0);
 }

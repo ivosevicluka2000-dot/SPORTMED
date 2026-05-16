@@ -265,6 +265,21 @@ export function getProtocolPdfUrl(bodyPart: ProtocolBodyPart): string {
   return `${SITE_URL.replace(/\/$/, "")}/protocols/${bodyPart}.pdf`;
 }
 
+async function getProtocolPdfPath(bodyPart: ProtocolBodyPart): Promise<string> {
+  const { join } = await import("node:path");
+  return join(process.cwd(), "public", "protocols", `${bodyPart}.pdf`);
+}
+
+export async function hasProtocolPdf(bodyPart: ProtocolBodyPart): Promise<boolean> {
+  try {
+    const { access } = await import("node:fs/promises");
+    await access(await getProtocolPdfPath(bodyPart));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const PROTOCOL_T = {
   sr: {
     subject: (label: string) => `Vaš besplatan PDF protokol — ${label}`,
@@ -295,9 +310,98 @@ const PROTOCOL_T = {
   },
 } as const;
 
+export interface LeadNotificationInput {
+  source: "contact" | "lead-capture-popup" | "exit-intent";
+  name: string;
+  email?: string;
+  phone?: string;
+  bodyPart?: ProtocolBodyPart;
+  treatment?: string;
+  message: string;
+  problemDescription?: string;
+  page?: string;
+  locale?: string;
+  userAgent?: string;
+  referrer?: string;
+  protocolEmailSent?: boolean;
+}
+
+export async function sendLeadNotificationEmail(input: LeadNotificationInput): Promise<boolean> {
+  try {
+    const adminEmail = getAdminEmail();
+    if (!adminEmail) {
+      console.info("[email] ADMIN_EMAIL not configured; skipping lead notification");
+      return false;
+    }
+
+    const lang = input.locale === "en" ? "en" : "sr";
+    const bodyPartLabel = input.bodyPart
+      ? PROTOCOL_LABELS[input.bodyPart][lang]
+      : undefined;
+    const sourceLabel =
+      input.source === "contact"
+        ? "Contact form"
+        : input.source === "exit-intent"
+          ? "Exit intent popup"
+          : "Lead capture popup";
+    const protocolStatus =
+      input.protocolEmailSent === undefined
+        ? "No protocol email sent"
+        : input.protocolEmailSent
+          ? "Protocol email sent"
+          : "Protocol email failed";
+
+    const details = [
+      ["Source", sourceLabel],
+      ["Name", input.name],
+      ["Email", input.email || "-"],
+      ["Phone", input.phone || "-"],
+      ["Body part / protocol", bodyPartLabel ?? input.treatment ?? "-"],
+      ["Protocol delivery", protocolStatus],
+      ["Message", input.message],
+      ["Problem description", input.problemDescription || "-"],
+      ["Page", input.page || "-"],
+      ["Locale", input.locale || "-"],
+      ["Referrer", input.referrer || "-"],
+      ["User agent", input.userAgent || "-"],
+      ["Date", new Date().toISOString()],
+    ] as const;
+
+    const text = details
+      .map(([label, value]) => `${label}: ${value}`)
+      .join("\n\n");
+    const rows = details
+      .map(
+        ([label, value]) =>
+          `<tr><th style="vertical-align:top;text-align:left;padding:8px;border-bottom:1px solid #eee;color:#555;width:160px">${escapeHtml(
+            label
+          )}</th><td style="padding:8px;border-bottom:1px solid #eee;white-space:pre-wrap">${escapeHtml(
+            value
+          )}</td></tr>`
+      )
+      .join("");
+    const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222;background:#fafafa;padding:24px">
+  <div style="max-width:680px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:8px;padding:24px">
+    <h2 style="margin:0 0 16px">New Sport Care Med lead</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:14px">${rows}</table>
+  </div>
+</body></html>`;
+
+    return await sendEmail({
+      to: adminEmail,
+      subject: `New lead: ${sourceLabel} — ${input.name}`,
+      text,
+      html,
+    });
+  } catch (err) {
+    console.error("[email] sendLeadNotificationEmail failed:", err);
+    return false;
+  }
+}
+
 /**
- * Send the free PDF protocol email to a lead. Fire-and-forget; never throws.
- * The PDF itself lives under /public/protocols/{bodyPart}.pdf.
+ * Send the free PDF protocol email to a lead. Returns false on failure and
+ * never throws. The PDF itself lives under /public/protocols/{bodyPart}.pdf.
  */
 export async function sendProtocolEmail(args: {
   to: string;
@@ -308,7 +412,6 @@ export async function sendProtocolEmail(args: {
 }): Promise<boolean> {
   try {
     const { readFile } = await import("node:fs/promises");
-    const { join } = await import("node:path");
 
     const lang = args.locale === "en" ? "en" : "sr";
     const t = PROTOCOL_T[lang];
@@ -317,7 +420,7 @@ export async function sendProtocolEmail(args: {
     const name = (args.name ?? "").trim();
     const description = (args.problemDescription ?? "").trim();
 
-    const pdfPath = join(process.cwd(), "public", "protocols", `${args.bodyPart}.pdf`);
+    const pdfPath = await getProtocolPdfPath(args.bodyPart);
     let pdfBase64: string | undefined;
     try {
       const buf = await readFile(pdfPath);

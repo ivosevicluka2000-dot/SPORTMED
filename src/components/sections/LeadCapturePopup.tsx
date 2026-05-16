@@ -12,7 +12,6 @@ const BODY_PARTS = [
   "kicmeni-stub",
   "zglob-ramena",
   "misici-zadnje-loze",
-  "ostalo",
 ] as const;
 
 export default function LeadCapturePopup() {
@@ -47,7 +46,7 @@ export default function LeadCapturePopup() {
           message: `Zahtev za besplatan PDF protokol — ${tBodyParts(bodyPart)}`,
           page: typeof window !== "undefined" ? window.location.pathname : undefined,
           locale,
-          website: hp,
+          faxNumber: hp,
         }),
       });
       if (res.ok) {
@@ -134,7 +133,7 @@ export default function LeadCapturePopup() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <input
                         type="text"
-                        name="website"
+                        name="faxNumber"
                         tabIndex={-1}
                         autoComplete="off"
                         value={hp}

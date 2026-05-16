@@ -11,7 +11,7 @@ import { Send, CheckCircle } from "lucide-react";
 export default function Newsletter() {
   const t = useTranslations("newsletter");
   const [email, setEmail] = useState("");
-  const [website, setWebsite] = useState(""); // honeypot
+  const [faxNumber, setFaxNumber] = useState(""); // honeypot
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,7 +22,7 @@ export default function Newsletter() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, website }),
+        body: JSON.stringify({ email, faxNumber }),
       });
       if (res.ok) {
         setStatus("success");
@@ -59,11 +59,11 @@ export default function Newsletter() {
           {/* Honeypot - hidden from real users */}
           <input
             type="text"
-            name="website"
+            name="faxNumber"
             tabIndex={-1}
             autoComplete="off"
-            value={website}
-            onChange={(e) => setWebsite(e.target.value)}
+            value={faxNumber}
+            onChange={(e) => setFaxNumber(e.target.value)}
             aria-hidden="true"
             className="absolute left-[-9999px] w-px h-px opacity-0 pointer-events-none"
           />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -59,6 +59,7 @@ const stepVariants = {
 export default function ContactContent() {
   const t = useTranslations("contact");
   const tLeadCapture = useTranslations("leadCapture");
+  const locale = useLocale();
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
@@ -97,23 +98,24 @@ export default function ContactContent() {
     if (step !== TOTAL_STEPS) return;
     setStatus("sending");
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "66e1584f-915b-4c08-a4a9-53a6cd6b91c0",
-          subject: `Nova poruka sa sajta — ${data.name}`,
-          from_name: "Sport Care Med — Kontakt",
+          source: "contact",
           name: data.name,
           email: data.email,
           phone: data.phone,
           bodyPart: data.bodyPart,
           condition: data.condition,
-          message: `[Deo tela: ${data.bodyPart}]\n[Stanje: ${data.condition}]${data.message ? `\n\n${data.message}` : ""}`,
-          botcheck: hp,
+          treatment: data.bodyPart,
+          message: data.message?.trim() || data.condition,
+          page: typeof window !== "undefined" ? window.location.pathname : undefined,
+          locale,
+          faxNumber: hp,
         }),
       });
       const json = await res.json().catch(() => ({ success: false }));
@@ -204,7 +206,7 @@ export default function ContactContent() {
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <input
                         type="text"
-                        name="website"
+                        name="faxNumber"
                         tabIndex={-1}
                         autoComplete="off"
                         value={hp}

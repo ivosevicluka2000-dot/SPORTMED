@@ -120,7 +120,7 @@ export default function B2BProposalBuilder() {
           selectedKits: selectedServices,
           competitionLevel,
           seasonDuration: String(seasonDuration),
-          website: hp,
+          faxNumber: hp,
         }),
       });
       if (res.ok) {
@@ -393,7 +393,7 @@ export default function B2BProposalBuilder() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   <input
                     type="text"
-                    name="website"
+                    name="faxNumber"
                     tabIndex={-1}
                     autoComplete="off"
                     value={hp}
