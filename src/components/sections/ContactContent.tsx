@@ -123,9 +123,14 @@ export default function ContactContent() {
         setStatus("success");
         reset();
       } else {
+        console.error("[contact-form] Submission failed", {
+          status: res.status,
+          response: json,
+        });
         setStatus("error");
       }
-    } catch {
+    } catch (error) {
+      console.error("[contact-form] Submission failed", error);
       setStatus("error");
     }
   };

@@ -49,16 +49,22 @@ export default function LeadCapturePopup() {
           faxNumber: hp,
         }),
       });
-      if (res.ok) {
+      const json = await res.json().catch(() => ({ success: false }));
+      if (res.ok && json.success) {
         setStatus("success");
         setName("");
         setEmail("");
         setBodyPart("");
         setProblemDescription("");
       } else {
+        console.error("[lead-capture-popup] Submission failed", {
+          status: res.status,
+          response: json,
+        });
         setStatus("error");
       }
-    } catch {
+    } catch (error) {
+      console.error("[lead-capture-popup] Submission failed", error);
       setStatus("error");
     }
   };

@@ -11,28 +11,10 @@ export default function Hero() {
 
   return (
     <section className="relative bg-navy min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Background video */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster="https://images.pexels.com/videos/5319980/free-video-5319980.jpg"
-        aria-hidden="true"
-        tabIndex={-1}
-        className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
-      >
-        <source
-          src="https://videos.pexels.com/video-files/5319980/5319980-uhd_2560_1440_30fps.mp4"
-          type="video/mp4"
-        />
-      </video>
-
-      {/* Static fallback for reduced-motion users */}
+      {/* Static background: remote video sources can return 403 in production. */}
       <div
         aria-hidden="true"
-        className="hidden motion-reduce:block absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
             "url(https://images.pexels.com/videos/5319980/free-video-5319980.jpg)",
