@@ -40,9 +40,7 @@ export default function LocationPreview() {
               <Clock className="w-4 h-4 text-teal mt-1 flex-shrink-0" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-navy">{t("workingHours")}</p>
-                <p className="text-sm text-gray-400">{t("weekdays")}: 08:00 - 20:00</p>
-                <p className="text-sm text-gray-400">{t("saturday")}: 09:00 - 14:00</p>
-                <p className="text-sm text-gray-400">{t("sunday")}: {t("closed")}</p>
+                <p className="text-sm text-gray-400">{t("everyday")}: 10:00 - 17:00</p>
               </div>
             </div>
           </div>

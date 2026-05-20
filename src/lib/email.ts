@@ -311,7 +311,7 @@ const PROTOCOL_T = {
 } as const;
 
 export interface LeadNotificationInput {
-  source: "contact" | "lead-capture-popup" | "exit-intent";
+  source: "contact" | "b2b" | "lead-capture-popup" | "exit-intent";
   name: string;
   email?: string;
   phone?: string;
@@ -341,9 +341,11 @@ export async function sendLeadNotificationEmail(input: LeadNotificationInput): P
     const sourceLabel =
       input.source === "contact"
         ? "Contact form"
-        : input.source === "exit-intent"
-          ? "Exit intent popup"
-          : "Lead capture popup";
+        : input.source === "b2b"
+          ? "B2B inquiry"
+          : input.source === "exit-intent"
+            ? "Exit intent popup"
+            : "Lead capture popup";
     const protocolStatus =
       input.protocolEmailSent === undefined
         ? "No protocol email sent"
@@ -356,8 +358,8 @@ export async function sendLeadNotificationEmail(input: LeadNotificationInput): P
       ["Name", input.name],
       ["Email", input.email || "-"],
       ["Phone", input.phone || "-"],
-      ["Body part / protocol", bodyPartLabel ?? input.treatment ?? "-"],
-      ["Protocol delivery", protocolStatus],
+      [input.source === "b2b" ? "Service" : "Body part / protocol", bodyPartLabel ?? input.treatment ?? "-"],
+      ...(input.source === "b2b" ? [] : [["Protocol delivery", protocolStatus] as const]),
       ["Message", input.message],
       ["Problem description", input.problemDescription || "-"],
       ["Page", input.page || "-"],

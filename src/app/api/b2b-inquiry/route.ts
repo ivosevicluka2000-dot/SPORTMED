@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
 import { createLead } from "@/lib/leads";
+import { sendLeadNotificationEmail } from "@/lib/email";
+
+export const runtime = "nodejs";
 
 const b2bSchema = z.object({
   organization: z.string().min(2).max(200),
@@ -48,13 +51,14 @@ export async function POST(request: NextRequest) {
       detailLines.push(`Services: ${data.selectedServices.join(", ")}`);
     detailLines.push("", data.message);
 
-    await createLead({
+    const detailMessage = detailLines.join("\n");
+    const leadSaved = await createLead({
       source: "b2b",
       name: data.contactPerson,
       phone: data.phone,
       email: data.email,
       service: data.selectedServices?.[0],
-      message: detailLines.join("\n"),
+      message: detailMessage,
       metadata: {
         page: data.page,
         locale: data.locale,
@@ -63,7 +67,27 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    const adminNotified = await sendLeadNotificationEmail({
+      source: "b2b",
+      name: data.contactPerson,
+      phone: data.phone,
+      email: data.email,
+      treatment: data.selectedServices?.[0],
+      message: detailMessage,
+      page: data.page,
+      locale: data.locale,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+      referrer: request.headers.get("referer") ?? undefined,
+    });
+
+    if (!leadSaved && !adminNotified) {
+      return NextResponse.json(
+        { error: "Submission could not be delivered" },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({ success: true, leadSaved, adminNotified });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

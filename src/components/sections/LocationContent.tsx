@@ -83,18 +83,8 @@ export default function LocationContent() {
                   </h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between gap-8">
-                      <span className="text-gray-400">{t("weekdays")}</span>
-                      <span className="text-navy font-medium">08:00 - 20:00</span>
-                    </div>
-                    <div className="flex justify-between gap-8">
-                      <span className="text-gray-400">{t("saturday")}</span>
-                      <span className="text-navy font-medium">09:00 - 14:00</span>
-                    </div>
-                    <div className="flex justify-between gap-8">
-                      <span className="text-gray-400">{t("sunday")}</span>
-                      <span className="text-red-400 font-medium">
-                        {t("closed")}
-                      </span>
+                      <span className="text-gray-400">{t("everyday")}</span>
+                      <span className="text-navy font-medium">10:00 - 17:00</span>
                     </div>
                   </div>
                 </div>

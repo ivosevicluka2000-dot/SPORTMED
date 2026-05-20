@@ -124,9 +124,7 @@ export default function Footer() {
               {t("workingHours")}
             </h3>
             <ul className="space-y-3 text-sm text-gray-400">
-              <li>{t("weekdays")}</li>
-              <li>{t("saturday")}</li>
-              <li>{t("sunday")}</li>
+              <li>{t("everyday")}</li>
             </ul>
           </div>
 

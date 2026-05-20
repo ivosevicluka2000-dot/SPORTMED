@@ -9,6 +9,8 @@ import {
   type ProtocolBodyPart,
 } from "@/lib/email";
 
+export const runtime = "nodejs";
+
 const BODY_PARTS = [
   "skocni-zglob",
   "zglob-kolena",
@@ -57,7 +59,7 @@ const contactSchema = z
     problemDescription: z.string().max(2000).optional(),
     source: z
       .enum(["contact", "lead-capture-popup", "exit-intent"])
-      .optional(),
+      .default("contact"),
     page: z.string().max(200).optional(),
     locale: z.string().max(10).optional(),
   })
@@ -165,7 +167,7 @@ export async function POST(request: NextRequest) {
     }
 
     const leadSaved = await createLead({
-      source: data.source ?? "contact",
+      source: data.source,
       name: data.name,
       phone: data.phone,
       email: data.email || undefined,
@@ -180,11 +182,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!leadSaved) {
-      console.error("[contact] Lead was not saved; aborting submission");
-      return NextResponse.json(
-        { error: "Lead could not be saved" },
-        { status: 500 }
-      );
+      console.error("[contact] Lead was not saved; continuing with email delivery");
     }
 
     let protocolEmailSent: boolean | undefined;
@@ -211,7 +209,7 @@ export async function POST(request: NextRequest) {
     }
 
     const adminNotified = await sendLeadNotificationEmail({
-      source: data.source ?? "contact",
+      source: data.source,
       name: data.name,
       phone: data.phone,
       email: data.email || undefined,
@@ -229,7 +227,26 @@ export async function POST(request: NextRequest) {
       console.error("[contact] Admin notification email was not sent");
     }
 
-    return NextResponse.json({ success: true });
+    if (data.source === "contact" && !leadSaved && !adminNotified) {
+      return NextResponse.json(
+        { error: "Submission could not be delivered" },
+        { status: 502 }
+      );
+    }
+
+    if (isLeadCapture && !leadSaved && !adminNotified && !protocolEmailSent) {
+      return NextResponse.json(
+        { error: "Submission could not be delivered" },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      leadSaved,
+      protocolEmailSent,
+      adminNotified,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
