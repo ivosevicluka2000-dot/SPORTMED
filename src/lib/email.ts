@@ -6,6 +6,14 @@ interface SendArgs {
   attachments?: Array<{ filename: string; content: string }>;
 }
 
+export function getEmailConfigStatus() {
+  return {
+    resendApiKeyConfigured: Boolean(process.env.RESEND_API_KEY),
+    emailFromConfigured: Boolean(process.env.EMAIL_FROM),
+    adminEmailConfigured: Boolean(process.env.ADMIN_EMAIL),
+  };
+}
+
 /**
  * Minimal admin notification helper. Uses the Resend HTTP API when
  * `RESEND_API_KEY` is configured. No-ops (and logs) otherwise so local
@@ -20,7 +28,11 @@ export async function sendEmail({ to, subject, text, html, attachments }: SendAr
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
   if (!apiKey || !from) {
-    console.info("[email] not configured; would send:", { to, subject });
+    console.error("[email] not configured; would send:", {
+      to,
+      subject,
+      config: getEmailConfigStatus(),
+    });
     return false;
   }
   try {

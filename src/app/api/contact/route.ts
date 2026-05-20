@@ -3,6 +3,7 @@ import { z } from "zod";
 import { rateLimit, getClientIp, isHoneypotTriggered } from "@/lib/rate-limit";
 import { createLead } from "@/lib/leads";
 import {
+  getEmailConfigStatus,
   hasProtocolPdf,
   sendLeadNotificationEmail,
   sendProtocolEmail,
@@ -223,16 +224,45 @@ export async function POST(request: NextRequest) {
       console.error("[contact] Admin notification email was not sent");
     }
 
+    const protocolEmailExpected = Boolean(
+      data.email && protocolBodyPart && protocolExists
+    );
+
+    if (protocolEmailExpected && protocolEmailSent !== true) {
+      return NextResponse.json(
+        {
+          error: "Protocol email could not be sent",
+          emailConfig: getEmailConfigStatus(),
+          leadSaved,
+          adminNotified,
+          protocolEmailSent,
+        },
+        { status: 502 }
+      );
+    }
+
     if (data.source === "contact" && !leadSaved && !adminNotified) {
       return NextResponse.json(
-        { error: "Submission could not be delivered" },
+        {
+          error: "Submission could not be delivered",
+          emailConfig: getEmailConfigStatus(),
+          leadSaved,
+          adminNotified,
+          protocolEmailSent,
+        },
         { status: 502 }
       );
     }
 
     if (isLeadCapture && !leadSaved && !adminNotified) {
       return NextResponse.json(
-        { error: "Submission could not be delivered" },
+        {
+          error: "Submission could not be delivered",
+          emailConfig: getEmailConfigStatus(),
+          leadSaved,
+          adminNotified,
+          protocolEmailSent,
+        },
         { status: 502 }
       );
     }
