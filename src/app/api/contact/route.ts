@@ -201,10 +201,6 @@ export async function POST(request: NextRequest) {
           email: data.email,
           bodyPart: protocolBodyPart,
         });
-        return NextResponse.json(
-          { error: "Protocol email could not be sent" },
-          { status: 502 }
-        );
       }
     }
 
@@ -234,7 +230,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (isLeadCapture && !leadSaved && !adminNotified && !protocolEmailSent) {
+    if (isLeadCapture && !leadSaved && !adminNotified) {
       return NextResponse.json(
         { error: "Submission could not be delivered" },
         { status: 502 }
