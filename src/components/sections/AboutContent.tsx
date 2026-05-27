@@ -1,66 +1,69 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Section, { SectionHeader } from "@/components/ui/Section";
-import { Target, Eye, Award, Stethoscope, GraduationCap, CheckCircle2 } from "lucide-react";
+import {
+  Target,
+  Eye,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 const teamMembers = [
   {
-    name: "Dr. Placeholder",
-    roleKey: "Specijalista sportske medicine",
-    image: null,
+    name: "Tijana Tanasković",
+    role: "diplomirani fizioterapeut",
+    image: "/about/tijana-tanaskovic.png",
+    alt: "Tijana Tanasković, diplomirani fizioterapeut u Sport Care & Med timu",
+    imageClassName: "object-[58%_35%]",
   },
   {
-    name: "Fizioterapeut Placeholder",
-    roleKey: "Diplomirani fizioterapeut",
-    image: null,
-  },
-  {
-    name: "Kineziterapeut Placeholder",
-    roleKey: "Kineziterapeut",
-    image: null,
+    name: "Ognjen Živanović",
+    role: "strukovni fizioterapeut",
+    image: "/about/ognjen-zivanovic.png",
+    alt: "Ognjen Živanović, strukovni fizioterapeut u Sport Care & Med timu",
+    imageClassName: "object-[58%_35%]",
   },
 ];
-
-const teamIcons = [Stethoscope, Award, GraduationCap];
 
 const clinicPhotos = [
   {
     src: "/about/clinic-exterior.png",
     alt: "Ulaz u Sport Care & Med kliniku",
-    className: "md:col-span-2 md:row-span-2 aspect-[16/10] md:aspect-auto",
-    sizes: "(max-width: 768px) 100vw, 50vw",
   },
   {
     src: "/about/treatment-room-entry.png",
     alt: "Ulaz u terapijsku prostoriju Sport Care & Med klinike",
-    className: "md:col-span-2 aspect-[4/3]",
-    sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 50vw",
   },
   {
     src: "/about/waiting-area.png",
     alt: "Prostor za čekanje u Sport Care & Med klinici",
-    className: "aspect-[3/4] sm:aspect-[4/3]",
-    sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw",
   },
   {
     src: "/about/treatment-room.png",
     alt: "Terapijski sto u Sport Care & Med ordinaciji",
-    className: "aspect-[4/3]",
-    sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw",
   },
   {
     src: "/about/second-treatment-room.png",
     alt: "Druga terapijska prostorija Sport Care & Med klinike",
-    className: "md:col-span-4 aspect-[16/9] md:aspect-[16/6]",
-    sizes: "100vw",
   },
 ];
 
 export default function AboutContent() {
   const t = useTranslations("about");
+  const [activePhoto, setActivePhoto] = useState(0);
+  const currentPhoto = clinicPhotos[activePhoto];
+  const totalPhotos = clinicPhotos.length;
+  const showPreviousPhoto = () => {
+    setActivePhoto((index) => (index === 0 ? totalPhotos - 1 : index - 1));
+  };
+  const showNextPhoto = () => {
+    setActivePhoto((index) => (index === totalPhotos - 1 ? 0 : index + 1));
+  };
 
   return (
     <>
@@ -225,30 +228,35 @@ export default function AboutContent() {
           accent
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          {teamMembers.map((member, index) => {
-            const Icon = teamIcons[index];
-            return (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-20 h-20 rounded-full border border-gray-200 flex items-center justify-center mx-auto mb-4 bg-ivory">
-                  <Icon className="w-8 h-8 text-teal/70" />
-                </div>
-                <h3 className="text-base font-heading font-semibold text-navy mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          {teamMembers.map((member, index) => (
+            <motion.div
+              key={member.name}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="overflow-hidden rounded-lg border border-gray-100 bg-white text-center shadow-[var(--shadow-soft)]"
+            >
+              <div className="relative aspect-[3/4] bg-ivory">
+                <Image
+                  src={member.image}
+                  alt={member.alt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 360px"
+                  className={`object-cover ${member.imageClassName}`}
+                />
+              </div>
+              <div className="px-5 py-5">
+                <h3 className="text-lg font-heading font-semibold text-navy mb-1">
                   {member.name}
                 </h3>
                 <p className="text-[11px] uppercase tracking-wider text-gray-400">
-                  {member.roleKey}
+                  {member.role}
                 </p>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </Section>
 
@@ -259,26 +267,70 @@ export default function AboutContent() {
           subtitle={t("gallery.subtitle")}
           accent
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 md:auto-rows-[220px] lg:auto-rows-[260px] gap-3">
-          {clinicPhotos.map((photo, index) => (
-            <motion.div
-              key={photo.src}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              className={`relative overflow-hidden rounded-lg border border-gray-100 bg-white shadow-[var(--shadow-soft)] ${photo.className}`}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-5xl mx-auto"
+        >
+          <div className="relative overflow-hidden rounded-lg border border-gray-100 bg-white shadow-[var(--shadow-soft)]">
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/8] bg-navy/5">
+              <motion.div
+                key={currentPhoto.src}
+                initial={{ opacity: 0, scale: 1.015 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={currentPhoto.src}
+                  alt={currentPhoto.alt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 1024px"
+                  className="object-cover"
+                  priority={activePhoto === 0}
+                />
+              </motion.div>
+            </div>
+
+            <button
+              type="button"
+              onClick={showPreviousPhoto}
+              aria-label="Prethodna fotografija"
+              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/85 text-navy shadow-sm transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-gold md:left-5 md:h-12 md:w-12"
             >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                sizes={photo.sizes}
-                className="object-cover"
-              />
-            </motion.div>
-          ))}
-        </div>
+              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={showNextPhoto}
+              aria-label="Sledeća fotografija"
+              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/85 text-navy shadow-sm transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-gold md:right-5 md:h-12 md:w-12"
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            </button>
+
+            <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-4 bg-gradient-to-t from-navy/75 via-navy/35 to-transparent px-4 pb-4 pt-12 md:px-6 md:pb-5">
+              <span className="font-heading text-sm font-semibold text-white">
+                {String(activePhoto + 1).padStart(2, "0")} / {String(totalPhotos).padStart(2, "0")}
+              </span>
+              <div className="flex items-center gap-2">
+                {clinicPhotos.map((photo, index) => (
+                  <button
+                    key={photo.src}
+                    type="button"
+                    onClick={() => setActivePhoto(index)}
+                    aria-label={`Prikaži fotografiju ${index + 1}`}
+                    aria-current={index === activePhoto ? "true" : undefined}
+                    className={`h-2.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-gold ${
+                      index === activePhoto ? "w-8 bg-gold" : "w-2.5 bg-white/75 hover:bg-white"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </Section>
     </>
   );
