@@ -2,8 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Section, { SectionHeader } from "@/components/ui/Section";
-import { Target, Eye, Award, Stethoscope, GraduationCap, User, CheckCircle2 } from "lucide-react";
+import { Target, Eye, Award, Stethoscope, GraduationCap, CheckCircle2 } from "lucide-react";
 
 const teamMembers = [
   {
@@ -24,6 +25,29 @@ const teamMembers = [
 ];
 
 const teamIcons = [Stethoscope, Award, GraduationCap];
+
+const clinicPhotos = [
+  {
+    src: "/about/clinic-exterior.jpeg",
+    alt: "Ulaz u Sport Care & Med kliniku",
+    className: "md:col-span-2 md:row-span-2 aspect-[16/10] md:aspect-auto",
+  },
+  {
+    src: "/about/treatment-room.jpeg",
+    alt: "Terapijski sto u Sport Care & Med ordinaciji",
+    className: "aspect-[4/3]",
+  },
+  {
+    src: "/about/waiting-area.jpeg",
+    alt: "Prostor za čekanje u Sport Care & Med klinici",
+    className: "aspect-[4/3]",
+  },
+  {
+    src: "/about/treatment-room-entry.jpeg",
+    alt: "Ulaz u terapijsku prostoriju Sport Care & Med klinike",
+    className: "md:col-span-2 aspect-[16/9]",
+  },
+];
 
 export default function AboutContent() {
   const t = useTranslations("about");
@@ -94,12 +118,15 @@ export default function AboutContent() {
             transition={{ duration: 0.5 }}
             className="order-1 md:order-1"
           >
-            <div
-              className="aspect-square w-full max-w-md mx-auto md:mx-0 rounded-2xl border border-gray-200 bg-white flex items-center justify-center overflow-hidden shadow-[var(--shadow-soft)]"
-              role="img"
-              aria-label={t("founder.photoAlt")}
-            >
-              <User className="w-24 h-24 text-gray-200" strokeWidth={1.25} />
+            <div className="relative aspect-[3/4] w-full max-w-md mx-auto md:mx-0 rounded-lg border border-gray-200 bg-white overflow-hidden shadow-[var(--shadow-soft)]">
+              <Image
+                src="/about/founder-djordje-ignjatovic.png"
+                alt={t("founder.photoAlt")}
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover"
+                priority={false}
+              />
             </div>
           </motion.div>
 
@@ -215,23 +242,35 @@ export default function AboutContent() {
         </div>
       </Section>
 
-      {/* Gallery placeholder */}
+      {/* Gallery */}
       <Section className="bg-ivory">
         <SectionHeader
           title={t("gallery.title")}
           subtitle={t("gallery.subtitle")}
           accent
         />
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="aspect-[4/3] bg-white border border-gray-100 rounded-lg flex items-center justify-center"
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 md:auto-rows-[220px] lg:auto-rows-[260px] gap-3">
+          {clinicPhotos.map((photo, index) => (
+            <motion.div
+              key={photo.src}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.08 }}
+              className={`relative overflow-hidden rounded-lg border border-gray-100 bg-white shadow-[var(--shadow-soft)] ${photo.className}`}
             >
-              <span className="text-gray-300 text-xs uppercase tracking-wider">
-                Photo {i}
-              </span>
-            </div>
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes={
+                  index === 0
+                    ? "(max-width: 768px) 100vw, 50vw"
+                    : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
+                }
+                className="object-cover"
+              />
+            </motion.div>
           ))}
         </div>
       </Section>
