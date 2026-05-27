@@ -28,24 +28,34 @@ const teamIcons = [Stethoscope, Award, GraduationCap];
 
 const clinicPhotos = [
   {
-    src: "/about/clinic-exterior.jpeg",
+    src: "/about/clinic-exterior.png",
     alt: "Ulaz u Sport Care & Med kliniku",
     className: "md:col-span-2 md:row-span-2 aspect-[16/10] md:aspect-auto",
+    sizes: "(max-width: 768px) 100vw, 50vw",
   },
   {
-    src: "/about/treatment-room.jpeg",
+    src: "/about/treatment-room-entry.png",
+    alt: "Ulaz u terapijsku prostoriju Sport Care & Med klinike",
+    className: "md:col-span-2 aspect-[4/3]",
+    sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 50vw",
+  },
+  {
+    src: "/about/waiting-area.png",
+    alt: "Prostor za čekanje u Sport Care & Med klinici",
+    className: "aspect-[3/4] sm:aspect-[4/3]",
+    sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw",
+  },
+  {
+    src: "/about/treatment-room.png",
     alt: "Terapijski sto u Sport Care & Med ordinaciji",
     className: "aspect-[4/3]",
+    sizes: "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw",
   },
   {
-    src: "/about/waiting-area.jpeg",
-    alt: "Prostor za čekanje u Sport Care & Med klinici",
-    className: "aspect-[4/3]",
-  },
-  {
-    src: "/about/treatment-room-entry.jpeg",
-    alt: "Ulaz u terapijsku prostoriju Sport Care & Med klinike",
-    className: "md:col-span-2 aspect-[16/9]",
+    src: "/about/second-treatment-room.png",
+    alt: "Druga terapijska prostorija Sport Care & Med klinike",
+    className: "md:col-span-4 aspect-[16/9] md:aspect-[16/6]",
+    sizes: "100vw",
   },
 ];
 
@@ -263,11 +273,7 @@ export default function AboutContent() {
                 src={photo.src}
                 alt={photo.alt}
                 fill
-                sizes={
-                  index === 0
-                    ? "(max-width: 768px) 100vw, 50vw"
-                    : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
-                }
+                sizes={photo.sizes}
                 className="object-cover"
               />
             </motion.div>
