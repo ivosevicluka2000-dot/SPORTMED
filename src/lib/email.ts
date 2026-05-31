@@ -261,6 +261,8 @@ export type ProtocolBodyPart =
   | "misici-zadnje-loze"
   | "ostalo";
 
+type ProtocolLocale = "sr" | "en";
+
 const PROTOCOL_LABELS: Record<ProtocolBodyPart, { sr: string; en: string }> = {
   "skocni-zglob": { sr: "Skočni zglob", en: "Ankle" },
   "zglob-kolena": { sr: "Zglob kolena", en: "Knee" },
@@ -270,22 +272,47 @@ const PROTOCOL_LABELS: Record<ProtocolBodyPart, { sr: string; en: string }> = {
   ostalo: { sr: "Ostalo", en: "Other" },
 };
 
+const PROTOCOL_FILES: Record<ProtocolLocale, Record<ProtocolBodyPart, string>> = {
+  sr: {
+    "skocni-zglob": "skocni-zglob.pdf",
+    "zglob-kolena": "zglob-kolena.pdf",
+    "kicmeni-stub": "kicmeni-stub.pdf",
+    "zglob-ramena": "zglob-ramena.pdf",
+    "misici-zadnje-loze": "istegnuce-zadnje-loze.pdf",
+    ostalo: "ostalo.pdf",
+  },
+  en: {
+    "skocni-zglob": "ankle-sprain.pdf",
+    "zglob-kolena": "knee-pain.pdf",
+    "kicmeni-stub": "lower-back-pain.pdf",
+    "zglob-ramena": "shoulder-pain.pdf",
+    "misici-zadnje-loze": "hamstring-strain.pdf",
+    ostalo: "other.pdf",
+  },
+};
+
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://sportcaremed.rs";
 
-export function getProtocolPdfUrl(bodyPart: ProtocolBodyPart): string {
-  return `${SITE_URL.replace(/\/$/, "")}/protocols/${bodyPart}.pdf`;
+function getProtocolLocale(locale?: string): ProtocolLocale {
+  return locale === "en" ? "en" : "sr";
 }
 
-async function getProtocolPdfPath(bodyPart: ProtocolBodyPart): Promise<string> {
+export function getProtocolPdfUrl(bodyPart: ProtocolBodyPart, locale?: string): string {
+  const lang = getProtocolLocale(locale);
+  return `${SITE_URL.replace(/\/$/, "")}/protocols/${lang}/${PROTOCOL_FILES[lang][bodyPart]}`;
+}
+
+async function getProtocolPdfPath(bodyPart: ProtocolBodyPart, locale?: string): Promise<string> {
   const { join } = await import("node:path");
-  return join(process.cwd(), "public", "protocols", `${bodyPart}.pdf`);
+  const lang = getProtocolLocale(locale);
+  return join(process.cwd(), "public", "protocols", lang, PROTOCOL_FILES[lang][bodyPart]);
 }
 
-export async function hasProtocolPdf(bodyPart: ProtocolBodyPart): Promise<boolean> {
+export async function hasProtocolPdf(bodyPart: ProtocolBodyPart, locale?: string): Promise<boolean> {
   try {
     const { access } = await import("node:fs/promises");
-    await access(await getProtocolPdfPath(bodyPart));
+    await access(await getProtocolPdfPath(bodyPart, locale));
     return true;
   } catch {
     return false;
@@ -415,7 +442,8 @@ export async function sendLeadNotificationEmail(input: LeadNotificationInput): P
 
 /**
  * Send the free PDF protocol email to a lead. Returns false on failure and
- * never throws. The PDF itself lives under /public/protocols/{bodyPart}.pdf.
+ * never throws. PDFs live under /public/protocols/{locale}/ and are resolved
+ * from the submitted locale plus the selected body part.
  */
 export async function sendProtocolEmail(args: {
   to: string;
@@ -427,14 +455,14 @@ export async function sendProtocolEmail(args: {
   try {
     const { readFile } = await import("node:fs/promises");
 
-    const lang = args.locale === "en" ? "en" : "sr";
+    const lang = getProtocolLocale(args.locale);
     const t = PROTOCOL_T[lang];
     const label = PROTOCOL_LABELS[args.bodyPart][lang];
-    const pdfUrl = getProtocolPdfUrl(args.bodyPart);
+    const pdfUrl = getProtocolPdfUrl(args.bodyPart, args.locale);
     const name = (args.name ?? "").trim();
     const description = (args.problemDescription ?? "").trim();
 
-    const pdfPath = await getProtocolPdfPath(args.bodyPart);
+    const pdfPath = await getProtocolPdfPath(args.bodyPart, args.locale);
     let pdfBase64: string | undefined;
     try {
       const buf = await readFile(pdfPath);

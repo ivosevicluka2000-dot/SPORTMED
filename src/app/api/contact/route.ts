@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
       ? data.bodyPart
       : undefined;
     const protocolExists = protocolBodyPart
-      ? await hasProtocolPdf(protocolBodyPart)
+      ? await hasProtocolPdf(protocolBodyPart, data.locale)
       : false;
 
     if (isLeadCapture && (!protocolBodyPart || !protocolExists)) {
