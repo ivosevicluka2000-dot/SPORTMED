@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
@@ -11,14 +12,14 @@ export default function Hero() {
 
   return (
     <section className="relative bg-navy min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Static background: remote video sources can return 403 in production. */}
-      <div
+      <Image
+        src="/hero/sport-care-hero.png"
+        alt=""
+        fill
+        preload
+        sizes="100vw"
         aria-hidden="true"
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url(https://images.pexels.com/videos/5319980/free-video-5319980.jpg)",
-        }}
+        className="absolute inset-0 object-cover object-center"
       />
 
       {/* Dark overlay for readability */}
