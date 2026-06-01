@@ -1,11 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import Section, { SectionHeader } from "@/components/ui/Section";
-import { rehabTreatments, recoveryTreatments, treatmentImages } from "@/lib/utils";
+import PhotoLightbox from "@/components/ui/PhotoLightbox";
+import {
+  rehabTreatments,
+  recoveryTreatments,
+  treatmentImages,
+  type TreatmentSlug,
+} from "@/lib/utils";
 import {
   Zap,
   Hand,
@@ -21,6 +28,7 @@ import {
   Wind,
   Vibrate,
   ArrowRight,
+  Maximize2,
 } from "lucide-react";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -39,9 +47,19 @@ const iconMap: Record<string, React.ReactNode> = {
   Vibrate: <Vibrate className="w-5 h-5" />,
 };
 
-type TreatmentLike = { slug: string; icon: string };
+type TreatmentLike = { slug: TreatmentSlug; icon: string };
 
-function TreatmentGrid({ items, t }: { items: readonly TreatmentLike[]; t: ReturnType<typeof useTranslations> }) {
+function TreatmentGrid({
+  items,
+  t,
+  photoStartIndex,
+  onOpenPhoto,
+}: {
+  items: readonly TreatmentLike[];
+  t: ReturnType<typeof useTranslations>;
+  photoStartIndex: number;
+  onOpenPhoto: (index: number) => void;
+}) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100 rounded-xl overflow-hidden border border-gray-100">
       {items.map((treatment, index) => (
@@ -52,11 +70,14 @@ function TreatmentGrid({ items, t }: { items: readonly TreatmentLike[]; t: Retur
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.3) }}
         >
-          <Link href={{ pathname: "/usluge/[slug]", params: { slug: treatment.slug } }}>
-            <div className="group bg-white h-full cursor-pointer hover:bg-ivory transition-colors flex flex-col">
+          <div className="group relative h-full bg-white transition-colors hover:bg-ivory">
+            <Link
+              href={{ pathname: "/usluge/[slug]", params: { slug: treatment.slug } }}
+              className="flex h-full cursor-pointer flex-col"
+            >
               <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
                 <Image
-                  src={treatmentImages[treatment.slug as keyof typeof treatmentImages]}
+                  src={treatmentImages[treatment.slug]}
                   alt={t(`items.${treatment.slug}.title`)}
                   fill
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
@@ -78,8 +99,18 @@ function TreatmentGrid({ items, t }: { items: readonly TreatmentLike[]; t: Retur
                   <ArrowRight className="w-3 h-3" />
                 </span>
               </div>
-            </div>
-          </Link>
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => onOpenPhoto(photoStartIndex + index)}
+              className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/90 text-navy opacity-100 shadow-sm transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-gold md:opacity-0 md:group-hover:opacity-100"
+              aria-label={`Open ${t(`items.${treatment.slug}.title`)} photo fullscreen`}
+              title="Open fullscreen"
+            >
+              <Maximize2 className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         </motion.div>
       ))}
     </div>
@@ -88,6 +119,13 @@ function TreatmentGrid({ items, t }: { items: readonly TreatmentLike[]; t: Retur
 
 export default function ServicesOverview() {
   const t = useTranslations("services");
+  const [activePhoto, setActivePhoto] = useState<number | null>(null);
+  const visibleTreatments = [...rehabTreatments, ...recoveryTreatments];
+  const servicePhotos = visibleTreatments.map((treatment) => ({
+    src: treatmentImages[treatment.slug],
+    alt: t(`items.${treatment.slug}.title`),
+    label: t(`items.${treatment.slug}.title`),
+  }));
 
   return (
     <>
@@ -98,7 +136,12 @@ export default function ServicesOverview() {
           label={t("groups.rehab.label")}
           accent
         />
-        <TreatmentGrid items={rehabTreatments} t={t} />
+        <TreatmentGrid
+          items={rehabTreatments}
+          t={t}
+          photoStartIndex={0}
+          onOpenPhoto={setActivePhoto}
+        />
       </Section>
 
       <Section className="bg-ivory">
@@ -108,8 +151,22 @@ export default function ServicesOverview() {
           label={t("groups.recovery.label")}
           accent
         />
-        <TreatmentGrid items={recoveryTreatments} t={t} />
+        <TreatmentGrid
+          items={recoveryTreatments}
+          t={t}
+          photoStartIndex={rehabTreatments.length}
+          onOpenPhoto={setActivePhoto}
+        />
       </Section>
+
+      {activePhoto !== null && (
+        <PhotoLightbox
+          photos={servicePhotos}
+          initialIndex={activePhoto}
+          open
+          onClose={() => setActivePhoto(null)}
+        />
+      )}
     </>
   );
 }

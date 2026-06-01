@@ -171,7 +171,7 @@ export default function LocationContent() {
           <p className="text-gray-500">{t("gallerySubtitle")}</p>
         </div>
 
-        <ClinicPhotoGrid />
+        <ClinicPhotoGrid enableFullscreen />
       </Section>
 
       {/* CTA */}
