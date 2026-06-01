@@ -39,5 +39,5 @@ export default async function TreatmentPage({
     notFound();
   }
 
-  return <TreatmentDetail slug={slug} treatment={treatment} />;
+  return <TreatmentDetail slug={treatment.slug} treatment={treatment} />;
 }

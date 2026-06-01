@@ -9,7 +9,12 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import ServiceFaq from "@/components/sections/ServiceFaq";
 import StickyServiceCta from "@/components/sections/StickyServiceCta";
-import { treatments, treatmentImages } from "@/lib/utils";
+import {
+  treatments,
+  treatmentHeroImages,
+  treatmentImages,
+  type TreatmentSlug,
+} from "@/lib/utils";
 import {
   ArrowLeft,
   ArrowRight,
@@ -63,7 +68,7 @@ const iconMapSmall: Record<string, React.ReactNode> = {
 };
 
 interface TreatmentDetailProps {
-  slug: string;
+  slug: TreatmentSlug;
   treatment: (typeof treatments)[number];
 }
 
@@ -79,6 +84,7 @@ export default function TreatmentDetail({
   const relatedTreatments = treatments.filter((rt) =>
     (treatment.relatedSlugs as readonly string[]).includes(rt.slug)
   );
+  const heroImage = treatmentHeroImages[slug];
 
   // FAQ JSON-LD schema for SEO
   const faqSchema = {
@@ -102,8 +108,22 @@ export default function TreatmentDetail({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       {/* Hero */}
-      <section className="bg-navy py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-navy py-20 md:py-28">
+        {heroImage && (
+          <>
+            <Image
+              src={heroImage}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-navy/75" />
+            <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/30 to-navy/80" />
+          </>
+        )}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/usluge"
             className="inline-flex items-center text-white/40 hover:text-white transition-colors mb-10 text-sm"

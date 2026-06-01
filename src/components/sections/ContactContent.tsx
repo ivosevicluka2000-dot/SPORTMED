@@ -10,6 +10,7 @@ import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Input";
+import ClinicPhotoGrid from "@/components/sections/ClinicPhotoGrid";
 import { Phone, Mail, MapPin, Send, ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
 
 const Instagram = ({ className }: { className?: string }) => (
@@ -58,6 +59,7 @@ const stepVariants = {
 
 export default function ContactContent() {
   const t = useTranslations("contact");
+  const tLocation = useTranslations("location");
   const tLeadCapture = useTranslations("leadCapture");
   const locale = useLocale();
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -505,6 +507,18 @@ export default function ContactContent() {
             </motion.div>
           </div>
         </div>
+      </Section>
+
+      {/* Clinic gallery */}
+      <Section className="bg-ivory">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="text-3xl md:text-4xl font-heading font-semibold text-navy mb-4">
+            {tLocation("galleryTitle")}
+          </h2>
+          <p className="text-gray-500">{tLocation("gallerySubtitle")}</p>
+        </div>
+
+        <ClinicPhotoGrid />
       </Section>
 
       {/* Map */}

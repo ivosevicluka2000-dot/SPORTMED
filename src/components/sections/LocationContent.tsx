@@ -3,8 +3,9 @@
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import Section from "@/components/ui/Section";
+import ClinicPhotoGrid from "@/components/sections/ClinicPhotoGrid";
 import { Link } from "@/i18n/routing";
-import { MapPin, Clock, Car, Navigation, Phone, Send, Image as ImageIcon } from "lucide-react";
+import { MapPin, Clock, Car, Navigation, Phone, Send } from "lucide-react";
 
 export default function LocationContent() {
   const t = useTranslations("location");
@@ -170,32 +171,7 @@ export default function LocationContent() {
           <p className="text-gray-500">{t("gallerySubtitle")}</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-          {[
-            { i: 1, span: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto" },
-            { i: 2, span: "aspect-square" },
-            { i: 3, span: "aspect-square" },
-            { i: 4, span: "aspect-square" },
-            { i: 5, span: "aspect-square" },
-            { i: 6, span: "aspect-square" },
-          ].map(({ i, span }) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className={`relative overflow-hidden rounded-xl bg-gradient-to-br from-navy/5 via-teal/10 to-navy/10 border border-gray-100 ${span}`}
-            >
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-teal/30">
-                <ImageIcon className="w-8 h-8 mb-2" />
-                <span className="text-[10px] uppercase tracking-[0.2em] font-medium">
-                  {t("facilityLabel")} {i}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <ClinicPhotoGrid />
       </Section>
 
       {/* CTA */}

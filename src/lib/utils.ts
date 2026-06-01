@@ -98,35 +98,39 @@ export const recoveryTreatments = treatments.filter((t) =>
   (t.categories as readonly string[]).includes("recovery")
 );
 
-// Royalty-free Pexels imagery, one per treatment slug.
-// Sized via the ?auto=compress&cs=tinysrgb&w= query for next/image.
+// Homepage and related-card imagery, one per treatment slug.
 export const treatmentImages: Record<TreatmentSlug, string> = {
-  "fizikalna-terapija":
-    "https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "manuelna-terapija":
-    "https://images.pexels.com/photos/3757957/pexels-photo-3757957.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "kineziterapija":
-    "https://images.pexels.com/photos/4498482/pexels-photo-4498482.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "cupping-terapija":
-    "https://images.pexels.com/photos/6628638/pexels-photo-6628638.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "flossing-terapija":
-    "https://images.pexels.com/photos/4506217/pexels-photo-4506217.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "kinesiotape":
-    "https://images.pexels.com/photos/4506105/pexels-photo-4506105.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "fizikalna-terapija": "/treatments/fizikalna-terapija.jpeg",
+  "manuelna-terapija": "/treatments/manuelna-terapija.jpeg",
+  "kineziterapija": "/treatments/kineziterapija.jpeg",
+  "cupping-terapija": "/treatments/cupping-terapija.jpeg",
+  "flossing-terapija": "/treatments/flossing-terapija.jpeg",
+  "kinesiotape": "/treatments/kinesiotape.jpeg",
   "sportska-rehabilitacija":
     "https://images.pexels.com/photos/3768916/pexels-photo-3768916.jpeg?auto=compress&cs=tinysrgb&w=1200",
   "dijagnostika":
     "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "masaza":
-    "https://images.pexels.com/photos/3997991/pexels-photo-3997991.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "recovery-terapije":
-    "https://images.pexels.com/photos/4753986/pexels-photo-4753986.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "presoterapija":
-    "https://images.pexels.com/photos/6975474/pexels-photo-6975474.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "tretman-masaznim-pistoljem":
-    "https://images.pexels.com/photos/6453397/pexels-photo-6453397.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  "testiranje-merenja":
-    "https://images.pexels.com/photos/8401307/pexels-photo-8401307.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "masaza": "/treatments/masaza.jpeg",
+  "recovery-terapije": "/treatments/recovery-terapije.jpeg",
+  "presoterapija": "/treatments/presoterapija.jpeg",
+  "tretman-masaznim-pistoljem": "/treatments/tretman-masaznim-pistoljem.jpeg",
+  "testiranje-merenja": "/treatments/testiranje-merenja.jpeg",
+};
+
+export const treatmentHeroImages: Partial<Record<TreatmentSlug, string>> = {
+  "fizikalna-terapija": "/treatments/fizikalna-terapija.jpeg",
+  "manuelna-terapija": "/treatments/manuelna-terapija.jpeg",
+  "kineziterapija": "/treatments/kineziterapija.jpeg",
+  "cupping-terapija": "/treatments/cupping-terapija.jpeg",
+  "flossing-terapija": "/treatments/flossing-terapija.jpeg",
+  "kinesiotape": "/treatments/kinesiotape.jpeg",
+  "sportska-rehabilitacija": treatmentImages["sportska-rehabilitacija"],
+  "dijagnostika": treatmentImages.dijagnostika,
+  "masaza": "/treatments/masaza.jpeg",
+  "recovery-terapije": "/treatments/recovery-terapije.jpeg",
+  "presoterapija": "/treatments/presoterapija.jpeg",
+  "tretman-masaznim-pistoljem": "/treatments/tretman-masaznim-pistoljem.jpeg",
+  "testiranje-merenja": "/treatments/testiranje-merenja.jpeg",
 };
 
 export const b2bProductKits = [
