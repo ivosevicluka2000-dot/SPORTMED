@@ -75,6 +75,50 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+export interface RehabAppointmentReminderInput {
+  to: string;
+  patientName: string;
+  workspaceName: string;
+  startsAt: string;
+}
+
+export async function sendRehabAppointmentReminder(
+  input: RehabAppointmentReminderInput
+): Promise<boolean> {
+  const formatted = new Intl.DateTimeFormat("sr-RS", {
+    timeZone: "Europe/Belgrade",
+    weekday: "long",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(input.startsAt));
+  const safeName = escapeHtml(input.patientName);
+  const safeWorkspace = escapeHtml(input.workspaceName);
+  const safeDate = escapeHtml(formatted);
+  const subject = `Podsetnik za termin — ${input.workspaceName}`;
+  const text =
+    `Poštovani ${input.patientName},\n\n` +
+    `podsećamo vas da imate zakazan termin u ${input.workspaceName}:\n` +
+    `${formatted}.\n\n` +
+    `Ako niste u mogućnosti da dođete, molimo vas da nas obavestite.\n\n` +
+    `Sport Care & Med`;
+  const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#1e293b;background:#f8fafc;padding:24px">
+  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:28px">
+    <p style="margin:0 0 18px;color:#64748b;font-size:13px;text-transform:uppercase;letter-spacing:.08em">Podsetnik za termin</p>
+    <h2 style="margin:0 0 14px;color:#4f636a">Poštovani ${safeName},</h2>
+    <p style="line-height:1.6">Podsećamo vas da imate zakazan termin u <strong>${safeWorkspace}</strong>.</p>
+    <div style="margin:20px 0;padding:16px;border-left:4px solid #9ecde8;background:#f1f8fc;font-size:18px;font-weight:600;color:#334155">${safeDate}</div>
+    <p style="line-height:1.6;color:#475569">Ako niste u mogućnosti da dođete, molimo vas da nas obavestite.</p>
+    <p style="margin-top:24px;color:#64748b">Sport Care & Med</p>
+  </div>
+</body></html>`;
+
+  return sendEmail({ to: input.to, subject, text, html });
+}
+
 // ---------------------------------------------------------------------------
 // Order confirmation
 // ---------------------------------------------------------------------------

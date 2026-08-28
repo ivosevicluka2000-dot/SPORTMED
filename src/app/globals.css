@@ -110,3 +110,40 @@
 .animate-cart-bump {
   animation: cart-bump 0.4s ease-out;
 }
+
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  .rehab-platform-chrome,
+  .rehab-print-toolbar {
+    display: none !important;
+  }
+
+  .rehab-platform-content {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .rehab-print-page,
+  .rehab-print-sheet {
+    margin: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .rehab-print-sheet {
+    font-size: 11pt;
+  }
+}

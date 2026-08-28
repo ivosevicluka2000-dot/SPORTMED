@@ -15,7 +15,7 @@ interface Props {
 export default function UserMenu({ textColorClass }: Props) {
   const t = useTranslations("account.nav");
   const [email, setEmail] = useState<string | null | undefined>(undefined);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminHref, setAdminHref] = useState<"/admin" | "/rehab" | null>(null);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -24,24 +24,36 @@ export default function UserMenu({ textColorClass }: Props) {
     let active = true;
 
     const loadRole = async (userId: string) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userId)
-        .maybeSingle();
-      if (active) setIsAdmin(data?.role === "admin");
+      const [{ data: profile }, { data: membership }] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", userId)
+          .maybeSingle(),
+        supabase
+          .from("rehab_workspace_members")
+          .select("workspace_id")
+          .eq("user_id", userId)
+          .limit(1)
+          .maybeSingle(),
+      ]);
+      if (active) {
+        setAdminHref(
+          profile?.role === "admin" ? "/admin" : membership ? "/rehab" : null
+        );
+      }
     };
 
     supabase.auth.getUser().then(({ data }) => {
       if (!active) return;
       setEmail(data.user?.email ?? null);
       if (data.user?.id) loadRole(data.user.id);
-      else setIsAdmin(false);
+      else setAdminHref(null);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       setEmail(session?.user?.email ?? null);
       if (session?.user?.id) loadRole(session.user.id);
-      else setIsAdmin(false);
+      else setAdminHref(null);
     });
     return () => {
       active = false;
@@ -113,9 +125,9 @@ export default function UserMenu({ textColorClass }: Props) {
             <Package className="w-4 h-4" />
             {t("orders")}
           </Link>
-          {isAdmin && (
+          {adminHref && (
             <Link
-              href="/admin"
+              href={adminHref}
               className="flex items-center gap-2 px-4 py-2.5 text-sm text-teal hover:bg-gray-50 font-medium"
               role="menuitem"
               onClick={() => setOpen(false)}

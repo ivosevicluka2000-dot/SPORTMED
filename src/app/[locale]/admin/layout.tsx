@@ -4,8 +4,13 @@ import { createClient } from "@/lib/supabase/server";
 import { Link, getPathname } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
 import SignOutButton from "@/components/account/SignOutButton";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout({
   children,
@@ -35,7 +40,9 @@ export default async function AdminLayout({
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!profile || profile.role !== "admin") {
+  const isGlobalAdmin = profile?.role === "admin";
+
+  if (!profile || !isGlobalAdmin) {
     return (
       <main className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="text-center max-w-md">
@@ -49,8 +56,21 @@ export default async function AdminLayout({
     );
   }
 
-  const navItems: Array<{ href: "/admin" | "/admin/products" | "/admin/categories" | "/admin/discounts" | "/admin/orders" | "/admin/blog" | "/admin/authors" | "/admin/leads" | "/admin/newsletter"; label: string }> = [
+  type AdminHref =
+    | "/admin"
+    | "/admin/products"
+    | "/admin/categories"
+    | "/admin/discounts"
+    | "/admin/orders"
+    | "/admin/blog"
+    | "/admin/authors"
+    | "/admin/leads"
+    | "/admin/newsletter"
+    | "/rehab";
+
+  const navItems: Array<{ href: AdminHref; label: string }> = [
     { href: "/admin", label: t("nav.dashboard") },
+    { href: "/rehab", label: "Otvori Rehab platformu" },
     { href: "/admin/products", label: t("nav.products") },
     { href: "/admin/categories", label: t("nav.categories") },
     { href: "/admin/discounts", label: t("nav.discounts") },

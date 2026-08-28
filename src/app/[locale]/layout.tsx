@@ -11,6 +11,7 @@ import FloatingContact from "@/components/layout/FloatingContact";
 import PageTransition from "@/components/layout/PageTransition";
 import Popups from "@/components/layout/Popups";
 import CartToast from "@/components/shop/CartToast";
+import PublicOnly from "@/components/layout/PublicOnly";
 import { CartProvider } from "@/lib/cart-context";
 import { DiscountProvider } from "@/lib/discount-context";
 
@@ -161,14 +162,18 @@ export default async function LocaleLayout({
                 >
                   {messages.a11y?.skipToContent ?? "Skip to content"}
                 </a>
-                <Header />
+                <PublicOnly>
+                  <Header />
+                </PublicOnly>
                 <main id="main-content" className="flex-1">
                   <PageTransition>{children}</PageTransition>
                 </main>
-                <Footer />
-                <FloatingContact />
-                <Popups />
-                <CartToast />
+                <PublicOnly>
+                  <Footer />
+                  <FloatingContact />
+                  <Popups />
+                  <CartToast />
+                </PublicOnly>
               </DiscountProvider>
             </Suspense>
           </CartProvider>

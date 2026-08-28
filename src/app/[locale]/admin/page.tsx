@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
-import { Link } from "@/i18n/routing";
+import { Link, getPathname, type Locale } from "@/i18n/routing";
+import { redirect } from "next/navigation";
+import { getRehabAccessContext } from "@/lib/rehab/access";
 import {
   TrendingUp,
   TrendingDown,
@@ -223,20 +224,14 @@ export default async function AdminDashboardPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const access = await getRehabAccessContext(locale as Locale);
+  if (!access.isGlobalAdmin) {
+    redirect(getPathname({ locale: locale as Locale, href: "/rehab" }));
+  }
   const t = await getTranslations("admin.dashboard");
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { data: profile } = user
-    ? await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
-        .maybeSingle()
-    : { data: null };
 
   const a = await getAnalytics();
+  const profile = { full_name: access.fullName };
   const maxDaily = Math.max(1, ...a.daily.map((d) => d.value));
   const positive = a.revenue.change >= 0;
 
@@ -304,7 +299,7 @@ export default async function AdminDashboardPage({
           {t("title")}
         </h1>
         <p className="text-gray-600">
-          {t("hello", { name: profile?.full_name ?? user?.email ?? "" })}
+          {t("hello", { name: profile.full_name })}
         </p>
       </div>
 
