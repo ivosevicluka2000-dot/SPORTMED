@@ -1,6 +1,7 @@
 import { CalendarClock, Mail } from "lucide-react";
 import {
   createAppointmentAction,
+  updateAppointmentAction,
   updateAppointmentStatusAction,
 } from "@/app/[locale]/admin/rehab/_actions";
 import { createClient } from "@/lib/supabase/server";
@@ -17,6 +18,8 @@ import {
   rehabInputClass,
   rehabLabelClass,
 } from "@/components/rehab/RehabUi";
+import { RehabForm } from "@/components/rehab/RehabForm";
+import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -86,7 +89,7 @@ export default async function RehabAppointmentsPage({
           {patientRows.length === 0 ? (
             <EmptyState>Prvo dodajte aktivnog pacijenta ili igrača.</EmptyState>
           ) : (
-            <form action={createAppointmentAction} className="space-y-4">
+            <RehabForm action={createAppointmentAction} className="space-y-4">
               <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="workspace_id" value={workspace.id} />
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -141,15 +144,15 @@ export default async function RehabAppointmentsPage({
                 </label>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <button className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
                   Zakaži termin
-                </button>
+                </RehabSubmitButton>
                 <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
                   <Mail className="h-3.5 w-3.5" />
                   Ako karton nema email, termin se čuva bez podsetnika.
                 </span>
               </div>
-            </form>
+            </RehabForm>
           )}
         </RehabPanel>
       )}
@@ -213,6 +216,7 @@ function AppointmentList({
                       {formatRehabDate(appointment.starts_at, true)} · {appointment.duration_minutes} min
                     </p>
                     {appointment.therapy && <p className="mt-1 text-sm text-gray-500">{appointment.therapy}</p>}
+                    {appointment.notes && <p className="mt-1 text-xs italic text-gray-400">{appointment.notes}</p>}
                     <p className="mt-2 text-xs text-gray-400">
                       {appointment.reminder_email
                         ? appointment.reminder_sent_at
@@ -233,20 +237,70 @@ function AppointmentList({
                 </span>
               </div>
               {canEdit && (
-                <form action={updateAppointmentStatusAction} className="mt-3 flex flex-wrap gap-2 border-t border-gray-100 pt-3">
-                  <input type="hidden" name="locale" value={locale} />
-                  <input type="hidden" name="workspace_id" value={workspaceId} />
-                  <input type="hidden" name="appointment_id" value={appointment.id} />
-                  {appointment.status !== "completed" && (
-                    <button name="status" value="completed" className="text-xs font-medium text-emerald-700 hover:underline">Označi završenim</button>
-                  )}
-                  {appointment.status !== "cancelled" && (
-                    <button name="status" value="cancelled" className="text-xs font-medium text-red-600 hover:underline">Otkaži</button>
-                  )}
-                  {appointment.status !== "scheduled" && (
-                    <button name="status" value="scheduled" className="text-xs font-medium text-sky-700 hover:underline">Vrati u zakazane</button>
-                  )}
-                </form>
+                <div className="mt-3 border-t border-gray-100 pt-3">
+                  <form action={updateAppointmentStatusAction} className="flex flex-wrap gap-3">
+                    <input type="hidden" name="locale" value={locale} />
+                    <input type="hidden" name="workspace_id" value={workspaceId} />
+                    <input type="hidden" name="appointment_id" value={appointment.id} />
+                    {appointment.status !== "completed" && (
+                      <button name="status" value="completed" className="text-xs font-medium text-emerald-700 hover:underline">Označi završenim</button>
+                    )}
+                    {appointment.status !== "cancelled" && (
+                      <button name="status" value="cancelled" className="text-xs font-medium text-red-600 hover:underline">Otkaži</button>
+                    )}
+                    {appointment.status !== "scheduled" && (
+                      <button name="status" value="scheduled" className="text-xs font-medium text-sky-700 hover:underline">Vrati u zakazane</button>
+                    )}
+                  </form>
+                  <details className="mt-3">
+                    <summary className="cursor-pointer text-xs font-medium text-teal-dark">Izmeni termin</summary>
+                    <RehabForm action={updateAppointmentAction} className="mt-4 space-y-3 rounded-lg border border-gray-200 bg-white p-4">
+                      <input type="hidden" name="locale" value={locale} />
+                      <input type="hidden" name="workspace_id" value={workspaceId} />
+                      <input type="hidden" name="appointment_id" value={appointment.id} />
+                      <div className="grid gap-3 sm:grid-cols-[1fr_150px]">
+                        <label>
+                          <span className={rehabLabelClass}>Datum i vreme *</span>
+                          <input
+                            name="starts_at"
+                            type="datetime-local"
+                            required
+                            defaultValue={dateTimeLocalInputValue(new Date(appointment.starts_at))}
+                            className={rehabInputClass}
+                          />
+                        </label>
+                        <label>
+                          <span className={rehabLabelClass}>Trajanje</span>
+                          <input
+                            name="duration_minutes"
+                            type="number"
+                            min={15}
+                            max={240}
+                            step={15}
+                            required
+                            defaultValue={appointment.duration_minutes}
+                            className={rehabInputClass}
+                          />
+                        </label>
+                      </div>
+                      <label>
+                        <span className={rehabLabelClass}>Email za podsetnik</span>
+                        <input name="reminder_email" type="email" defaultValue={appointment.reminder_email ?? ""} className={rehabInputClass} />
+                      </label>
+                      <label>
+                        <span className={rehabLabelClass}>Terapija / razlog dolaska</span>
+                        <input name="therapy" maxLength={1000} defaultValue={appointment.therapy ?? ""} className={rehabInputClass} />
+                      </label>
+                      <label>
+                        <span className={rehabLabelClass}>Interna napomena</span>
+                        <input name="notes" maxLength={2000} defaultValue={appointment.notes ?? ""} className={rehabInputClass} />
+                      </label>
+                      <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                        Sačuvaj izmene
+                      </RehabSubmitButton>
+                    </RehabForm>
+                  </details>
+                </div>
               )}
             </article>
           ))}

@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import {
   createDailyEntryAction,
   createRehabPlanAction,
+  updateDailyEntryAction,
   updatePlanDayAction,
   updatePlanStatusAction,
+  updateRehabPlanAction,
   updateRehabPatientAction,
 } from "@/app/[locale]/admin/rehab/_actions";
 import { createClient } from "@/lib/supabase/server";
@@ -27,6 +29,8 @@ import {
   rehabPlanPrintUrl,
   rehabUrl,
 } from "@/components/rehab/RehabUi";
+import { RehabForm } from "@/components/rehab/RehabForm";
+import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -116,9 +120,9 @@ export default async function RehabPatientDetailPage({
             </div>
 
             {workspace.canEdit && (
-              <details className="mb-6 rounded-lg border border-teal/30 bg-teal-50/50 p-4" open={entries.length === 0}>
+              <details className="mb-6 rounded-lg border border-teal/30 bg-teal-50/50 p-4">
                 <summary className="cursor-pointer font-medium text-navy">+ Dodaj dnevni unos</summary>
-                <form action={createDailyEntryAction} className="mt-4 space-y-4">
+                <RehabForm action={createDailyEntryAction} className="mt-4 space-y-4">
                   <input type="hidden" name="locale" value={locale} />
                   <input type="hidden" name="workspace_id" value={workspace.id} />
                   <input type="hidden" name="patient_id" value={patient.id} />
@@ -144,10 +148,10 @@ export default async function RehabPatientDetailPage({
                     <span className={rehabLabelClass}>Napomena</span>
                     <textarea name="notes" rows={2} maxLength={3000} className={rehabInputClass} />
                   </label>
-                  <button className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                  <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
                     Sačuvaj unos
-                  </button>
-                </form>
+                  </RehabSubmitButton>
+                </RehabForm>
               </details>
             )}
 
@@ -168,6 +172,44 @@ export default async function RehabPatientDetailPage({
                     <p className="text-sm font-medium text-gray-700">{entry.condition_summary}</p>
                     <p className="mt-2 whitespace-pre-wrap text-sm text-gray-600">{entry.therapy}</p>
                     {entry.notes && <p className="mt-2 text-sm italic text-gray-500">{entry.notes}</p>}
+                    {workspace.canEdit && (
+                      <details className="mt-3 border-t border-gray-200 pt-3">
+                        <summary className="cursor-pointer text-xs font-medium text-teal-dark">
+                          Izmeni dnevni unos
+                        </summary>
+                        <RehabForm action={updateDailyEntryAction} className="mt-4 space-y-3">
+                          <input type="hidden" name="locale" value={locale} />
+                          <input type="hidden" name="workspace_id" value={workspace.id} />
+                          <input type="hidden" name="patient_id" value={patient.id} />
+                          <input type="hidden" name="entry_id" value={entry.id} />
+                          <div className="grid gap-3 sm:grid-cols-[180px_140px_1fr]">
+                            <label>
+                              <span className={rehabLabelClass}>Datum *</span>
+                              <input name="recorded_on" type="date" required defaultValue={entry.recorded_on} className={rehabInputClass} />
+                            </label>
+                            <label>
+                              <span className={rehabLabelClass}>Bol 0–10</span>
+                              <input name="pain_level" type="number" min={0} max={10} defaultValue={entry.pain_level ?? ""} className={rehabInputClass} />
+                            </label>
+                            <label>
+                              <span className={rehabLabelClass}>Trenutno stanje *</span>
+                              <input name="condition_summary" required maxLength={1000} defaultValue={entry.condition_summary} className={rehabInputClass} />
+                            </label>
+                          </div>
+                          <label>
+                            <span className={rehabLabelClass}>Urađena terapija *</span>
+                            <textarea name="therapy" required rows={3} maxLength={3000} defaultValue={entry.therapy} className={rehabInputClass} />
+                          </label>
+                          <label>
+                            <span className={rehabLabelClass}>Napomena</span>
+                            <textarea name="notes" rows={2} maxLength={3000} defaultValue={entry.notes ?? ""} className={rehabInputClass} />
+                          </label>
+                          <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                            Sačuvaj izmene
+                          </RehabSubmitButton>
+                        </RehabForm>
+                      </details>
+                    )}
                   </article>
                 ))}
               </div>
@@ -181,9 +223,9 @@ export default async function RehabPatientDetailPage({
             </div>
 
             {workspace.canEdit && (
-              <details className="mb-6 rounded-lg border border-teal/30 bg-teal-50/50 p-4" open={plans.length === 0}>
+              <details className="mb-6 rounded-lg border border-teal/30 bg-teal-50/50 p-4">
                 <summary className="cursor-pointer font-medium text-navy">+ Napravi novi plan</summary>
-                <form action={createRehabPlanAction} className="mt-4 space-y-4">
+                <RehabForm action={createRehabPlanAction} className="mt-4 space-y-4">
                   <input type="hidden" name="locale" value={locale} />
                   <input type="hidden" name="workspace_id" value={workspace.id} />
                   <input type="hidden" name="patient_id" value={patient.id} />
@@ -216,10 +258,10 @@ export default async function RehabPatientDetailPage({
                     <span className={rehabLabelClass}>Napomena</span>
                     <textarea name="notes" rows={2} maxLength={3000} className={rehabInputClass} />
                   </label>
-                  <button className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                  <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
                     Sačuvaj plan
-                  </button>
-                </form>
+                  </RehabSubmitButton>
+                </RehabForm>
               </details>
             )}
 
@@ -261,6 +303,40 @@ export default async function RehabPatientDetailPage({
                         )}
                       </div>
                     </div>
+                    {workspace.canEdit && (
+                      <details className="border-t border-gray-100 bg-white px-4 py-3">
+                        <summary className="cursor-pointer text-xs font-medium text-teal-dark">
+                          Izmeni osnovne podatke plana
+                        </summary>
+                        <RehabForm action={updateRehabPlanAction} className="mt-4 space-y-3">
+                          <input type="hidden" name="locale" value={locale} />
+                          <input type="hidden" name="workspace_id" value={workspace.id} />
+                          <input type="hidden" name="patient_id" value={patient.id} />
+                          <input type="hidden" name="plan_id" value={plan.id} />
+                          <div className="grid gap-3 sm:grid-cols-[1fr_180px]">
+                            <label>
+                              <span className={rehabLabelClass}>Naziv plana *</span>
+                              <input name="title" required maxLength={200} defaultValue={plan.title} className={rehabInputClass} />
+                            </label>
+                            <label>
+                              <span className={rehabLabelClass}>Početak *</span>
+                              <input name="start_date" type="date" required defaultValue={plan.start_date} className={rehabInputClass} />
+                            </label>
+                          </div>
+                          <label>
+                            <span className={rehabLabelClass}>Cilj plana</span>
+                            <input name="goal" maxLength={1000} defaultValue={plan.goal ?? ""} className={rehabInputClass} />
+                          </label>
+                          <label>
+                            <span className={rehabLabelClass}>Napomena</span>
+                            <textarea name="notes" rows={2} maxLength={3000} defaultValue={plan.notes ?? ""} className={rehabInputClass} />
+                          </label>
+                          <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                            Sačuvaj podatke plana
+                          </RehabSubmitButton>
+                        </RehabForm>
+                      </details>
+                    )}
                     <div className="divide-y divide-gray-100">
                       {(plan.days ?? []).map((day) => (
                         <div key={day.id} className="grid gap-2 px-4 py-3 sm:grid-cols-[100px_1fr]">
@@ -268,18 +344,31 @@ export default async function RehabPatientDetailPage({
                             <p className="text-sm font-semibold text-navy">Dan {day.day_number}</p>
                             {day.planned_date && <p className="text-xs text-gray-400">{formatRehabDate(day.planned_date)}</p>}
                           </div>
-                          {workspace.canEdit ? (
-                            <form action={updatePlanDayAction} className="flex gap-2">
-                              <input type="hidden" name="locale" value={locale} />
-                              <input type="hidden" name="workspace_id" value={workspace.id} />
-                              <input type="hidden" name="patient_id" value={patient.id} />
-                              <input type="hidden" name="day_id" value={day.id} />
-                              <input name="instructions" defaultValue={day.instructions} required className={rehabInputClass} />
-                              <button className="rounded-md border border-gray-200 px-3 text-xs text-gray-600 hover:bg-gray-50">Sačuvaj</button>
-                            </form>
-                          ) : (
+                          <div>
                             <p className="whitespace-pre-wrap text-sm text-gray-700">{day.instructions}</p>
-                          )}
+                            {workspace.canEdit && (
+                              <details className="mt-2">
+                                <summary className="cursor-pointer text-xs font-medium text-teal-dark">Izmeni dan</summary>
+                                <RehabForm action={updatePlanDayAction} className="mt-3 grid gap-2 sm:grid-cols-[160px_1fr_auto]">
+                                  <input type="hidden" name="locale" value={locale} />
+                                  <input type="hidden" name="workspace_id" value={workspace.id} />
+                                  <input type="hidden" name="patient_id" value={patient.id} />
+                                  <input type="hidden" name="day_id" value={day.id} />
+                                  <label>
+                                    <span className="sr-only">Planirani datum</span>
+                                    <input name="planned_date" type="date" required defaultValue={day.planned_date ?? ""} className={rehabInputClass} />
+                                  </label>
+                                  <input name="instructions" defaultValue={day.instructions} required className={rehabInputClass} />
+                                  <RehabSubmitButton
+                                    pendingLabel="Čuvanje..."
+                                    className="rounded-md border border-gray-200 px-3 py-2.5 text-xs text-gray-600 hover:bg-gray-50"
+                                  >
+                                    Sačuvaj
+                                  </RehabSubmitButton>
+                                </RehabForm>
+                              </details>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -291,7 +380,7 @@ export default async function RehabPatientDetailPage({
           </RehabPanel>
         </div>
 
-        <aside className="space-y-6">
+        <aside className="order-first space-y-6 xl:order-last">
           <RehabPanel>
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="font-heading text-xl font-semibold text-navy">Podaci</h2>
@@ -300,7 +389,7 @@ export default async function RehabPatientDetailPage({
               </span>
             </div>
             {workspace.canEdit ? (
-              <form action={updateRehabPatientAction} className="space-y-3">
+              <RehabForm action={updateRehabPatientAction} className="space-y-3">
                 <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="workspace_id" value={workspace.id} />
                 <input type="hidden" name="patient_id" value={patient.id} />
@@ -319,8 +408,10 @@ export default async function RehabPatientDetailPage({
                     <option value="completed">Završen</option>
                   </select>
                 </label>
-                <button className="w-full rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">Sačuvaj izmene</button>
-              </form>
+                <RehabSubmitButton className="w-full rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                  Sačuvaj izmene
+                </RehabSubmitButton>
+              </RehabForm>
             ) : (
               <dl className="space-y-3 text-sm">
                 <div><dt className="text-gray-400">Email</dt><dd className="text-gray-700">{patient.email || "—"}</dd></div>

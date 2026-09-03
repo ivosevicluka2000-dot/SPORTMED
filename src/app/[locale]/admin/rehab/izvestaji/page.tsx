@@ -12,6 +12,8 @@ import {
   rehabInputClass,
   rehabLabelClass,
 } from "@/components/rehab/RehabUi";
+import { RehabForm } from "@/components/rehab/RehabForm";
+import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -159,7 +161,7 @@ export default async function RehabReportsPage({
           Ovde se upisuje kratak zaključak o radu, stanju pacijenata ili igrača i planu za naredni period.
         </p>
         {workspace.canEdit ? (
-          <form action={savePeriodSummaryAction} className="mt-5 space-y-4">
+          <RehabForm action={savePeriodSummaryAction} className="mt-5 space-y-4">
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="workspace_id" value={workspace.id} />
             <input type="hidden" name="period_type" value={periodType} />
@@ -172,10 +174,10 @@ export default async function RehabReportsPage({
               className={rehabInputClass}
               placeholder="Upišite zaključak..."
             />
-            <button className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+            <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
               Sačuvaj zaključak
-            </button>
-          </form>
+            </RehabSubmitButton>
+          </RehabForm>
         ) : (
           <div className="mt-5 whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700">
             {summary.data?.conclusion || "Zaključak još nije unet."}

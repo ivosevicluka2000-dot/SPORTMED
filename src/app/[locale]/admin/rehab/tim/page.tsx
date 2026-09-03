@@ -16,6 +16,8 @@ import {
   rehabInputClass,
   rehabLabelClass,
 } from "@/components/rehab/RehabUi";
+import { RehabForm } from "@/components/rehab/RehabForm";
+import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -93,7 +95,7 @@ export default async function RehabTeamPage({
             </p>
           </div>
         </div>
-        <form action={addWorkspaceMemberAction} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:items-end">
+        <RehabForm action={addWorkspaceMemberAction} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:items-end">
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="workspace_id" value={workspace.id} />
           <label>
@@ -123,10 +125,10 @@ export default async function RehabTeamPage({
               <input type="hidden" name="role" value="viewer" />
             </label>
           )}
-          <button className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark sm:col-span-2 xl:col-span-4">
+          <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark sm:col-span-2 xl:col-span-4">
             Sačuvaj nalog i pristup
-          </button>
-        </form>
+          </RehabSubmitButton>
+        </RehabForm>
       </RehabPanel>
 
       <RehabPanel>

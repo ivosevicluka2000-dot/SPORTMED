@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Building2, CheckCircle2, Trophy } from "lucide-react";
 import { getPathname, type Locale } from "@/i18n/routing";
 import type { RehabAccessContext } from "@/lib/rehab/types";
 import { cn } from "@/lib/utils";
@@ -110,20 +111,28 @@ export function WorkspaceTabs({
   if (access.workspaces.length <= 1) return null;
   return (
     <div className="mb-6 inline-flex max-w-full gap-1 overflow-x-auto rounded-lg border border-gray-200 bg-white p-1">
-      {access.workspaces.map((workspace) => (
-        <Link
-          key={workspace.id}
-          href={rehabUrl(locale, href, { ...query, workspace: workspace.id })}
-          className={cn(
-            "whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition",
-            workspace.id === selectedId
-              ? "bg-navy text-white"
-              : "text-gray-600 hover:bg-gray-50 hover:text-navy"
-          )}
-        >
-          {workspace.name}
-        </Link>
-      ))}
+      {access.workspaces.map((workspace) => {
+        const WorkspaceIcon = workspace.kind === "club" ? Trophy : Building2;
+        const selected = workspace.id === selectedId;
+        return (
+          <Link
+            key={workspace.id}
+            href={rehabUrl(locale, href, { ...query, workspace: workspace.id })}
+            aria-current={selected ? "page" : undefined}
+            className={cn(
+              "inline-flex items-center gap-2 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition",
+              selected && workspace.kind === "club"
+                ? "bg-amber-500 text-white"
+                : selected
+                  ? "bg-teal-dark text-white"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-navy"
+            )}
+          >
+            <WorkspaceIcon className="h-4 w-4" />
+            {workspace.name}
+          </Link>
+        );
+      })}
     </div>
   );
 }
@@ -148,9 +157,10 @@ export function RehabAlert({
         "mb-6 rounded-lg border px-4 py-3 text-sm",
         error
           ? "border-red-200 bg-red-50 text-red-700"
-          : "border-emerald-200 bg-emerald-50 text-emerald-700"
+          : "flex items-center gap-2 border-emerald-200 bg-emerald-50 font-medium text-emerald-700"
       )}
     >
+      {!error && <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />}
       {error || (saved ? savedMessages[saved] : undefined) || "Sačuvano."}
     </div>
   );

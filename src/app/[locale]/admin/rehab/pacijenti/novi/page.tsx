@@ -12,6 +12,8 @@ import {
   rehabLabelClass,
   rehabUrl,
 } from "@/components/rehab/RehabUi";
+import { RehabForm } from "@/components/rehab/RehabForm";
+import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +49,7 @@ export default async function NewRehabPatientPage({
         <RehabPanel>Imate pristup samo za pregled.</RehabPanel>
       ) : (
         <RehabPanel className="max-w-4xl">
-          <form action={createRehabPatientAction} className="space-y-5">
+          <RehabForm action={createRehabPatientAction} className="space-y-5">
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="workspace_id" value={workspace.id} />
             <div className="grid gap-4 sm:grid-cols-2">
@@ -91,9 +93,9 @@ export default async function NewRehabPatientPage({
               <textarea name="notes" rows={4} maxLength={5000} className={rehabInputClass} />
             </label>
             <div className="flex flex-wrap gap-3 border-t border-gray-100 pt-5">
-              <button className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+              <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
                 Sačuvaj karton
-              </button>
+              </RehabSubmitButton>
               <Link
                 href={rehabUrl(locale, "/rehab/pacijenti", { workspace: workspace.id })}
                 className="rounded-md border border-gray-200 px-5 py-2.5 text-sm text-gray-600 hover:bg-gray-50"
@@ -101,7 +103,7 @@ export default async function NewRehabPatientPage({
                 Otkaži
               </Link>
             </div>
-          </form>
+          </RehabForm>
         </RehabPanel>
       )}
     </div>

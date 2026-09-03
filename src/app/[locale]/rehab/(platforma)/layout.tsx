@@ -64,7 +64,10 @@ export default async function RehabPlatformLayout({
           </div>
         </div>
         <Suspense fallback={<div className="h-11" />}>
-          <RehabNavigation isGlobalAdmin={access.isGlobalAdmin} />
+          <RehabNavigation
+            isGlobalAdmin={access.isGlobalAdmin}
+            workspaces={access.workspaces}
+          />
         </Suspense>
       </header>
       <main className="rehab-platform-content mx-auto max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">

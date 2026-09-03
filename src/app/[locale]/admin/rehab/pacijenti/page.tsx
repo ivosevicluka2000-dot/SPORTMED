@@ -48,6 +48,42 @@ export default async function RehabPatientsPage({
   }
   const { data } = await request.limit(300);
   const rows = (data ?? []) as RehabPatient[];
+  const patientIds = rows.map((patient) => patient.id);
+  const lastTherapyByPatient = new Map<string, string>();
+  const nextAppointmentByPatient = new Map<string, string>();
+
+  if (patientIds.length > 0) {
+    const [{ data: entries }, { data: appointments }] = await Promise.all([
+      supabase
+        .from("rehab_daily_entries")
+        .select("patient_id, recorded_on")
+        .eq("workspace_id", workspace.id)
+        .in("patient_id", patientIds)
+        .order("recorded_on", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(1000),
+      supabase
+        .from("rehab_appointments")
+        .select("patient_id, starts_at")
+        .eq("workspace_id", workspace.id)
+        .eq("status", "scheduled")
+        .in("patient_id", patientIds)
+        .gte("starts_at", new Date().toISOString())
+        .order("starts_at", { ascending: true })
+        .limit(1000),
+    ]);
+
+    for (const entry of entries ?? []) {
+      if (!lastTherapyByPatient.has(entry.patient_id)) {
+        lastTherapyByPatient.set(entry.patient_id, entry.recorded_on);
+      }
+    }
+    for (const appointment of appointments ?? []) {
+      if (!nextAppointmentByPatient.has(appointment.patient_id)) {
+        nextAppointmentByPatient.set(appointment.patient_id, appointment.starts_at);
+      }
+    }
+  }
 
   return (
     <div>
@@ -135,8 +171,26 @@ export default async function RehabPatientsPage({
               <p className="line-clamp-2 min-h-10 text-sm text-gray-600">
                 {patient.problem || "Problem nije unet."}
               </p>
-              <div className="mt-4 border-t border-gray-100 pt-3 text-xs text-gray-500">
-                {patient.phone || patient.email || "Kontakt nije unet"}
+              <div className="mt-4 grid grid-cols-2 gap-3 border-t border-gray-100 pt-3 text-xs">
+                <div>
+                  <p className="text-gray-400">Poslednja terapija</p>
+                  <p className="mt-0.5 font-medium text-gray-600">
+                    {lastTherapyByPatient.has(patient.id)
+                      ? formatRehabDate(lastTherapyByPatient.get(patient.id)!)
+                      : "Nema unosa"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Sledeći termin</p>
+                  <p className="mt-0.5 font-medium text-gray-600">
+                    {nextAppointmentByPatient.has(patient.id)
+                      ? formatRehabDate(nextAppointmentByPatient.get(patient.id)!, true)
+                      : "Nema termina"}
+                  </p>
+                </div>
+                <p className="col-span-2 truncate text-gray-400">
+                  {patient.phone || patient.email || "Kontakt nije unet"}
+                </p>
               </div>
             </Link>
           ))}

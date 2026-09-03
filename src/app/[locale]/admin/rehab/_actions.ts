@@ -230,6 +230,51 @@ export async function createDailyEntryAction(formData: FormData) {
   );
 }
 
+export async function updateDailyEntryAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const workspaceId = text(formData.get("workspace_id"));
+  const patientId = text(formData.get("patient_id"));
+  const entryId = text(formData.get("entry_id"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
+  const painText = text(formData.get("pain_level"));
+  const painLevel = painText === "" ? null : Number(painText);
+  const recordedOn = text(formData.get("recorded_on"));
+  const condition = text(formData.get("condition_summary"));
+  const therapy = text(formData.get("therapy"));
+  const notes = text(formData.get("notes"));
+
+  if (
+    !entryId ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(recordedOn) ||
+    !condition ||
+    condition.length > 1000 ||
+    !therapy ||
+    therapy.length > 3000 ||
+    notes.length > 3000 ||
+    (painLevel !== null && (!Number.isInteger(painLevel) || painLevel < 0 || painLevel > 10))
+  ) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Izmene dnevnog unosa nisu ispravne." }));
+  }
+
+  const { error } = await access.supabase
+    .from("rehab_daily_entries")
+    .update({
+      recorded_on: recordedOn,
+      condition_summary: condition,
+      pain_level: painLevel,
+      therapy,
+      notes: optional(notes),
+    })
+    .eq("id", entryId)
+    .eq("patient_id", patientId)
+    .eq("workspace_id", workspaceId);
+
+  redirect(patientPath(locale, patientId, {
+    workspace: workspaceId,
+    ...(error ? { error: "Dnevni unos nije izmenjen." } : { saved: "entry-updated" }),
+  }));
+}
+
 export async function createRehabPlanAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
@@ -290,19 +335,95 @@ export async function createRehabPlanAction(formData: FormData) {
   redirect(patientPath(locale, patientId, { workspace: workspaceId, saved: "plan" }));
 }
 
+export async function updateRehabPlanAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const workspaceId = text(formData.get("workspace_id"));
+  const patientId = text(formData.get("patient_id"));
+  const planId = text(formData.get("plan_id"));
+  const title = text(formData.get("title"));
+  const startDate = text(formData.get("start_date"));
+  const goal = text(formData.get("goal"));
+  const notes = text(formData.get("notes"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
+
+  if (
+    !planId ||
+    !title ||
+    title.length > 200 ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(startDate) ||
+    goal.length > 1000 ||
+    notes.length > 3000
+  ) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Podaci plana nisu ispravni." }));
+  }
+
+  const { data: days, error: daysReadError } = await access.supabase
+    .from("rehab_plan_days")
+    .select("id, day_number")
+    .eq("plan_id", planId)
+    .eq("workspace_id", workspaceId)
+    .order("day_number", { ascending: true });
+
+  if (daysReadError || !days?.length) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dani plana nisu pronađeni." }));
+  }
+
+  const end = new Date(`${startDate}T12:00:00Z`);
+  end.setUTCDate(end.getUTCDate() + days.length - 1);
+  const { error: planError } = await access.supabase
+    .from("rehab_plans")
+    .update({
+      title,
+      start_date: startDate,
+      end_date: end.toISOString().slice(0, 10),
+      goal: optional(goal),
+      notes: optional(notes),
+    })
+    .eq("id", planId)
+    .eq("patient_id", patientId)
+    .eq("workspace_id", workspaceId);
+
+  if (planError) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Plan nije izmenjen." }));
+  }
+
+  const dayUpdates = await Promise.all(
+    days.map((day) => {
+      const planned = new Date(`${startDate}T12:00:00Z`);
+      planned.setUTCDate(planned.getUTCDate() + day.day_number - 1);
+      return access.supabase
+        .from("rehab_plan_days")
+        .update({ planned_date: planned.toISOString().slice(0, 10) })
+        .eq("id", day.id)
+        .eq("workspace_id", workspaceId);
+    })
+  );
+  const dayError = dayUpdates.some((result) => result.error);
+
+  redirect(patientPath(locale, patientId, {
+    workspace: workspaceId,
+    ...(dayError ? { error: "Plan je izmenjen, ali datumi pojedinih dana nisu sačuvani." } : { saved: "plan-updated" }),
+  }));
+}
+
 export async function updatePlanDayAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
   const patientId = text(formData.get("patient_id"));
   const dayId = text(formData.get("day_id"));
   const instructions = text(formData.get("instructions"));
+  const plannedDate = text(formData.get("planned_date"));
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
-  if (!instructions) {
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Opis dana ne može biti prazan." }));
+  if (
+    !instructions ||
+    instructions.length > 3000 ||
+    (plannedDate && !/^\d{4}-\d{2}-\d{2}$/.test(plannedDate))
+  ) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Datum i opis dana nisu ispravni." }));
   }
   const { error } = await access.supabase
     .from("rehab_plan_days")
-    .update({ instructions })
+    .update({ instructions, planned_date: optional(plannedDate) })
     .eq("id", dayId)
     .eq("workspace_id", workspaceId);
   redirect(patientPath(locale, patientId, { workspace: workspaceId, ...(error ? { error: "Dan plana nije izmenjen." } : { saved: "day" }) }));
@@ -368,6 +489,53 @@ export async function createAppointmentAction(formData: FormData) {
   });
 
   redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, ...(error ? { error: "Termin nije sačuvan." } : { saved: "1" }) }));
+}
+
+export async function updateAppointmentAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const workspaceId = text(formData.get("workspace_id"));
+  const appointmentId = text(formData.get("appointment_id"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
+  let startsAt: string;
+  try {
+    startsAt = localBelgradeDateTimeToIso(text(formData.get("starts_at")));
+  } catch {
+    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Datum i vreme termina nisu ispravni." }));
+  }
+
+  const duration = Number(text(formData.get("duration_minutes")) || "60");
+  const reminderEmail = text(formData.get("reminder_email"));
+  const therapy = text(formData.get("therapy"));
+  const notes = text(formData.get("notes"));
+  if (
+    !appointmentId ||
+    !Number.isInteger(duration) ||
+    duration < 15 ||
+    duration > 240 ||
+    (reminderEmail && !z.email().safeParse(reminderEmail).success) ||
+    therapy.length > 1000 ||
+    notes.length > 2000
+  ) {
+    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Izmene termina nisu ispravne." }));
+  }
+
+  const { error } = await access.supabase
+    .from("rehab_appointments")
+    .update({
+      starts_at: startsAt,
+      duration_minutes: duration,
+      therapy: optional(therapy),
+      notes: optional(notes),
+      reminder_email: optional(reminderEmail),
+      reminder_sent_at: null,
+    })
+    .eq("id", appointmentId)
+    .eq("workspace_id", workspaceId);
+
+  redirect(pathWithQuery(locale, "/rehab/termini", {
+    workspace: workspaceId,
+    ...(error ? { error: "Termin nije izmenjen." } : { saved: "appointment-updated" }),
+  }));
 }
 
 export async function updateAppointmentStatusAction(formData: FormData) {
