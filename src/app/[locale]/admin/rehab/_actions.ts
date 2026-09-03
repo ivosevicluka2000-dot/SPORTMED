@@ -69,6 +69,67 @@ const patientSchema = z.object({
   notes: z.string().max(5000),
 });
 
+const REHAB_IMAGE_BUCKET = "rehab-entry-images";
+const MAX_ENTRY_IMAGES = 3;
+const MAX_ENTRY_IMAGE_BYTES = 5 * 1024 * 1024;
+const ENTRY_IMAGE_EXTENSIONS: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
+type RehabSupabaseClient = Awaited<
+  ReturnType<typeof requireRehabWorkspace>
+>["supabase"];
+
+function rehabImageFiles(formData: FormData): File[] {
+  return formData
+    .getAll("images")
+    .filter((value): value is File => typeof value !== "string" && value.size > 0);
+}
+
+function validateRehabImages(files: File[], existingCount = 0): string | null {
+  if (existingCount + files.length > MAX_ENTRY_IMAGES) {
+    return `Možete dodati najviše ${MAX_ENTRY_IMAGES} slike po dnevnom unosu.`;
+  }
+  for (const file of files) {
+    if (!ENTRY_IMAGE_EXTENSIONS[file.type]) {
+      return "Dozvoljene su JPG, PNG i WebP slike.";
+    }
+    if (file.size > MAX_ENTRY_IMAGE_BYTES) {
+      return "Jedna slika može imati najviše 5 MB.";
+    }
+  }
+  return null;
+}
+
+async function uploadRehabImages(
+  supabase: RehabSupabaseClient,
+  workspaceId: string,
+  patientId: string,
+  entryId: string,
+  files: File[]
+) {
+  const uploadedPaths: string[] = [];
+  for (const file of files) {
+    const extension = ENTRY_IMAGE_EXTENSIONS[file.type];
+    const path = `${workspaceId}/${patientId}/${entryId}/${crypto.randomUUID()}.${extension}`;
+    const { error } = await supabase.storage.from(REHAB_IMAGE_BUCKET).upload(path, file, {
+      cacheControl: "3600",
+      contentType: file.type,
+      upsert: false,
+    });
+    if (error) {
+      if (uploadedPaths.length > 0) {
+        await supabase.storage.from(REHAB_IMAGE_BUCKET).remove(uploadedPaths);
+      }
+      return { paths: [] as string[], error };
+    }
+    uploadedPaths.push(path);
+  }
+  return { paths: uploadedPaths, error: null };
+}
+
 export async function createRehabPatientAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
@@ -201,31 +262,70 @@ export async function createDailyEntryAction(formData: FormData) {
   const recordedOn = text(formData.get("recorded_on"));
   const condition = text(formData.get("condition_summary"));
   const therapy = text(formData.get("therapy"));
+  const notes = text(formData.get("notes"));
+  const images = rehabImageFiles(formData);
+  const imageError = validateRehabImages(images);
 
   if (
     !/^\d{4}-\d{2}-\d{2}$/.test(recordedOn) ||
     !condition ||
+    condition.length > 1000 ||
     !therapy ||
+    therapy.length > 3000 ||
+    notes.length > 3000 ||
+    imageError ||
     (painLevel !== null && (!Number.isInteger(painLevel) || painLevel < 0 || painLevel > 10))
   ) {
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dnevni unos nije ispravan." }));
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: imageError ?? "Dnevni unos nije ispravan." }));
   }
 
-  const { error } = await access.supabase.from("rehab_daily_entries").insert({
-    workspace_id: workspaceId,
-    patient_id: patientId,
-    recorded_on: recordedOn,
-    condition_summary: condition,
-    pain_level: painLevel,
-    therapy,
-    notes: optional(text(formData.get("notes"))),
-    created_by: access.userId,
-  });
+  const { data: entry, error } = await access.supabase
+    .from("rehab_daily_entries")
+    .insert({
+      workspace_id: workspaceId,
+      patient_id: patientId,
+      recorded_on: recordedOn,
+      condition_summary: condition,
+      pain_level: painLevel,
+      therapy,
+      notes: optional(notes),
+      created_by: access.userId,
+    })
+    .select("id")
+    .single();
+
+  if (error || !entry) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dnevni unos nije sačuvan." }));
+  }
+
+  if (images.length > 0) {
+    const upload = await uploadRehabImages(
+      access.supabase,
+      workspaceId,
+      patientId,
+      entry.id,
+      images
+    );
+    if (upload.error) {
+      await access.supabase.from("rehab_daily_entries").delete().eq("id", entry.id);
+      redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slike nisu sačuvane. Proverite format i pokušajte ponovo." }));
+    }
+    const { error: imageSaveError } = await access.supabase
+      .from("rehab_daily_entries")
+      .update({ image_paths: upload.paths })
+      .eq("id", entry.id)
+      .eq("workspace_id", workspaceId);
+    if (imageSaveError) {
+      await access.supabase.storage.from(REHAB_IMAGE_BUCKET).remove(upload.paths);
+      await access.supabase.from("rehab_daily_entries").delete().eq("id", entry.id);
+      redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slike nisu povezane sa dnevnim unosom." }));
+    }
+  }
 
   redirect(
     patientPath(locale, patientId, {
       workspace: workspaceId,
-      ...(error ? { error: "Dnevni unos nije sačuvan." } : { saved: "entry" }),
+      saved: "entry",
     })
   );
 }
@@ -242,6 +342,7 @@ export async function updateDailyEntryAction(formData: FormData) {
   const condition = text(formData.get("condition_summary"));
   const therapy = text(formData.get("therapy"));
   const notes = text(formData.get("notes"));
+  const images = rehabImageFiles(formData);
 
   if (
     !entryId ||
@@ -256,6 +357,33 @@ export async function updateDailyEntryAction(formData: FormData) {
     redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Izmene dnevnog unosa nisu ispravne." }));
   }
 
+  const { data: currentEntry, error: currentEntryError } = await access.supabase
+    .from("rehab_daily_entries")
+    .select("image_paths")
+    .eq("id", entryId)
+    .eq("patient_id", patientId)
+    .eq("workspace_id", workspaceId)
+    .maybeSingle();
+  if (currentEntryError || !currentEntry) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dnevni unos nije pronađen." }));
+  }
+  const currentImagePaths = (currentEntry.image_paths ?? []) as string[];
+  const imageError = validateRehabImages(images, currentImagePaths.length);
+  if (imageError) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: imageError }));
+  }
+
+  const upload = await uploadRehabImages(
+    access.supabase,
+    workspaceId,
+    patientId,
+    entryId,
+    images
+  );
+  if (upload.error) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Nove slike nisu sačuvane." }));
+  }
+
   const { error } = await access.supabase
     .from("rehab_daily_entries")
     .update({
@@ -264,10 +392,15 @@ export async function updateDailyEntryAction(formData: FormData) {
       pain_level: painLevel,
       therapy,
       notes: optional(notes),
+      image_paths: [...currentImagePaths, ...upload.paths],
     })
     .eq("id", entryId)
     .eq("patient_id", patientId)
     .eq("workspace_id", workspaceId);
+
+  if (error && upload.paths.length > 0) {
+    await access.supabase.storage.from(REHAB_IMAGE_BUCKET).remove(upload.paths);
+  }
 
   redirect(patientPath(locale, patientId, {
     workspace: workspaceId,
@@ -333,6 +466,135 @@ export async function createRehabPlanAction(formData: FormData) {
   }
 
   redirect(patientPath(locale, patientId, { workspace: workspaceId, saved: "plan" }));
+}
+
+export async function copyRehabPlanAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const workspaceId = text(formData.get("workspace_id"));
+  const sourcePatientId = text(formData.get("patient_id"));
+  const sourcePlanId = text(formData.get("plan_id"));
+  const targetPatientId = text(formData.get("target_patient_id"));
+  const startDate = text(formData.get("start_date"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
+
+  if (
+    !sourcePlanId ||
+    !targetPatientId ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(startDate)
+  ) {
+    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Podaci za kopiranje plana nisu ispravni." }));
+  }
+
+  const [{ data: targetPatient }, { data: sourcePlan }, { data: sourceDays }] =
+    await Promise.all([
+      access.supabase
+        .from("rehab_patients")
+        .select("id")
+        .eq("id", targetPatientId)
+        .eq("workspace_id", workspaceId)
+        .maybeSingle(),
+      access.supabase
+        .from("rehab_plans")
+        .select("title, goal, notes")
+        .eq("id", sourcePlanId)
+        .eq("patient_id", sourcePatientId)
+        .eq("workspace_id", workspaceId)
+        .maybeSingle(),
+      access.supabase
+        .from("rehab_plan_days")
+        .select("day_number, instructions")
+        .eq("plan_id", sourcePlanId)
+        .eq("workspace_id", workspaceId)
+        .order("day_number", { ascending: true }),
+    ]);
+
+  if (!targetPatient || !sourcePlan || !sourceDays?.length) {
+    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Plan ili ciljni karton nisu pronađeni." }));
+  }
+
+  const end = new Date(`${startDate}T12:00:00Z`);
+  end.setUTCDate(end.getUTCDate() + sourceDays.length - 1);
+  const { data: copiedPlan, error: planError } = await access.supabase
+    .from("rehab_plans")
+    .insert({
+      workspace_id: workspaceId,
+      patient_id: targetPatientId,
+      title: sourcePlan.title,
+      start_date: startDate,
+      end_date: end.toISOString().slice(0, 10),
+      goal: sourcePlan.goal,
+      notes: sourcePlan.notes,
+      status: "active",
+      created_by: access.userId,
+    })
+    .select("id")
+    .single();
+
+  if (planError || !copiedPlan) {
+    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Plan nije kopiran." }));
+  }
+
+  const copiedDays = sourceDays.map((day, index) => {
+    const planned = new Date(`${startDate}T12:00:00Z`);
+    planned.setUTCDate(planned.getUTCDate() + index);
+    return {
+      workspace_id: workspaceId,
+      plan_id: copiedPlan.id,
+      day_number: index + 1,
+      planned_date: planned.toISOString().slice(0, 10),
+      instructions: day.instructions,
+      created_by: access.userId,
+    };
+  });
+  const { error: daysError } = await access.supabase
+    .from("rehab_plan_days")
+    .insert(copiedDays);
+
+  if (daysError) {
+    await access.supabase.from("rehab_plans").delete().eq("id", copiedPlan.id);
+    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Dani kopiranog plana nisu sačuvani." }));
+  }
+
+  redirect(patientPath(locale, targetPatientId, { workspace: workspaceId, saved: "plan-copied" }));
+}
+
+export async function removeDailyEntryImageAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const workspaceId = text(formData.get("workspace_id"));
+  const patientId = text(formData.get("patient_id"));
+  const entryId = text(formData.get("entry_id"));
+  const imagePath = text(formData.get("image_path"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
+  const expectedPrefix = `${workspaceId}/${patientId}/${entryId}/`;
+
+  if (!entryId || !imagePath.startsWith(expectedPrefix)) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slika nije ispravno izabrana." }));
+  }
+
+  const { data: entry, error: entryError } = await access.supabase
+    .from("rehab_daily_entries")
+    .select("image_paths")
+    .eq("id", entryId)
+    .eq("patient_id", patientId)
+    .eq("workspace_id", workspaceId)
+    .maybeSingle();
+  const imagePaths = (entry?.image_paths ?? []) as string[];
+  if (entryError || !entry || !imagePaths.includes(imagePath)) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slika nije pronađena u dnevnom unosu." }));
+  }
+
+  const { error: updateError } = await access.supabase
+    .from("rehab_daily_entries")
+    .update({ image_paths: imagePaths.filter((path) => path !== imagePath) })
+    .eq("id", entryId)
+    .eq("patient_id", patientId)
+    .eq("workspace_id", workspaceId);
+  if (updateError) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slika nije uklonjena iz dnevnog unosa." }));
+  }
+
+  await access.supabase.storage.from(REHAB_IMAGE_BUCKET).remove([imagePath]);
+  redirect(patientPath(locale, patientId, { workspace: workspaceId, saved: "image-removed" }));
 }
 
 export async function updateRehabPlanAction(formData: FormData) {

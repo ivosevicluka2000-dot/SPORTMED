@@ -1,9 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarClock, ClipboardList, HeartPulse, ListChecks } from "lucide-react";
+import { CalendarClock, ClipboardList, Clock3, HeartPulse, Mail, Phone, ListChecks } from "lucide-react";
 import {
+  copyRehabPlanAction,
   createDailyEntryAction,
   createRehabPlanAction,
+  removeDailyEntryImageAction,
   updateDailyEntryAction,
   updatePlanDayAction,
   updatePlanStatusAction,
@@ -11,6 +14,7 @@ import {
   updateRehabPatientAction,
 } from "@/app/[locale]/admin/rehab/_actions";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
 import { dateInputValue, formatRehabDate } from "@/lib/rehab/dates";
 import type {
@@ -28,6 +32,7 @@ import {
   RehabPanel,
   rehabInputClass,
   rehabLabelClass,
+  rehabPatientReportUrl,
   rehabPlanPrintUrl,
   rehabUrl,
 } from "@/components/rehab/RehabUi";
@@ -51,7 +56,7 @@ export default async function RehabPatientDetailPage({
   if (!workspace) return null;
 
   const supabase = await createClient();
-  const [patientResult, entriesResult, plansResult, appointmentsResult] = await Promise.all([
+  const [patientResult, entriesResult, plansResult, appointmentsResult, otherPatientsResult] = await Promise.all([
     supabase
       .from("rehab_patients")
       .select(
@@ -63,7 +68,7 @@ export default async function RehabPatientDetailPage({
     supabase
       .from("rehab_daily_entries")
       .select(
-        "id, patient_id, workspace_id, recorded_on, condition_summary, pain_level, therapy, notes, created_at",
+        "id, patient_id, workspace_id, recorded_on, condition_summary, pain_level, therapy, notes, image_paths, created_by, created_at",
         { count: "exact" }
       )
       .eq("patient_id", id)
@@ -87,6 +92,13 @@ export default async function RehabPatientDetailPage({
       .eq("workspace_id", workspace.id)
       .order("starts_at", { ascending: false })
       .limit(20),
+    supabase
+      .from("rehab_patients")
+      .select("id, first_name, last_name")
+      .eq("workspace_id", workspace.id)
+      .eq("status", "active")
+      .neq("id", id)
+      .order("last_name", { ascending: true }),
   ]);
 
   if (!patientResult.data) notFound();
@@ -97,8 +109,34 @@ export default async function RehabPatientDetailPage({
     days: [...(plan.days ?? [])].sort((a, b) => a.day_number - b.day_number),
   }));
   const appointments = (appointmentsResult.data ?? []) as RehabAppointment[];
+  const otherPatients = (otherPatientsResult.data ?? []) as Array<{
+    id: string;
+    first_name: string;
+    last_name: string;
+  }>;
+  const creatorIds = [...new Set(entries.map((entry) => entry.created_by).filter(Boolean))];
+  const imagePaths = entries.flatMap((entry) => entry.image_paths ?? []);
+  const admin = createAdminClient();
+  const [creatorResult, signedImageResult] = await Promise.all([
+    creatorIds.length > 0
+      ? admin.from("profiles").select("id, full_name").in("id", creatorIds)
+      : Promise.resolve({ data: [] as Array<{ id: string; full_name: string | null }> }),
+    imagePaths.length > 0
+      ? supabase.storage.from("rehab-entry-images").createSignedUrls(imagePaths, 60 * 60)
+      : Promise.resolve({ data: [] as Array<{ path: string; signedUrl: string }> }),
+  ]);
+  const creatorNameById = new Map(
+    (creatorResult.data ?? []).map((profile) => [profile.id, profile.full_name || "Član tima"])
+  );
+  const signedImageByPath = new Map(
+    (signedImageResult.data ?? [])
+      .filter((item) => item.signedUrl)
+      .map((item) => [item.path, item.signedUrl])
+  );
   const latestPainEntry = entries.find((entry) => entry.pain_level !== null);
   const activePlan = plans.find((plan) => plan.status === "active");
+  const today = dateInputValue();
+  const activeTodayDay = activePlan?.days?.find((day) => day.planned_date === today);
   const currentTime = new Date().getTime();
   const nextAppointment = appointments
     .filter(
@@ -110,6 +148,28 @@ export default async function RehabPatientDetailPage({
       (first, second) =>
         new Date(first.starts_at).getTime() - new Date(second.starts_at).getTime()
     )[0];
+  const timeline = [
+    ...entries.map((entry) => ({
+      id: `entry-${entry.id}`,
+      date: entry.recorded_on,
+      label: "Terapija",
+      title: entry.therapy,
+    })),
+    ...appointments.map((appointment) => ({
+      id: `appointment-${appointment.id}`,
+      date: appointment.starts_at,
+      label: "Termin",
+      title: appointment.therapy || "Zakazan tretman",
+    })),
+    ...plans.map((plan) => ({
+      id: `plan-${plan.id}`,
+      date: plan.start_date,
+      label: "Plan",
+      title: plan.title,
+    })),
+  ]
+    .sort((first, second) => new Date(second.date).getTime() - new Date(first.date).getTime())
+    .slice(0, 12);
 
   return (
     <div>
@@ -118,12 +178,20 @@ export default async function RehabPatientDetailPage({
         title={`${patient.first_name} ${patient.last_name}`}
         description={patient.problem || "Problem ili povreda nisu uneti."}
         action={
-          <Link
-            href={rehabUrl(locale, "/rehab/pacijenti", { workspace: workspace.id })}
-            className="rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50"
-          >
-            ← Nazad na kartone
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={rehabPatientReportUrl(locale, patient.id, workspace.id)}
+              className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark"
+            >
+              Štampaj izveštaj
+            </Link>
+            <Link
+              href={rehabUrl(locale, "/rehab/pacijenti", { workspace: workspace.id })}
+              className="rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50"
+            >
+              ← Nazad na kartone
+            </Link>
+          </div>
         }
       />
       <RehabAlert error={query.error} saved={query.saved} />
@@ -160,6 +228,11 @@ export default async function RehabPatientDetailPage({
           <div className="min-w-0">
             <p className="text-xs text-gray-400">Aktivni plan</p>
             <p className="truncate text-sm font-semibold text-navy">{activePlan?.title ?? "Nema aktivnog plana"}</p>
+            {activeTodayDay && (
+              <p className="mt-0.5 text-xs font-medium text-teal-dark">
+                Danas je dan {activeTodayDay.day_number}/{activePlan?.days?.length ?? 0}
+              </p>
+            )}
           </div>
         </RehabPanel>
         <RehabPanel className="flex min-w-0 items-center gap-3 p-4 md:p-4">
@@ -225,6 +298,17 @@ export default async function RehabPatientDetailPage({
                     <span className={rehabLabelClass}>Napomena</span>
                     <textarea name="notes" rows={2} maxLength={3000} className={rehabInputClass} />
                   </label>
+                  <label>
+                    <span className={rehabLabelClass}>Fotografije</span>
+                    <input
+                      name="images"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      className={`${rehabInputClass} file:mr-3 file:rounded file:border-0 file:bg-teal-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-teal-dark`}
+                    />
+                    <span className="mt-1 block text-xs text-gray-500">Do 3 privatne slike po unosu, JPG, PNG ili WebP, do 5 MB po slici.</span>
+                  </label>
                   <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
                     Sačuvaj unos
                   </RehabSubmitButton>
@@ -247,6 +331,51 @@ export default async function RehabPatientDetailPage({
                     <p className="text-sm font-medium text-gray-700">{entry.condition_summary}</p>
                     <p className="mt-2 whitespace-pre-wrap text-sm text-gray-600">{entry.therapy}</p>
                     {entry.notes && <p className="mt-2 text-sm italic text-gray-500">{entry.notes}</p>}
+                    {(entry.image_paths ?? []).length > 0 && (
+                      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {entry.image_paths.map((path, imageIndex) => {
+                          const signedUrl = signedImageByPath.get(path);
+                          if (!signedUrl) return null;
+                          return (
+                            <div key={path} className="relative aspect-[4/3]">
+                              <a
+                                href={signedUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="absolute inset-0 overflow-hidden rounded-lg border border-gray-200 bg-white"
+                              >
+                                <Image
+                                  src={signedUrl}
+                                  alt={`Fotografija uz terapiju ${imageIndex + 1}`}
+                                  fill
+                                  unoptimized
+                                  className="object-cover transition hover:scale-[1.02]"
+                                />
+                              </a>
+                              {workspace.canEdit && (
+                                <form action={removeDailyEntryImageAction} className="absolute right-2 top-2 z-10">
+                                  <input type="hidden" name="locale" value={locale} />
+                                  <input type="hidden" name="workspace_id" value={workspace.id} />
+                                  <input type="hidden" name="patient_id" value={patient.id} />
+                                  <input type="hidden" name="entry_id" value={entry.id} />
+                                  <input type="hidden" name="image_path" value={path} />
+                                  <button
+                                    type="submit"
+                                    aria-label={`Ukloni fotografiju ${imageIndex + 1}`}
+                                    className="flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-sm font-semibold text-white hover:bg-red-600"
+                                  >
+                                    ×
+                                  </button>
+                                </form>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <p className="mt-3 text-xs text-gray-400">
+                      Uneo: {creatorNameById.get(entry.created_by) ?? "Član tima"}
+                    </p>
                     {workspace.canEdit && (
                       <details className="mt-3 border-t border-gray-200 pt-3">
                         <summary className="cursor-pointer text-xs font-medium text-teal-dark">
@@ -278,6 +407,19 @@ export default async function RehabPatientDetailPage({
                           <label>
                             <span className={rehabLabelClass}>Napomena</span>
                             <textarea name="notes" rows={2} maxLength={3000} defaultValue={entry.notes ?? ""} className={rehabInputClass} />
+                          </label>
+                          <label>
+                            <span className={rehabLabelClass}>Dodaj fotografije</span>
+                            <input
+                              name="images"
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp"
+                              multiple
+                              className={`${rehabInputClass} file:mr-3 file:rounded file:border-0 file:bg-teal-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-teal-dark`}
+                            />
+                            <span className="mt-1 block text-xs text-gray-500">
+                              Trenutno: {(entry.image_paths ?? []).length}/3. Nove slike se dodaju postojećim.
+                            </span>
                           </label>
                           <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
                             Sačuvaj izmene
@@ -412,11 +554,49 @@ export default async function RehabPatientDetailPage({
                         </RehabForm>
                       </details>
                     )}
+                    {workspace.canEdit && otherPatients.length > 0 && (
+                      <details className="border-t border-gray-100 bg-white px-4 py-3">
+                        <summary className="cursor-pointer text-xs font-medium text-teal-dark">
+                          Kopiraj ceo plan u drugi karton
+                        </summary>
+                        <RehabForm action={copyRehabPlanAction} className="mt-4 grid gap-3 sm:grid-cols-[1fr_180px_auto] sm:items-end">
+                          <input type="hidden" name="locale" value={locale} />
+                          <input type="hidden" name="workspace_id" value={workspace.id} />
+                          <input type="hidden" name="patient_id" value={patient.id} />
+                          <input type="hidden" name="plan_id" value={plan.id} />
+                          <label>
+                            <span className={rehabLabelClass}>Kopiraj za</span>
+                            <select name="target_patient_id" required className={rehabInputClass}>
+                              {otherPatients.map((otherPatient) => (
+                                <option key={otherPatient.id} value={otherPatient.id}>
+                                  {otherPatient.first_name} {otherPatient.last_name}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          <label>
+                            <span className={rehabLabelClass}>Novi datum početka</span>
+                            <input name="start_date" type="date" required defaultValue={today} className={rehabInputClass} />
+                          </label>
+                          <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
+                            Kopiraj plan
+                          </RehabSubmitButton>
+                        </RehabForm>
+                      </details>
+                    )}
                     <div className="divide-y divide-gray-100">
                       {(plan.days ?? []).map((day) => (
-                        <div key={day.id} className="grid gap-2 px-4 py-3 sm:grid-cols-[100px_1fr]">
+                        <div
+                          key={day.id}
+                          className={`grid gap-2 px-4 py-3 sm:grid-cols-[100px_1fr] ${day.planned_date === today ? "border-l-4 border-teal bg-teal-50/70" : ""}`}
+                        >
                           <div>
-                            <p className="text-sm font-semibold text-navy">Dan {day.day_number}</p>
+                            <p className="text-sm font-semibold text-navy">
+                              Dan {day.day_number}
+                              {day.planned_date === today && (
+                                <span className="ml-2 rounded-full bg-teal px-2 py-0.5 text-[10px] uppercase tracking-wide text-white">Danas</span>
+                              )}
+                            </p>
                             {day.planned_date && <p className="text-xs text-gray-400">{formatRehabDate(day.planned_date)}</p>}
                           </div>
                           <div>
@@ -453,6 +633,29 @@ export default async function RehabPatientDetailPage({
               </div>
             )}
           </RehabPanel>
+
+          <RehabPanel>
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <h2 className="font-heading text-2xl font-semibold text-navy">Tok rehabilitacije</h2>
+              <Clock3 className="h-5 w-5 text-teal-dark" />
+            </div>
+            {timeline.length === 0 ? (
+              <EmptyState>Aktivnosti će se ovde pojaviti čim napravite prvi unos.</EmptyState>
+            ) : (
+              <ol className="relative ml-2 border-l border-gray-200">
+                {timeline.map((item) => (
+                  <li key={item.id} className="relative mb-5 ml-5 last:mb-0">
+                    <span className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-teal" />
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-teal-dark">{item.label}</span>
+                      <time className="text-xs text-gray-400">{formatRehabDate(item.date, item.label === "Termin")}</time>
+                    </div>
+                    <p className="mt-1 line-clamp-2 whitespace-pre-wrap text-sm text-gray-700">{item.title}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </RehabPanel>
         </div>
 
         <aside className="order-first space-y-6 xl:order-last">
@@ -463,6 +666,20 @@ export default async function RehabPatientDetailPage({
                 {patient.status === "active" ? "Aktivan" : "Završen"}
               </span>
             </div>
+            {(patient.phone || patient.email) && (
+              <div className="mb-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+                {patient.phone && (
+                  <a href={`tel:${patient.phone}`} className="inline-flex items-center justify-center gap-2 rounded-md border border-gray-200 px-3 py-2 text-sm font-medium text-navy hover:bg-gray-50">
+                    <Phone className="h-4 w-4 text-teal-dark" /> Pozovi
+                  </a>
+                )}
+                {patient.email && (
+                  <a href={`mailto:${patient.email}`} className="inline-flex items-center justify-center gap-2 rounded-md border border-gray-200 px-3 py-2 text-sm font-medium text-navy hover:bg-gray-50">
+                    <Mail className="h-4 w-4 text-teal-dark" /> Pošalji email
+                  </a>
+                )}
+              </div>
+            )}
             {workspace.canEdit ? (
               <RehabForm action={updateRehabPatientAction} className="space-y-3">
                 <input type="hidden" name="locale" value={locale} />

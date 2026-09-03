@@ -48,6 +48,8 @@ export interface RehabDailyEntry {
   pain_level: number | null;
   therapy: string;
   notes: string | null;
+  image_paths: string[];
+  created_by: string;
   created_at: string;
 }
 

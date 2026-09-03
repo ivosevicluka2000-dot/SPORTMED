@@ -66,6 +66,21 @@ export function rehabPlanPrintUrl(
   return `${pathname}?${new URLSearchParams({ workspace: workspaceId }).toString()}`;
 }
 
+export function rehabPatientReportUrl(
+  locale: Locale,
+  patientId: string,
+  workspaceId: string
+) {
+  const pathname = getPathname({
+    locale,
+    href: {
+      pathname: "/rehab/pacijenti/[id]/izvestaj/stampa",
+      params: { id: patientId },
+    },
+  });
+  return `${pathname}?${new URLSearchParams({ workspace: workspaceId }).toString()}`;
+}
+
 export function RehabPageHeader({
   eyebrow,
   title,
@@ -149,6 +164,8 @@ export function RehabAlert({
     created: "Nalog je kreiran i pristup je dodat.",
     assigned: "Pristup i privremena lozinka su ažurirani.",
     removed: "Pristup je uklonjen.",
+    "plan-copied": "Plan je kopiran u izabrani karton.",
+    "image-removed": "Fotografija je uklonjena.",
   };
   return (
     <div

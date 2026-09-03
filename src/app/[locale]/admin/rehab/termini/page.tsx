@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CalendarClock, Mail } from "lucide-react";
 import {
   createAppointmentAction,
@@ -6,7 +7,12 @@ import {
 } from "@/app/[locale]/admin/rehab/_actions";
 import { createClient } from "@/lib/supabase/server";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
-import { dateTimeLocalInputValue, formatRehabDate } from "@/lib/rehab/dates";
+import {
+  dateInputValue,
+  dateTimeLocalInputValue,
+  formatRehabDate,
+  localBelgradeDateTimeToIso,
+} from "@/lib/rehab/dates";
 import type { RehabAppointment, RehabPatient } from "@/lib/rehab/types";
 import type { Locale } from "@/i18n/routing";
 import {
@@ -17,6 +23,7 @@ import {
   WorkspaceTabs,
   rehabInputClass,
   rehabLabelClass,
+  rehabUrl,
 } from "@/components/rehab/RehabUi";
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
@@ -28,7 +35,7 @@ export default async function RehabAppointmentsPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ workspace?: string; error?: string; saved?: string }>;
+  searchParams: Promise<{ workspace?: string; error?: string; saved?: string; period?: string }>;
 }) {
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
   const locale = rawLocale as Locale;
@@ -38,8 +45,33 @@ export default async function RehabAppointmentsPage({
 
   const supabase = await createClient();
   const currentDate = new Date();
+  const period = query.period === "today" || query.period === "week" ? query.period : "all";
   const since = new Date(currentDate);
   since.setDate(since.getDate() - 30);
+  const todayKey = dateInputValue(currentDate);
+  const tomorrow = new Date(`${todayKey}T12:00:00Z`);
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+  const weekEnd = new Date(`${todayKey}T12:00:00Z`);
+  weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
+  let appointmentsQuery = supabase
+    .from("rehab_appointments")
+    .select(
+      "id, patient_id, workspace_id, starts_at, duration_minutes, therapy, notes, status, reminder_email, reminder_hours_before, reminder_sent_at, patient:rehab_patients(id, first_name, last_name, email)"
+    )
+    .eq("workspace_id", workspace.id)
+    .order("starts_at", { ascending: true })
+    .limit(300);
+  if (period === "today") {
+    appointmentsQuery = appointmentsQuery
+      .gte("starts_at", localBelgradeDateTimeToIso(`${todayKey}T00:00`))
+      .lt("starts_at", localBelgradeDateTimeToIso(`${dateInputValue(tomorrow)}T00:00`));
+  } else if (period === "week") {
+    appointmentsQuery = appointmentsQuery
+      .gte("starts_at", localBelgradeDateTimeToIso(`${todayKey}T00:00`))
+      .lt("starts_at", localBelgradeDateTimeToIso(`${dateInputValue(weekEnd)}T00:00`));
+  } else {
+    appointmentsQuery = appointmentsQuery.gte("starts_at", since.toISOString());
+  }
   const [{ data: patients }, { data: appointments }] = await Promise.all([
     supabase
       .from("rehab_patients")
@@ -47,15 +79,7 @@ export default async function RehabAppointmentsPage({
       .eq("workspace_id", workspace.id)
       .eq("status", "active")
       .order("last_name", { ascending: true }),
-    supabase
-      .from("rehab_appointments")
-      .select(
-        "id, patient_id, workspace_id, starts_at, duration_minutes, therapy, notes, status, reminder_email, reminder_hours_before, reminder_sent_at, patient:rehab_patients(id, first_name, last_name, email)"
-      )
-      .eq("workspace_id", workspace.id)
-      .gte("starts_at", since.toISOString())
-      .order("starts_at", { ascending: true })
-      .limit(300),
+    appointmentsQuery,
   ]);
 
   const patientRows = (patients ?? []) as Array<
@@ -82,6 +106,26 @@ export default async function RehabAppointmentsPage({
         href="/rehab/termini"
       />
       <RehabAlert error={query.error} saved={query.saved} />
+
+      <div className="mb-6 inline-flex rounded-lg border border-gray-200 bg-white p-1">
+        {([
+          ["all", "Svi"],
+          ["today", "Danas"],
+          ["week", "Narednih 7 dana"],
+        ] as const).map(([value, label]) => (
+          <Link
+            key={value}
+            href={rehabUrl(locale, "/rehab/termini", {
+              workspace: workspace.id,
+              period: value === "all" ? undefined : value,
+            })}
+            aria-current={period === value ? "page" : undefined}
+            className={`rounded-md px-3 py-2 text-sm font-medium transition ${period === value ? "bg-navy text-white" : "text-gray-600 hover:bg-gray-50"}`}
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
 
       {workspace.canEdit && (
         <RehabPanel className="mb-6">
@@ -172,7 +216,7 @@ export default async function RehabAppointmentsPage({
           locale={locale}
           workspaceId={workspace.id}
           canEdit={workspace.canEdit}
-          empty="Nema prethodnih termina u poslednjih 30 dana."
+          empty={period === "all" ? "Nema prethodnih termina u poslednjih 30 dana." : "Nema prethodnih ni zatvorenih termina u izabranom periodu."}
         />
       </div>
     </div>
