@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Trophy } from "lucide-react";
 import { PrintPlanButton } from "@/components/rehab/PrintPlanButton";
 import { rehabPatientUrl } from "@/components/rehab/RehabUi";
 import type { Locale } from "@/i18n/routing";
@@ -87,10 +89,36 @@ export default async function PrintRehabPlanPage({
 
       <article className="rehab-print-sheet mx-auto max-w-4xl bg-white p-6 text-gray-900 sm:p-10">
         <header className="border-b-2 border-navy pb-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-dark">
-            {workspace.name}
-          </p>
-          <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            {workspace.kind === "clinic" ? (
+              <div>
+                <Image
+                  src="/logo.png"
+                  alt="Sport Care & Med"
+                  width={190}
+                  height={37}
+                  className="h-auto w-44"
+                  priority
+                />
+                <p className="mt-2 text-xs text-gray-500">Centar za sportsku medicinu i rehabilitaciju · Šabac</p>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <span className="rounded-lg bg-amber-100 p-2.5 text-amber-700">
+                  <Trophy className="h-6 w-6" />
+                </span>
+                <div>
+                  <p className="text-lg font-semibold text-navy">{workspace.name}</p>
+                  <p className="text-xs text-gray-500">Klupska rehabilitacija</p>
+                </div>
+              </div>
+            )}
+            <div className="text-right text-xs text-gray-500">
+              <p className="font-semibold uppercase tracking-[0.15em] text-teal-dark">Rehab platforma</p>
+              <p className="mt-1">Datum štampe: {formatRehabDate(new Date())}</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h1 className="font-heading text-3xl font-semibold text-navy">{plan.title}</h1>
               <p className="mt-1 text-sm text-gray-500">Rehabilitacioni plan</p>
@@ -159,8 +187,16 @@ export default async function PrintRehabPlanPage({
           </section>
         )}
 
-        <footer className="mt-10 grid gap-10 pt-6 text-sm sm:grid-cols-2">
-          <div className="border-t border-gray-400 pt-2 text-gray-500">Datum</div>
+        <section className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm">
+          <p className="text-xs uppercase tracking-wide text-gray-400">Plan pripremio</p>
+          <p className="mt-1 font-semibold text-navy">{access.fullName}</p>
+          {workspace.kind === "clinic" && (
+            <p className="mt-1 text-xs text-gray-500">info@sportcaremed.com · Šabac</p>
+          )}
+        </section>
+
+        <footer className="mt-12 grid gap-10 pt-6 text-sm sm:grid-cols-2">
+          <div className="border-t border-gray-400 pt-2 text-gray-500">Datum kontrole</div>
           <div className="border-t border-gray-400 pt-2 text-gray-500">Potpis terapeuta</div>
         </footer>
       </article>

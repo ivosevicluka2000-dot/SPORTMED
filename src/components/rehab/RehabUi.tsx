@@ -187,3 +187,20 @@ export function EmptyState({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
+export function RehabPainBadge({ value }: { value: number }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+        value <= 3
+          ? "bg-emerald-100 text-emerald-700"
+          : value <= 6
+            ? "bg-amber-100 text-amber-800"
+            : "bg-red-100 text-red-700"
+      )}
+    >
+      Bol: {value}/10
+    </span>
+  );
+}

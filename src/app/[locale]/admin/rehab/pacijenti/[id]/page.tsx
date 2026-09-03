@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CalendarClock, ClipboardList, HeartPulse, ListChecks } from "lucide-react";
 import {
   createDailyEntryAction,
   createRehabPlanAction,
@@ -22,6 +23,7 @@ import type { Locale } from "@/i18n/routing";
 import {
   EmptyState,
   RehabAlert,
+  RehabPainBadge,
   RehabPageHeader,
   RehabPanel,
   rehabInputClass,
@@ -31,6 +33,7 @@ import {
 } from "@/components/rehab/RehabUi";
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
+import { RehabCopyLastEntryButton } from "@/components/rehab/RehabCopyLastEntryButton";
 
 export const dynamic = "force-dynamic";
 
@@ -60,7 +63,8 @@ export default async function RehabPatientDetailPage({
     supabase
       .from("rehab_daily_entries")
       .select(
-        "id, patient_id, workspace_id, recorded_on, condition_summary, pain_level, therapy, notes, created_at"
+        "id, patient_id, workspace_id, recorded_on, condition_summary, pain_level, therapy, notes, created_at",
+        { count: "exact" }
       )
       .eq("patient_id", id)
       .eq("workspace_id", workspace.id)
@@ -93,6 +97,19 @@ export default async function RehabPatientDetailPage({
     days: [...(plan.days ?? [])].sort((a, b) => a.day_number - b.day_number),
   }));
   const appointments = (appointmentsResult.data ?? []) as RehabAppointment[];
+  const latestPainEntry = entries.find((entry) => entry.pain_level !== null);
+  const activePlan = plans.find((plan) => plan.status === "active");
+  const currentTime = new Date().getTime();
+  const nextAppointment = appointments
+    .filter(
+      (appointment) =>
+        appointment.status === "scheduled" &&
+        new Date(appointment.starts_at).getTime() >= currentTime
+    )
+    .sort(
+      (first, second) =>
+        new Date(first.starts_at).getTime() - new Date(second.starts_at).getTime()
+    )[0];
 
   return (
     <div>
@@ -111,6 +128,53 @@ export default async function RehabPatientDetailPage({
       />
       <RehabAlert error={query.error} saved={query.saved} />
 
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <RehabPanel className="flex items-center gap-3 p-4 md:p-4">
+          <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
+            <HeartPulse className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-xs text-gray-400">Evidentirane terapije</p>
+            <p className="text-lg font-semibold text-navy">{entriesResult.count ?? entries.length}</p>
+          </div>
+        </RehabPanel>
+        <RehabPanel className="flex items-center gap-3 p-4 md:p-4">
+          <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
+            <ListChecks className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-xs text-gray-400">Poslednji nivo bola</p>
+            <div className="mt-1">
+              {latestPainEntry?.pain_level !== null && latestPainEntry?.pain_level !== undefined ? (
+                <RehabPainBadge value={latestPainEntry.pain_level} />
+              ) : (
+                <p className="text-sm font-medium text-gray-500">Nije unet</p>
+              )}
+            </div>
+          </div>
+        </RehabPanel>
+        <RehabPanel className="flex min-w-0 items-center gap-3 p-4 md:p-4">
+          <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
+            <ClipboardList className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-xs text-gray-400">Aktivni plan</p>
+            <p className="truncate text-sm font-semibold text-navy">{activePlan?.title ?? "Nema aktivnog plana"}</p>
+          </div>
+        </RehabPanel>
+        <RehabPanel className="flex min-w-0 items-center gap-3 p-4 md:p-4">
+          <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
+            <CalendarClock className="h-5 w-5" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-xs text-gray-400">Sledeći termin</p>
+            <p className="truncate text-sm font-semibold text-navy">
+              {nextAppointment ? formatRehabDate(nextAppointment.starts_at, true) : "Nema zakazanog termina"}
+            </p>
+          </div>
+        </RehabPanel>
+      </div>
+
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-6">
           <RehabPanel>
@@ -126,6 +190,19 @@ export default async function RehabPatientDetailPage({
                   <input type="hidden" name="locale" value={locale} />
                   <input type="hidden" name="workspace_id" value={workspace.id} />
                   <input type="hidden" name="patient_id" value={patient.id} />
+                  {entries[0] && (
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-teal/20 bg-white p-3">
+                      <p className="text-xs text-gray-500">Ista ili slična terapija kao prethodni put?</p>
+                      <RehabCopyLastEntryButton
+                        entry={{
+                          conditionSummary: entries[0].condition_summary,
+                          painLevel: entries[0].pain_level,
+                          therapy: entries[0].therapy,
+                          notes: entries[0].notes ?? "",
+                        }}
+                      />
+                    </div>
+                  )}
                   <div className="grid gap-4 sm:grid-cols-[180px_160px_1fr]">
                     <label>
                       <span className={rehabLabelClass}>Datum *</span>
@@ -164,9 +241,7 @@ export default async function RehabPatientDetailPage({
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <time className="font-medium text-navy">{formatRehabDate(entry.recorded_on)}</time>
                       {entry.pain_level !== null && (
-                        <span className="rounded-full bg-white px-2.5 py-1 text-xs text-gray-600">
-                          Bol: {entry.pain_level}/10
-                        </span>
+                        <RehabPainBadge value={entry.pain_level} />
                       )}
                     </div>
                     <p className="text-sm font-medium text-gray-700">{entry.condition_summary}</p>
