@@ -1,6 +1,8 @@
-import { Mail, ShieldCheck, UserPlus } from "lucide-react";
+import { Building2, Mail, ShieldCheck, UserPlus } from "lucide-react";
+import { redirect } from "next/navigation";
 import {
   addWorkspaceMemberAction,
+  createClubWorkspaceAction,
   removeWorkspaceMemberAction,
 } from "@/app/[locale]/admin/rehab/_actions";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -15,6 +17,7 @@ import {
   WorkspaceTabs,
   rehabInputClass,
   rehabLabelClass,
+  rehabPatientUrl,
 } from "@/components/rehab/RehabUi";
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
@@ -34,6 +37,10 @@ export default async function RehabTeamPage({
   const workspace = selectRehabWorkspace(access, query.workspace);
   if (!workspace) return null;
 
+  if (workspace.role === "player" && workspace.patientId) {
+    redirect(rehabPatientUrl(locale, workspace.patientId, { workspace: workspace.id }));
+  }
+
   if (!access.isGlobalAdmin) {
     return (
       <RehabPanel>
@@ -46,26 +53,39 @@ export default async function RehabTeamPage({
   const admin = createAdminClient();
   const { data: memberships } = await admin
     .from("rehab_workspace_members")
-    .select("user_id, role, created_at")
+    .select("user_id, role, patient_id, created_at")
     .eq("workspace_id", workspace.id)
     .order("created_at", { ascending: true });
   const memberRows = (memberships ?? []) as Array<{
     user_id: string;
     role: RehabWorkspaceRole;
+    patient_id: string | null;
     created_at: string;
   }>;
   const userIds = memberRows.map((member) => member.user_id);
-  const [{ data: profiles }, authResult] = await Promise.all([
+  const [{ data: profiles }, authResult, { data: players }] = await Promise.all([
     userIds.length
       ? admin.from("profiles").select("id, full_name, phone").in("id", userIds)
       : Promise.resolve({ data: [] as Array<{ id: string; full_name: string | null; phone: string | null }> }),
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+    workspace.kind === "club"
+      ? admin
+          .from("rehab_patients")
+          .select("id, first_name, last_name, status")
+          .eq("workspace_id", workspace.id)
+          .eq("record_type", "player")
+          .order("status", { ascending: true })
+          .order("last_name", { ascending: true })
+      : Promise.resolve({ data: [] as Array<{ id: string; first_name: string; last_name: string; status: string }> }),
   ]);
   const profileMap = new Map(
     (profiles ?? []).map((profile) => [profile.id, profile])
   );
   const authMap = new Map(
     (authResult.data?.users ?? []).map((user) => [user.id, user])
+  );
+  const playerMap = new Map(
+    (players ?? []).map((player) => [player.id, player])
   );
 
   return (
@@ -82,6 +102,30 @@ export default async function RehabTeamPage({
         href="/rehab/tim"
       />
       <RehabAlert error={query.error} saved={query.saved} />
+
+      <RehabPanel className="mb-6">
+        <div className="mb-4 flex items-start gap-3">
+          <span className="rounded-full bg-amber-50 p-2.5 text-amber-700">
+            <Building2 className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="font-heading text-2xl font-semibold text-navy">Dodaj novi klub</h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Svaki klub dobija potpuno odvojen prostor, igrače i naloge.
+            </p>
+          </div>
+        </div>
+        <RehabForm action={createClubWorkspaceAction} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+          <input type="hidden" name="locale" value={locale} />
+          <label className="w-full max-w-xl">
+            <span className={rehabLabelClass}>Naziv kluba</span>
+            <input name="name" required minLength={2} maxLength={150} className={rehabInputClass} />
+          </label>
+          <RehabSubmitButton className="rounded-md bg-amber-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-600">
+            Dodaj klub
+          </RehabSubmitButton>
+        </RehabForm>
+      </RehabPanel>
 
       <RehabPanel className="mb-6">
         <div className="mb-5 flex items-start gap-3">
@@ -121,8 +165,28 @@ export default async function RehabTeamPage({
           ) : (
             <label>
               <span className={rehabLabelClass}>Dozvola</span>
-              <input value="Samo pregled kluba" disabled className={rehabInputClass} />
-              <input type="hidden" name="role" value="viewer" />
+              <select name="role" defaultValue="viewer" className={rehabInputClass}>
+                <option value="viewer">Klub — svi igrači</option>
+                <option value="player">Igrač — samo svoj karton</option>
+              </select>
+            </label>
+          )}
+          {workspace.kind === "club" && (
+            <label className="sm:col-span-2 xl:col-span-4">
+              <span className={rehabLabelClass}>Karton igrača (samo za igrački nalog)</span>
+              <select name="patient_id" defaultValue="" className={rehabInputClass}>
+                <option value="">Nije potrebno za nalog kluba</option>
+                {(players ?? []).map((player) => (
+                  <option key={player.id} value={player.id}>
+                    {player.first_name} {player.last_name}{player.status === "completed" ? " — završen" : ""}
+                  </option>
+                ))}
+              </select>
+              {(players ?? []).length === 0 && (
+                <span className="mt-1 block text-xs text-amber-700">
+                  Prvo napravite karton igrača, pa mu zatim otvorite nalog.
+                </span>
+              )}
             </label>
           )}
           <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark sm:col-span-2 xl:col-span-4">
@@ -140,6 +204,9 @@ export default async function RehabTeamPage({
             {memberRows.map((member) => {
               const profile = profileMap.get(member.user_id);
               const authUser = authMap.get(member.user_id);
+              const linkedPlayer = member.patient_id
+                ? playerMap.get(member.patient_id)
+                : null;
               return (
                 <div key={member.user_id} className="flex flex-col gap-3 py-4 first:pt-0 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3">
@@ -153,6 +220,11 @@ export default async function RehabTeamPage({
                       <p className="flex items-center gap-1 text-xs text-gray-500">
                         <Mail className="h-3 w-3" /> {authUser?.email || "Email nije dostupan"}
                       </p>
+                      {linkedPlayer && (
+                        <p className="mt-1 text-xs font-medium text-amber-700">
+                          Karton: {linkedPlayer.first_name} {linkedPlayer.last_name}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
@@ -161,7 +233,11 @@ export default async function RehabTeamPage({
                         ? "Vlasnik"
                         : member.role === "therapist"
                           ? "Fizioterapeut"
-                          : "Samo pregled"}
+                          : member.role === "player"
+                            ? "Igrač — svoj karton"
+                            : workspace.kind === "club"
+                              ? "Klub — svi igrači"
+                              : "Samo pregled"}
                     </span>
                     {member.role !== "owner" && (
                       <form action={removeWorkspaceMemberAction}>

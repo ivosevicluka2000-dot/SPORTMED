@@ -1,9 +1,9 @@
 export type RehabWorkspaceKind = "clinic" | "club";
-export type RehabWorkspaceRole = "owner" | "therapist" | "viewer";
+export type RehabWorkspaceRole = "owner" | "therapist" | "viewer" | "player";
 
 export interface RehabWorkspace {
   id: string;
-  slug: "clinic" | "club";
+  slug: string;
   name: string;
   kind: RehabWorkspaceKind;
 }
@@ -15,6 +15,7 @@ export interface RehabAccessContext {
   workspaces: Array<
     RehabWorkspace & {
       role: RehabWorkspaceRole;
+      patientId: string | null;
       canEdit: boolean;
       canManage: boolean;
     }

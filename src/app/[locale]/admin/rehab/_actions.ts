@@ -841,12 +841,47 @@ export async function savePeriodSummaryAction(formData: FormData) {
   redirect(pathWithQuery(locale, "/rehab/izvestaji", { workspace: workspaceId, type: periodType, period, ...(error ? { error: "Zaključak nije sačuvan." } : { saved: "1" }) }));
 }
 
+export async function createClubWorkspaceAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const name = text(formData.get("name"));
+  const parsed = z.string().min(2).max(150).safeParse(name);
+  await requireAdmin();
+
+  if (!parsed.success) {
+    redirect(pathWithQuery(locale, "/rehab/tim", {
+      error: "Unesite naziv kluba od najmanje 2 karaktera.",
+    }));
+  }
+
+  const normalizedName = name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60);
+  const slug = `club-${normalizedName || "klub"}-${crypto.randomUUID().slice(0, 8)}`;
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("rehab_workspaces")
+    .insert({ name, slug, kind: "club" })
+    .select("id")
+    .single();
+
+  redirect(pathWithQuery(locale, "/rehab/tim", {
+    ...(data?.id ? { workspace: data.id } : {}),
+    ...(error ? { error: "Klub nije dodat. Pokušajte ponovo." } : { saved: "club-created" }),
+  }));
+}
+
 export async function addWorkspaceMemberAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
   const email = text(formData.get("email")).toLowerCase();
   const fullName = text(formData.get("full_name"));
   const password = text(formData.get("password"));
+  const requestedRole = text(formData.get("role"));
+  const patientId = text(formData.get("patient_id"));
   await requireAdmin();
   const access = await requireRehabWorkspace(locale, workspaceId, "manage");
   const parsed = z
@@ -863,7 +898,27 @@ export async function addWorkspaceMemberAction(formData: FormData) {
     }));
   }
 
+  const role = access.workspace.kind === "clinic"
+    ? requestedRole === "viewer" ? "viewer" : "therapist"
+    : requestedRole === "player" ? "player" : "viewer";
+
   const admin = createAdminClient();
+  if (role === "player") {
+    const { data: player } = await admin
+      .from("rehab_patients")
+      .select("id")
+      .eq("id", patientId)
+      .eq("workspace_id", workspaceId)
+      .eq("record_type", "player")
+      .maybeSingle();
+    if (!player) {
+      redirect(pathWithQuery(locale, "/rehab/tim", {
+        workspace: workspaceId,
+        error: "Izaberite igrača čiji karton ovaj nalog može da vidi.",
+      }));
+    }
+  }
+
   const { data: listed, error: listError } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
   if (listError) {
     redirect(pathWithQuery(locale, "/rehab/tim", { workspace: workspaceId, error: "Nalog nije moguće kreirati." }));
@@ -905,17 +960,12 @@ export async function addWorkspaceMemberAction(formData: FormData) {
     }));
   }
 
-  const requestedRole = text(formData.get("role"));
-  const role = access.workspace.kind === "club"
-    ? "viewer"
-    : requestedRole === "viewer"
-      ? "viewer"
-      : "therapist";
   const { error } = await admin.from("rehab_workspace_members").upsert(
     {
       workspace_id: workspaceId,
       user_id: target.id,
       role,
+      patient_id: role === "player" ? patientId : null,
       created_by: access.userId,
     },
     { onConflict: "workspace_id,user_id" }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CalendarClock, Mail } from "lucide-react";
 import {
   createAppointmentAction,
@@ -23,6 +24,7 @@ import {
   WorkspaceTabs,
   rehabInputClass,
   rehabLabelClass,
+  rehabPatientUrl,
   rehabUrl,
 } from "@/components/rehab/RehabUi";
 import { RehabForm } from "@/components/rehab/RehabForm";
@@ -42,6 +44,9 @@ export default async function RehabAppointmentsPage({
   const access = await getRehabAccessContext(locale);
   const workspace = selectRehabWorkspace(access, query.workspace);
   if (!workspace) return null;
+  if (workspace.role === "player" && workspace.patientId) {
+    redirect(rehabPatientUrl(locale, workspace.patientId, { workspace: workspace.id }));
+  }
 
   const supabase = await createClient();
   const currentDate = new Date();

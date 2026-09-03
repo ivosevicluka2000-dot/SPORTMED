@@ -89,8 +89,10 @@ export default async function RehabPatientsPage({
     <div>
       <RehabPageHeader
         eyebrow={workspace.name}
-        title={workspace.kind === "club" ? "Igrači" : "Pacijenti"}
-        description="Kartoni, kontakt podaci, problem i početak rehabilitacije."
+        title={workspace.role === "player" ? "Moj karton" : workspace.kind === "club" ? "Igrači" : "Pacijenti"}
+        description={workspace.role === "player"
+          ? "Vaši podaci, tok rehabilitacije i plan po danima."
+          : "Kartoni, kontakt podaci, problem i početak rehabilitacije."}
         action={
           workspace.canEdit ? (
             <Link
@@ -110,8 +112,9 @@ export default async function RehabPatientsPage({
         query={{ q: query.q, status }}
       />
 
-      <RehabPanel className="mb-6">
-        <form method="get" className="grid gap-3 sm:grid-cols-[1fr_180px_auto]">
+      {workspace.role !== "player" && (
+        <RehabPanel className="mb-6">
+          <form method="get" className="grid gap-3 sm:grid-cols-[1fr_180px_auto]">
           <input type="hidden" name="workspace" value={workspace.id} />
           <label className="relative">
             <span className="sr-only">Pretraga</span>
@@ -131,8 +134,9 @@ export default async function RehabPatientsPage({
           <button className="rounded-md bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900">
             Prikaži
           </button>
-        </form>
-      </RehabPanel>
+          </form>
+        </RehabPanel>
+      )}
 
       {rows.length === 0 ? (
         <EmptyState>Nema zapisa za izabrani filter.</EmptyState>

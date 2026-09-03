@@ -16,7 +16,11 @@ import {
 } from "lucide-react";
 import { usePathname, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-import { rehabUrl, type RehabHref } from "@/components/rehab/RehabUi";
+import {
+  rehabPatientUrl,
+  rehabUrl,
+  type RehabHref,
+} from "@/components/rehab/RehabUi";
 import type { RehabAccessContext } from "@/lib/rehab/types";
 
 const baseItems: Array<{
@@ -45,9 +49,12 @@ export function RehabNavigation({
   const workspace = searchParams.get("workspace") ?? undefined;
   const selectedWorkspace =
     workspaces.find((item) => item.id === workspace) ?? workspaces[0];
-  const items = isGlobalAdmin
-    ? [...baseItems, { href: "/rehab/tim" as RehabHref, label: "Nalozi i pristupi", icon: Users }]
+  const visibleBaseItems = selectedWorkspace?.role === "player"
+    ? baseItems.filter((item) => item.href === "/rehab/pacijenti")
     : baseItems;
+  const items = isGlobalAdmin
+    ? [...visibleBaseItems, { href: "/rehab/tim" as RehabHref, label: "Nalozi i pristupi", icon: Users }]
+    : visibleBaseItems;
 
   const linkClass = (href: RehabHref) => {
     const isActive = href === "/rehab"
@@ -90,27 +97,46 @@ export function RehabNavigation({
         <div className="hidden gap-1 overflow-x-auto sm:flex">
           {items.map((item) => {
             const Icon = item.icon;
+            const itemHref = item.href === "/rehab/pacijenti" && selectedWorkspace?.role === "player" && selectedWorkspace.patientId
+              ? rehabPatientUrl(locale, selectedWorkspace.patientId, { workspace: selectedWorkspace.id })
+              : rehabUrl(locale, item.href, { workspace });
             return (
               <Link
                 key={item.href}
-                href={rehabUrl(locale, item.href, { workspace })}
+                href={itemHref}
                 className={`${linkClass(item.href)} min-w-max`}
               >
                 <Icon className="h-4 w-4" />
-                {item.label}
+                {item.href === "/rehab/pacijenti" && selectedWorkspace?.role === "player"
+                  ? "Moj karton"
+                  : item.label}
               </Link>
             );
           })}
         </div>
 
-        <div className={cn("grid gap-1 sm:hidden", isGlobalAdmin ? "grid-cols-5" : "grid-cols-4")}>
-          {baseItems.map((item) => {
+        <div
+          className={cn(
+            "grid gap-1 sm:hidden",
+            isGlobalAdmin
+              ? "grid-cols-5"
+              : selectedWorkspace?.role === "player"
+                ? "grid-cols-1"
+                : "grid-cols-4"
+          )}
+        >
+          {visibleBaseItems.map((item) => {
             const Icon = item.icon;
-            const shortLabel = item.href === "/rehab/pacijenti" ? "Kartoni" : item.label;
+            const shortLabel = item.href === "/rehab/pacijenti"
+              ? selectedWorkspace?.role === "player" ? "Moj karton" : "Kartoni"
+              : item.label;
+            const itemHref = item.href === "/rehab/pacijenti" && selectedWorkspace?.role === "player" && selectedWorkspace.patientId
+              ? rehabPatientUrl(locale, selectedWorkspace.patientId, { workspace: selectedWorkspace.id })
+              : rehabUrl(locale, item.href, { workspace });
             return (
               <Link
                 key={item.href}
-                href={rehabUrl(locale, item.href, { workspace })}
+                href={itemHref}
                 className={`${linkClass(item.href)} flex-col gap-1 px-1 py-2 text-[11px]`}
               >
                 <Icon className="h-4 w-4" />

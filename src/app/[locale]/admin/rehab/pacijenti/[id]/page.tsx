@@ -196,7 +196,7 @@ export default async function RehabPatientDetailPage({
       />
       <RehabAlert error={query.error} saved={query.saved} />
 
-      <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className={`mb-6 grid gap-3 sm:grid-cols-2 ${workspace.role === "player" ? "xl:grid-cols-3" : "xl:grid-cols-4"}`}>
         <RehabPanel className="flex items-center gap-3 p-4 md:p-4">
           <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
             <HeartPulse className="h-5 w-5" />
@@ -235,17 +235,19 @@ export default async function RehabPatientDetailPage({
             )}
           </div>
         </RehabPanel>
-        <RehabPanel className="flex min-w-0 items-center gap-3 p-4 md:p-4">
-          <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
-            <CalendarClock className="h-5 w-5" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-400">Sledeći termin</p>
-            <p className="truncate text-sm font-semibold text-navy">
-              {nextAppointment ? formatRehabDate(nextAppointment.starts_at, true) : "Nema zakazanog termina"}
-            </p>
-          </div>
-        </RehabPanel>
+        {workspace.role !== "player" && (
+          <RehabPanel className="flex min-w-0 items-center gap-3 p-4 md:p-4">
+            <span className="rounded-full bg-teal-50 p-2.5 text-teal-dark">
+              <CalendarClock className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs text-gray-400">Sledeći termin</p>
+              <p className="truncate text-sm font-semibold text-navy">
+                {nextAppointment ? formatRehabDate(nextAppointment.starts_at, true) : "Nema zakazanog termina"}
+              </p>
+            </div>
+          </RehabPanel>
+        )}
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
@@ -714,27 +716,29 @@ export default async function RehabPatientDetailPage({
             )}
           </RehabPanel>
 
-          <RehabPanel>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-heading text-xl font-semibold text-navy">Termini</h2>
-              <Link href={rehabUrl(locale, "/rehab/termini", { workspace: workspace.id })} className="text-xs text-teal-dark hover:underline">Otvori termine</Link>
-            </div>
-            {appointments.length === 0 ? (
-              <p className="text-sm text-gray-500">Nema termina.</p>
-            ) : (
-              <div className="space-y-3">
-                {appointments.slice(0, 5).map((appointment) => (
-                  <div key={appointment.id} className="rounded-lg bg-gray-50 p-3 text-sm">
-                    <p className="font-medium text-navy">{formatRehabDate(appointment.starts_at, true)}</p>
-                    <p className="text-gray-500">{appointment.therapy || "Terapija nije navedena"}</p>
-                    <p className="mt-1 text-xs text-gray-400">
-                      {appointment.status === "scheduled" ? "Zakazan" : appointment.status === "completed" ? "Završen" : "Otkazan"}
-                    </p>
-                  </div>
-                ))}
+          {workspace.role !== "player" && (
+            <RehabPanel>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-heading text-xl font-semibold text-navy">Termini</h2>
+                <Link href={rehabUrl(locale, "/rehab/termini", { workspace: workspace.id })} className="text-xs text-teal-dark hover:underline">Otvori termine</Link>
               </div>
-            )}
-          </RehabPanel>
+              {appointments.length === 0 ? (
+                <p className="text-sm text-gray-500">Nema termina.</p>
+              ) : (
+                <div className="space-y-3">
+                  {appointments.slice(0, 5).map((appointment) => (
+                    <div key={appointment.id} className="rounded-lg bg-gray-50 p-3 text-sm">
+                      <p className="font-medium text-navy">{formatRehabDate(appointment.starts_at, true)}</p>
+                      <p className="text-gray-500">{appointment.therapy || "Terapija nije navedena"}</p>
+                      <p className="mt-1 text-xs text-gray-400">
+                        {appointment.status === "scheduled" ? "Zakazan" : appointment.status === "completed" ? "Završen" : "Otkazan"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </RehabPanel>
+          )}
         </aside>
       </div>
     </div>

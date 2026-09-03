@@ -49,27 +49,34 @@ export async function getRehabAccessContext(
         .order("kind", { ascending: true }),
       supabase
         .from("rehab_workspace_members")
-        .select("workspace_id, role")
+        .select("workspace_id, role, patient_id")
         .eq("user_id", user.id),
     ]);
 
   const isGlobalAdmin = profile?.role === "admin";
-  const membershipMap = new Map<string, RehabWorkspaceRole>(
+  const membershipMap = new Map<
+    string,
+    { role: RehabWorkspaceRole; patientId: string | null }
+  >(
     ((memberships ?? []) as Array<{
       workspace_id: string;
       role: RehabWorkspaceRole;
-    }>).map((membership) => [membership.workspace_id, membership.role])
+      patient_id: string | null;
+    }>).map((membership) => [
+      membership.workspace_id,
+      { role: membership.role, patientId: membership.patient_id },
+    ])
   );
 
   const accessible = ((workspaces ?? []) as RehabWorkspace[])
     .filter((workspace) => isGlobalAdmin || membershipMap.has(workspace.id))
     .map((workspace) => {
-    const role = isGlobalAdmin
-      ? "owner"
-      : membershipMap.get(workspace.id) ?? "viewer";
+    const membership = membershipMap.get(workspace.id);
+    const role = isGlobalAdmin ? "owner" : membership?.role ?? "viewer";
     return {
       ...workspace,
       role,
+      patientId: isGlobalAdmin ? null : membership?.patientId ?? null,
       canEdit: isGlobalAdmin || canRole(role, "edit"),
       canManage: isGlobalAdmin || canRole(role, "manage"),
     };
@@ -99,7 +106,7 @@ export async function requireRehabWorkspace(
         .maybeSingle(),
       supabase
         .from("rehab_workspace_members")
-        .select("role")
+        .select("role, patient_id")
         .eq("workspace_id", workspaceId)
         .eq("user_id", user.id)
         .maybeSingle(),
@@ -121,6 +128,7 @@ export async function requireRehabWorkspace(
     userId: user.id,
     isGlobalAdmin,
     role,
+    patientId: isGlobalAdmin ? null : membership?.patient_id ?? null,
     workspace: workspace as RehabWorkspace,
   };
 }

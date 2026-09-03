@@ -1,4 +1,5 @@
 import { CalendarCheck, CheckCircle2, ClipboardList, FileText, UserRound } from "lucide-react";
+import { redirect } from "next/navigation";
 import { savePeriodSummaryAction } from "@/app/[locale]/admin/rehab/_actions";
 import { createClient } from "@/lib/supabase/server";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
@@ -11,6 +12,7 @@ import {
   WorkspaceTabs,
   rehabInputClass,
   rehabLabelClass,
+  rehabPatientUrl,
 } from "@/components/rehab/RehabUi";
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
@@ -35,6 +37,9 @@ export default async function RehabReportsPage({
   const access = await getRehabAccessContext(locale);
   const workspace = selectRehabWorkspace(access, query.workspace);
   if (!workspace) return null;
+  if (workspace.role === "player" && workspace.patientId) {
+    redirect(rehabPatientUrl(locale, workspace.patientId, { workspace: workspace.id }));
+  }
 
   const periodType = query.type === "year" ? "year" : "month";
   const currentYear = dateInputValue().slice(0, 4);

@@ -164,6 +164,7 @@ export function RehabAlert({
     created: "Nalog je kreiran i pristup je dodat.",
     assigned: "Pristup i privremena lozinka su ažurirani.",
     removed: "Pristup je uklonjen.",
+    "club-created": "Novi klub je dodat i spreman za igrače i naloge.",
     "plan-copied": "Plan je kopiran u izabrani karton.",
     "image-removed": "Fotografija je uklonjena.",
   };

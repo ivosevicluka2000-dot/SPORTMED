@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { AlertTriangle, CalendarDays, ClipboardList, HeartPulse, UserRound } from "lucide-react";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
 import {
@@ -31,6 +32,9 @@ export default async function RehabDashboardPage({
   const access = await getRehabAccessContext(locale);
   const workspace = selectRehabWorkspace(access, query.workspace);
   if (!workspace) return null;
+  if (workspace.role === "player" && workspace.patientId) {
+    redirect(rehabPatientUrl(locale, workspace.patientId, { workspace: workspace.id }));
+  }
 
   const supabase = await createClient();
   const today = dateInputValue();
