@@ -19,14 +19,15 @@ export default async function RehabPlatformLayout({
   const access = await getRehabAccessContext(locale);
 
   if (access.workspaces.length === 0) {
+    const message = access.loadError
+      ? "Rehab platforma trenutno ne može da učita podatke. Osvežite stranicu ili se obratite administratoru."
+      : access.isGlobalAdmin
+        ? "Nema podešenih Rehab radnih prostora. Proverite da li su migracije baze primenjene."
+        : "Vašem nalogu još nije dodeljen pristup klinici ili klubu. Obratite se glavnom administratoru.";
     return (
       <main className="min-h-[65vh] bg-gray-50 px-4 py-16">
         <div className="mx-auto max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
-          Rehab platforma još nije aktivirana u bazi. Primenite migraciju
-          <code className="mx-1 rounded bg-white px-1.5 py-0.5 text-sm">
-            0004_rehab_basic.sql
-          </code>
-          .
+          {message}
         </div>
       </main>
     );

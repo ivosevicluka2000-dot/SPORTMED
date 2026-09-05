@@ -162,7 +162,7 @@ export function RehabAlert({
   if (!error && !saved) return null;
   const savedMessages: Record<string, string> = {
     created: "Nalog je kreiran i pristup je dodat.",
-    assigned: "Pristup i privremena lozinka su ažurirani.",
+    assigned: "Pristup je ažuriran. Postojeća lozinka nije menjana.",
     removed: "Pristup je uklonjen.",
     "club-created": "Novi klub je dodat i spreman za igrače i naloge.",
     "plan-copied": "Plan je kopiran u izabrani karton.",

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { savePeriodSummaryAction } from "@/app/[locale]/admin/rehab/_actions";
 import { createClient } from "@/lib/supabase/server";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
-import { dateInputValue, localBelgradeDateTimeToIso, monthInputValue } from "@/lib/rehab/dates";
+import { dateInputValue, isValidRehabDate, localBelgradeDateTimeToIso, monthInputValue } from "@/lib/rehab/dates";
 import type { Locale } from "@/i18n/routing";
 import {
   RehabAlert,
@@ -44,10 +44,10 @@ export default async function RehabReportsPage({
   const periodType = query.type === "year" ? "year" : "month";
   const currentYear = dateInputValue().slice(0, 4);
   const period = periodType === "year"
-    ? /^\d{4}$/.test(query.period ?? "")
+    ? isValidRehabDate(`${query.period ?? ""}-01-01`)
       ? query.period!
       : currentYear
-    : /^\d{4}-(0[1-9]|1[0-2])$/.test(query.period ?? "")
+    : isValidRehabDate(`${query.period ?? ""}-01`)
       ? query.period!
       : monthInputValue();
   const { startDate, endDate, startIso, endIso } = periodBounds(periodType, period);

@@ -12,6 +12,7 @@ export interface RehabAccessContext {
   userId: string;
   fullName: string;
   isGlobalAdmin: boolean;
+  loadError: boolean;
   workspaces: Array<
     RehabWorkspace & {
       role: RehabWorkspaceRole;

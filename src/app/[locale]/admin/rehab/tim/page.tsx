@@ -21,6 +21,7 @@ import {
 } from "@/components/rehab/RehabUi";
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
+import { RehabConfirmSubmitButton } from "@/components/rehab/RehabConfirmSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -135,7 +136,7 @@ export default async function RehabTeamPage({
           <div>
             <h2 className="font-heading text-2xl font-semibold text-navy">Napravi Rehab nalog</h2>
             <p className="mt-1 text-sm text-gray-500">
-              Unesite podatke, izaberite dozvolu i kolegi prosledite privremenu lozinku. Ako email već postoji, uneta lozinka postaje njegova nova privremena lozinka.
+              Unesite podatke, izaberite dozvolu i kolegi prosledite privremenu lozinku. Ako email već postoji, nalog zadržava svoju sadašnju lozinku.
             </p>
           </div>
         </div>
@@ -151,8 +152,9 @@ export default async function RehabTeamPage({
             <input name="email" type="email" required className={rehabInputClass} />
           </label>
           <label>
-            <span className={rehabLabelClass}>Privremena lozinka</span>
-            <input name="password" type="password" required minLength={8} maxLength={72} autoComplete="new-password" className={rehabInputClass} />
+            <span className={rehabLabelClass}>Lozinka za novi nalog</span>
+            <input name="password" type="password" minLength={8} maxLength={72} autoComplete="new-password" className={rehabInputClass} />
+            <span className="mt-1 block text-xs text-gray-500">Ostavite prazno za postojeći nalog.</span>
           </label>
           {workspace.kind === "clinic" ? (
             <label>
@@ -244,9 +246,12 @@ export default async function RehabTeamPage({
                         <input type="hidden" name="locale" value={locale} />
                         <input type="hidden" name="workspace_id" value={workspace.id} />
                         <input type="hidden" name="user_id" value={member.user_id} />
-                        <button className="text-xs font-medium text-red-600 hover:underline">
+                        <RehabConfirmSubmitButton
+                          confirmMessage="Da li sigurno želite da uklonite ovaj pristup?"
+                          className="text-xs font-medium text-red-600 hover:underline"
+                        >
                           Ukloni
-                        </button>
+                        </RehabConfirmSubmitButton>
                       </form>
                     )}
                   </div>

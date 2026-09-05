@@ -1,5 +1,26 @@
 const BELGRADE_TIME_ZONE = "Europe/Belgrade";
 
+const REHAB_MIN_YEAR = 1900;
+const REHAB_MAX_YEAR = 2100;
+
+export function isValidRehabDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+
+  const [, yearText, monthText, dayText] = match;
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  if (year < REHAB_MIN_YEAR || year > REHAB_MAX_YEAR) return false;
+
+  const date = new Date(Date.UTC(year, month - 1, day, 12));
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+}
+
 export function formatRehabDate(value: string | Date, withTime = false): string {
   const date = value instanceof Date ? value : new Date(value);
   return new Intl.DateTimeFormat("sr-RS", {
@@ -17,6 +38,15 @@ export function localBelgradeDateTimeToIso(value: string): string {
   if (!match) throw new Error("Termin nije ispravno unet.");
 
   const [, y, m, d, hh, mm] = match;
+  if (
+    !isValidRehabDate(`${y}-${m}-${d}`) ||
+    Number(hh) < 0 ||
+    Number(hh) > 23 ||
+    Number(mm) < 0 ||
+    Number(mm) > 59
+  ) {
+    throw new Error("Termin nije ispravno unet.");
+  }
   const targetUtc = Date.UTC(+y, +m - 1, +d, +hh, +mm);
   const guess = new Date(targetUtc);
   const parts = new Intl.DateTimeFormat("en-CA", {

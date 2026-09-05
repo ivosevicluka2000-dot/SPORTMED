@@ -39,6 +39,7 @@ import {
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 import { RehabCopyLastEntryButton } from "@/components/rehab/RehabCopyLastEntryButton";
+import { RehabConfirmSubmitButton } from "@/components/rehab/RehabConfirmSubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -361,13 +362,13 @@ export default async function RehabPatientDetailPage({
                                   <input type="hidden" name="patient_id" value={patient.id} />
                                   <input type="hidden" name="entry_id" value={entry.id} />
                                   <input type="hidden" name="image_path" value={path} />
-                                  <button
-                                    type="submit"
+                                  <RehabConfirmSubmitButton
+                                    confirmMessage="Da li sigurno želite da uklonite ovu fotografiju?"
                                     aria-label={`Ukloni fotografiju ${imageIndex + 1}`}
                                     className="flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-sm font-semibold text-white hover:bg-red-600"
                                   >
                                     ×
-                                  </button>
+                                  </RehabConfirmSubmitButton>
                                 </form>
                               )}
                             </div>
@@ -451,7 +452,7 @@ export default async function RehabPatientDetailPage({
                   <div className="grid gap-4 sm:grid-cols-[1fr_200px]">
                     <label>
                       <span className={rehabLabelClass}>Naziv plana *</span>
-                      <input name="title" required placeholder="Npr. Rehabilitacija kolena" className={rehabInputClass} />
+                      <input name="title" required maxLength={200} placeholder="Npr. Rehabilitacija kolena" className={rehabInputClass} />
                     </label>
                     <label>
                       <span className={rehabLabelClass}>Početak *</span>
@@ -471,7 +472,7 @@ export default async function RehabPatientDetailPage({
                       className={rehabInputClass}
                       placeholder={"Jedan red predstavlja jedan dan.\nMobilnost i led 15 min\nVežbe aktivacije 3×10\n..."}
                     />
-                    <span className="mt-1 block text-xs text-gray-500">Jedan neprazan red = jedan dan plana.</span>
+                    <span className="mt-1 block text-xs text-gray-500">Jedan neprazan red = jedan dan plana. Najviše 60 dana po planu.</span>
                   </label>
                   <label>
                     <span className={rehabLabelClass}>Napomena</span>

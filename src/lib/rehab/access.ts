@@ -36,7 +36,7 @@ export async function getRehabAccessContext(
   locale: Locale
 ): Promise<RehabAccessContext> {
   const { supabase, user } = await getAuthenticatedUser(locale);
-  const [{ data: profile }, { data: workspaces }, { data: memberships }] =
+  const [profileResult, workspacesResult, membershipsResult] =
     await Promise.all([
       supabase
         .from("profiles")
@@ -52,6 +52,9 @@ export async function getRehabAccessContext(
         .select("workspace_id, role, patient_id")
         .eq("user_id", user.id),
     ]);
+  const { data: profile } = profileResult;
+  const { data: workspaces } = workspacesResult;
+  const { data: memberships } = membershipsResult;
 
   const isGlobalAdmin = profile?.role === "admin";
   const membershipMap = new Map<
@@ -86,6 +89,9 @@ export async function getRehabAccessContext(
     userId: user.id,
     fullName: profile?.full_name ?? user.email ?? "",
     isGlobalAdmin,
+    loadError: Boolean(
+      profileResult.error || workspacesResult.error || membershipsResult.error
+    ),
     workspaces: accessible,
   };
 }

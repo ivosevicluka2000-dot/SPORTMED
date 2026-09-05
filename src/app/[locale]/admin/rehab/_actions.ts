@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getPathname, type Locale } from "@/i18n/routing";
-import { localBelgradeDateTimeToIso } from "@/lib/rehab/dates";
+import { isValidRehabDate, localBelgradeDateTimeToIso } from "@/lib/rehab/dates";
 import { requireRehabWorkspace } from "@/lib/rehab/access";
 import { requireAdmin } from "@/lib/admin-helpers";
 
@@ -63,9 +64,9 @@ const patientSchema = z.object({
   lastName: z.string().min(1).max(100),
   email: z.union([z.literal(""), z.email()]),
   phone: z.string().max(50),
-  birthDate: z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]),
+  birthDate: z.union([z.literal(""), z.string().refine(isValidRehabDate)]),
   problem: z.string().max(3000),
-  startedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  startedOn: z.string().refine(isValidRehabDate),
   notes: z.string().max(5000),
 });
 
@@ -267,7 +268,7 @@ export async function createDailyEntryAction(formData: FormData) {
   const imageError = validateRehabImages(images);
 
   if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(recordedOn) ||
+    !isValidRehabDate(recordedOn) ||
     !condition ||
     condition.length > 1000 ||
     !therapy ||
@@ -346,7 +347,7 @@ export async function updateDailyEntryAction(formData: FormData) {
 
   if (
     !entryId ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(recordedOn) ||
+    !isValidRehabDate(recordedOn) ||
     !condition ||
     condition.length > 1000 ||
     !therapy ||
@@ -418,11 +419,26 @@ export async function createRehabPlanAction(formData: FormData) {
   const instructions = text(formData.get("instructions"))
     .split(/\r?\n/)
     .map((line) => line.trim())
-    .filter(Boolean)
-    .slice(0, 60);
+    .filter(Boolean);
+  const goal = text(formData.get("goal"));
+  const notes = text(formData.get("notes"));
 
-  if (!title || !/^\d{4}-\d{2}-\d{2}$/.test(startDate) || instructions.length === 0) {
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Unesite naziv, datum i najmanje jedan dan plana." }));
+  if (
+    !title ||
+    title.length > 200 ||
+    !isValidRehabDate(startDate) ||
+    instructions.length === 0 ||
+    instructions.length > 60 ||
+    instructions.some((line) => line.length > 3000) ||
+    goal.length > 1000 ||
+    notes.length > 3000
+  ) {
+    redirect(patientPath(locale, patientId, {
+      workspace: workspaceId,
+      error: instructions.length > 60
+        ? "Jedan plan može imati najviše 60 dana."
+        : "Unesite ispravan naziv, datum i najmanje jedan dan plana.",
+    }));
   }
 
   const end = new Date(`${startDate}T12:00:00Z`);
@@ -436,8 +452,8 @@ export async function createRehabPlanAction(formData: FormData) {
       title,
       start_date: startDate,
       end_date: endDate,
-      goal: optional(text(formData.get("goal"))),
-      notes: optional(text(formData.get("notes"))),
+      goal: optional(goal),
+      notes: optional(notes),
       created_by: access.userId,
     })
     .select("id")
@@ -480,7 +496,7 @@ export async function copyRehabPlanAction(formData: FormData) {
   if (
     !sourcePlanId ||
     !targetPatientId ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(startDate)
+    !isValidRehabDate(startDate)
   ) {
     redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Podaci za kopiranje plana nisu ispravni." }));
   }
@@ -593,7 +609,21 @@ export async function removeDailyEntryImageAction(formData: FormData) {
     redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slika nije uklonjena iz dnevnog unosa." }));
   }
 
-  await access.supabase.storage.from(REHAB_IMAGE_BUCKET).remove([imagePath]);
+  const { error: storageError } = await access.supabase.storage
+    .from(REHAB_IMAGE_BUCKET)
+    .remove([imagePath]);
+  if (storageError) {
+    await access.supabase
+      .from("rehab_daily_entries")
+      .update({ image_paths: imagePaths })
+      .eq("id", entryId)
+      .eq("patient_id", patientId)
+      .eq("workspace_id", workspaceId);
+    redirect(patientPath(locale, patientId, {
+      workspace: workspaceId,
+      error: "Fotografija trenutno nije uklonjena. Pokušajte ponovo.",
+    }));
+  }
   redirect(patientPath(locale, patientId, { workspace: workspaceId, saved: "image-removed" }));
 }
 
@@ -612,59 +642,29 @@ export async function updateRehabPlanAction(formData: FormData) {
     !planId ||
     !title ||
     title.length > 200 ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(startDate) ||
+    !isValidRehabDate(startDate) ||
     goal.length > 1000 ||
     notes.length > 3000
   ) {
     redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Podaci plana nisu ispravni." }));
   }
 
-  const { data: days, error: daysReadError } = await access.supabase
-    .from("rehab_plan_days")
-    .select("id, day_number")
-    .eq("plan_id", planId)
-    .eq("workspace_id", workspaceId)
-    .order("day_number", { ascending: true });
-
-  if (daysReadError || !days?.length) {
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dani plana nisu pronađeni." }));
-  }
-
-  const end = new Date(`${startDate}T12:00:00Z`);
-  end.setUTCDate(end.getUTCDate() + days.length - 1);
-  const { error: planError } = await access.supabase
-    .from("rehab_plans")
-    .update({
-      title,
-      start_date: startDate,
-      end_date: end.toISOString().slice(0, 10),
-      goal: optional(goal),
-      notes: optional(notes),
-    })
-    .eq("id", planId)
-    .eq("patient_id", patientId)
-    .eq("workspace_id", workspaceId);
-
-  if (planError) {
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Plan nije izmenjen." }));
-  }
-
-  const dayUpdates = await Promise.all(
-    days.map((day) => {
-      const planned = new Date(`${startDate}T12:00:00Z`);
-      planned.setUTCDate(planned.getUTCDate() + day.day_number - 1);
-      return access.supabase
-        .from("rehab_plan_days")
-        .update({ planned_date: planned.toISOString().slice(0, 10) })
-        .eq("id", day.id)
-        .eq("workspace_id", workspaceId);
-    })
+  const { data: updated, error } = await access.supabase.rpc(
+    "update_rehab_plan_schedule",
+    {
+      p_workspace_id: workspaceId,
+      p_patient_id: patientId,
+      p_plan_id: planId,
+      p_title: title,
+      p_start_date: startDate,
+      p_goal: optional(goal),
+      p_notes: optional(notes),
+    }
   );
-  const dayError = dayUpdates.some((result) => result.error);
 
   redirect(patientPath(locale, patientId, {
     workspace: workspaceId,
-    ...(dayError ? { error: "Plan je izmenjen, ali datumi pojedinih dana nisu sačuvani." } : { saved: "plan-updated" }),
+    ...(error || !updated ? { error: "Plan nije izmenjen." } : { saved: "plan-updated" }),
   }));
 }
 
@@ -677,16 +677,38 @@ export async function updatePlanDayAction(formData: FormData) {
   const plannedDate = text(formData.get("planned_date"));
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
   if (
+    !dayId ||
     !instructions ||
     instructions.length > 3000 ||
-    (plannedDate && !/^\d{4}-\d{2}-\d{2}$/.test(plannedDate))
+    (plannedDate && !isValidRehabDate(plannedDate))
   ) {
     redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Datum i opis dana nisu ispravni." }));
   }
+
+  const { data: day } = await access.supabase
+    .from("rehab_plan_days")
+    .select("plan_id")
+    .eq("id", dayId)
+    .eq("workspace_id", workspaceId)
+    .maybeSingle();
+  const { data: plan } = day
+    ? await access.supabase
+        .from("rehab_plans")
+        .select("id")
+        .eq("id", day.plan_id)
+        .eq("patient_id", patientId)
+        .eq("workspace_id", workspaceId)
+        .maybeSingle()
+    : { data: null };
+  if (!day || !plan) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dan plana nije pronađen." }));
+  }
+
   const { error } = await access.supabase
     .from("rehab_plan_days")
     .update({ instructions, planned_date: optional(plannedDate) })
     .eq("id", dayId)
+    .eq("plan_id", plan.id)
     .eq("workspace_id", workspaceId);
   redirect(patientPath(locale, patientId, { workspace: workspaceId, ...(error ? { error: "Dan plana nije izmenjen." } : { saved: "day" }) }));
 }
@@ -702,6 +724,7 @@ export async function updatePlanStatusAction(formData: FormData) {
     .from("rehab_plans")
     .update({ status })
     .eq("id", planId)
+    .eq("patient_id", patientId)
     .eq("workspace_id", workspaceId);
   redirect(patientPath(locale, patientId, { workspace: workspaceId, ...(error ? { error: "Status plana nije promenjen." } : { saved: "plan-status" }) }));
 }
@@ -719,8 +742,16 @@ export async function createAppointmentAction(formData: FormData) {
   }
 
   const duration = Number(text(formData.get("duration_minutes")) || "60");
-  if (!Number.isInteger(duration) || duration < 15 || duration > 240) {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Trajanje termina nije ispravno." }));
+  const therapy = text(formData.get("therapy"));
+  const notes = text(formData.get("notes"));
+  if (
+    !Number.isInteger(duration) ||
+    duration < 15 ||
+    duration > 240 ||
+    therapy.length > 1000 ||
+    notes.length > 2000
+  ) {
+    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Podaci termina nisu ispravni." }));
   }
 
   const { data: patient } = await access.supabase
@@ -743,8 +774,8 @@ export async function createAppointmentAction(formData: FormData) {
     patient_id: patientId,
     starts_at: startsAt,
     duration_minutes: duration,
-    therapy: optional(text(formData.get("therapy"))),
-    notes: optional(text(formData.get("notes"))),
+    therapy: optional(therapy),
+    notes: optional(notes),
     reminder_email: optional(reminderEmail),
     reminder_hours_before: 24,
     created_by: access.userId,
@@ -805,7 +836,10 @@ export async function updateAppointmentStatusAction(formData: FormData) {
   const workspaceId = text(formData.get("workspace_id"));
   const appointmentId = text(formData.get("appointment_id"));
   const rawStatus = text(formData.get("status"));
-  const status = rawStatus === "completed" || rawStatus === "cancelled" ? rawStatus : "scheduled";
+  if (!appointmentId || !["scheduled", "completed", "cancelled"].includes(rawStatus)) {
+    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Status termina nije ispravan." }));
+  }
+  const status = rawStatus as "scheduled" | "completed" | "cancelled";
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
   const { error } = await access.supabase
     .from("rehab_appointments")
@@ -820,11 +854,13 @@ export async function savePeriodSummaryAction(formData: FormData) {
   const workspaceId = text(formData.get("workspace_id"));
   const periodType = text(formData.get("period_type")) === "year" ? "year" : "month";
   const period = text(formData.get("period"));
+  const conclusion = text(formData.get("conclusion"));
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
-  const valid = periodType === "year"
+  const periodYear = Number(period.slice(0, 4));
+  const valid = periodYear >= 2020 && periodYear <= 2100 && (periodType === "year"
     ? /^\d{4}$/.test(period)
-    : /^\d{4}-(0[1-9]|1[0-2])$/.test(period);
-  if (!valid) {
+    : /^\d{4}-(0[1-9]|1[0-2])$/.test(period));
+  if (!valid || conclusion.length > 10000) {
     redirect(pathWithQuery(locale, "/rehab/izvestaji", { workspace: workspaceId, error: "Period nije ispravan." }));
   }
   const periodStart = periodType === "year" ? `${period}-01-01` : `${period}-01`;
@@ -833,7 +869,7 @@ export async function savePeriodSummaryAction(formData: FormData) {
       workspace_id: workspaceId,
       period_type: periodType,
       period_start: periodStart,
-      conclusion: text(formData.get("conclusion")),
+      conclusion,
       created_by: access.userId,
     },
     { onConflict: "workspace_id,period_type,period_start" }
@@ -879,7 +915,7 @@ export async function addWorkspaceMemberAction(formData: FormData) {
   const workspaceId = text(formData.get("workspace_id"));
   const email = text(formData.get("email")).toLowerCase();
   const fullName = text(formData.get("full_name"));
-  const password = text(formData.get("password"));
+  const password = String(formData.get("password") ?? "");
   const requestedRole = text(formData.get("role"));
   const patientId = text(formData.get("patient_id"));
   await requireAdmin();
@@ -888,7 +924,7 @@ export async function addWorkspaceMemberAction(formData: FormData) {
     .object({
       email: z.email(),
       fullName: z.string().min(2).max(100),
-      password: z.string().min(8).max(72),
+      password: z.union([z.literal(""), z.string().min(8).max(72)]),
     })
     .safeParse({ email, fullName, password });
   if (!parsed.success) {
@@ -919,13 +955,46 @@ export async function addWorkspaceMemberAction(formData: FormData) {
     }
   }
 
-  const { data: listed, error: listError } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
-  if (listError) {
-    redirect(pathWithQuery(locale, "/rehab/tim", { workspace: workspaceId, error: "Nalog nije moguće kreirati." }));
+  let target: User | null = null;
+  let page = 1;
+  do {
+    const { data: listed, error: listError } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+    if (listError) {
+      redirect(pathWithQuery(locale, "/rehab/tim", { workspace: workspaceId, error: "Nalog nije moguće kreirati." }));
+    }
+    target = listed.users.find((user) => user.email?.toLowerCase() === email) ?? null;
+    if (target || listed.users.length < 1000) break;
+    page += 1;
+  } while (page > 0);
+
+  if (target) {
+    const { data: existingProfile, error: profileError } = await admin
+      .from("profiles")
+      .select("role")
+      .eq("id", target.id)
+      .maybeSingle();
+    if (profileError || !existingProfile) {
+      redirect(pathWithQuery(locale, "/rehab/tim", {
+        workspace: workspaceId,
+        error: "Nije moguće proveriti postojeći nalog. Pokušajte ponovo.",
+      }));
+    }
+    if (existingProfile?.role === "admin") {
+      redirect(pathWithQuery(locale, "/rehab/tim", {
+        workspace: workspaceId,
+        error: "Ovaj email pripada glavnom administratoru, koji već ima pristup svim prostorima.",
+      }));
+    }
   }
-  let target = listed.users.find((user) => user.email?.toLowerCase() === email);
+
   let createdUserId: string | null = null;
   if (!target) {
+    if (!password) {
+      redirect(pathWithQuery(locale, "/rehab/tim", {
+        workspace: workspaceId,
+        error: "Za novi nalog unesite lozinku od najmanje 8 karaktera.",
+      }));
+    }
     const { data: created, error: createError } = await admin.auth.admin.createUser({
       email,
       password,
@@ -976,20 +1045,14 @@ export async function addWorkspaceMemberAction(formData: FormData) {
   }
 
   if (!error && !createdUserId) {
-    const [{ error: profileError }, { error: passwordError }] = await Promise.all([
-      admin
-        .from("profiles")
-        .update({ full_name: fullName })
-        .eq("id", target.id),
-      admin.auth.admin.updateUserById(target.id, {
-        password,
-        user_metadata: { ...target.user_metadata, full_name: fullName },
-      }),
-    ]);
-    if (profileError || passwordError) {
+    const { error: profileError } = await admin
+      .from("profiles")
+      .update({ full_name: fullName })
+      .eq("id", target.id);
+    if (profileError) {
       redirect(pathWithQuery(locale, "/rehab/tim", {
         workspace: workspaceId,
-        error: "Pristup je sačuvan, ali ime ili privremena lozinka nisu ažurirani. Pokušajte ponovo.",
+        error: "Pristup je sačuvan, ali ime nije ažurirano. Lozinka postojećeg naloga nije menjana.",
       }));
     }
   }
