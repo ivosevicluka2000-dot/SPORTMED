@@ -45,7 +45,11 @@ EMAIL_FROM=
 CRON_SECRET=
 ```
 
-`vercel.json` poziva `/api/cron/rehab-reminders` svakog sata. Vrednost `CRON_SECRET` mora biti jaka nasumična vrednost i ne sme ići u klijentski kod.
+Satni posao sada pokreće Supabase Cron (migracija `0008_rehab_reminder_scheduler.sql`), jer Vercel Hobby ne podržava satno zakazivanje. `vercel.json` ne sadrži cron posao.
+
+U Supabase Vault podesiti `rehab_reminder_url` na produkcioni HTTPS URL sa putanjom `/api/cron/rehab-reminders`, a `rehab_cron_secret` na istu jaku nasumičnu vrednost kao Vercel `CRON_SECRET`. Tajne ne upisivati u Git. Posao `rehab-reminders-hourly` radi u 17. minutu svakog sata; podsetnik je okvirno 24 sata pre termina, uz odstupanje do jednog sata.
+
+Proveriti `cron.job_run_details` i HTTP rezultate u `net._http_response`: uspešan cron run znači da je HTTP zahtev zakazan, ne da je email isporučen. Očekivan HTTP rezultat je 200 sa `failed: 0`. Kod 401 znači da tajne nisu usklađene. Supabase baza mora biti aktivna; pauzirana baza neće pokretati posao. Email slanje i dalje koristi postojeći Resend nalog i njegova ograničenja.
 
 ## 4. Provera pre objavljivanja
 
