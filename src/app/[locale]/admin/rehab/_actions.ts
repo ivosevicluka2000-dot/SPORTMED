@@ -30,7 +30,8 @@ function pathWithQuery(
     | "/rehab/pacijenti/novi"
     | "/rehab/termini"
     | "/rehab/izvestaji"
-    | "/rehab/tim",
+    | "/rehab/tim"
+    | "/rehab/klubovi",
   query: Record<string, string | undefined>
 ) {
   const pathname = getPathname({ locale, href });
@@ -581,9 +582,10 @@ export async function removeDailyEntryImageAction(formData: FormData) {
   const entryId = text(formData.get("entry_id"));
   const imagePath = text(formData.get("image_path"));
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
-  const expectedPrefix = `${workspaceId}/${patientId}/${entryId}/`;
-
-  if (!entryId || !imagePath.startsWith(expectedPrefix)) {
+  const imageSegments = imagePath.split("/");
+  // A transferred photo keeps its original workspace prefix. Ownership is
+  // checked against the current card/entry and storage RLS, not that prefix.
+  if (!entryId || imageSegments.length !== 4 || imageSegments[1] !== patientId || imageSegments[2] !== entryId) {
     redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Slika nije ispravno izabrana." }));
   }
 
@@ -884,7 +886,7 @@ export async function createClubWorkspaceAction(formData: FormData) {
   await requireAdmin();
 
   if (!parsed.success) {
-    redirect(pathWithQuery(locale, "/rehab/tim", {
+    redirect(pathWithQuery(locale, "/rehab/klubovi", {
       error: "Unesite naziv kluba od najmanje 2 karaktera.",
     }));
   }
@@ -904,7 +906,7 @@ export async function createClubWorkspaceAction(formData: FormData) {
     .select("id")
     .single();
 
-  redirect(pathWithQuery(locale, "/rehab/tim", {
+  redirect(pathWithQuery(locale, error ? "/rehab/klubovi" : "/rehab/pacijenti", {
     ...(data?.id ? { workspace: data.id } : {}),
     ...(error ? { error: "Klub nije dodat. Pokušajte ponovo." } : { saved: "club-created" }),
   }));

@@ -10,7 +10,8 @@ export type RehabHref =
   | "/rehab/pacijenti/novi"
   | "/rehab/termini"
   | "/rehab/izvestaji"
-  | "/rehab/tim";
+  | "/rehab/tim"
+  | "/rehab/klubovi";
 
 export const rehabInputClass =
   "w-full rounded-md border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20 disabled:bg-gray-50 disabled:text-gray-500";
@@ -167,6 +168,7 @@ export function RehabAlert({
     "club-created": "Novi klub je dodat i spreman za igrače i naloge.",
     "plan-copied": "Plan je kopiran u izabrani karton.",
     "image-removed": "Fotografija je uklonjena.",
+    "player-transferred": "Igrač i njegov sportski karton su premešteni. Novi klub sada ima pristup, a prethodni više nema.",
   };
   return (
     <div

@@ -46,6 +46,7 @@ export function RehabNavigation({
   const pathname = usePathname();
   const locale = useLocale() as Locale;
   const searchParams = useSearchParams();
+  const isClubIndex = pathname === "/rehab/klubovi";
   const workspace = searchParams.get("workspace") ?? undefined;
   const selectedWorkspace =
     workspaces.find((item) => item.id === workspace) ?? workspaces[0];
@@ -53,7 +54,7 @@ export function RehabNavigation({
     ? baseItems.filter((item) => item.href === "/rehab/pacijenti")
     : baseItems;
   const items = isGlobalAdmin
-    ? [...visibleBaseItems, { href: "/rehab/tim" as RehabHref, label: "Nalozi i pristupi", icon: Users }]
+    ? [...visibleBaseItems, { href: "/rehab/tim" as RehabHref, label: selectedWorkspace?.kind === "clinic" ? "Fizioterapeuti" : "Osobe sa pristupom", icon: Users }]
     : visibleBaseItems;
 
   const linkClass = (href: RehabHref) => {
@@ -70,10 +71,14 @@ export function RehabNavigation({
 
   return (
     <div className="mx-auto max-w-[1500px] px-4 pb-3 sm:px-6 lg:px-8">
-      {selectedWorkspace && (
+      {isGlobalAdmin && <nav aria-label="Klinika i klubovi" className="mb-4 flex gap-2 border-b border-gray-100 pb-3">
+        {workspaces.find(w => w.kind === "clinic") && <Link href={rehabUrl(locale, "/rehab/pacijenti", { workspace: workspaces.find(w => w.kind === "clinic")!.id })} className={`inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold ${selectedWorkspace?.kind === "clinic" && pathname !== "/rehab/klubovi" ? "bg-teal-dark text-white" : "bg-gray-100 text-navy"}`}><Building2 className="h-4 w-4" />Klinika</Link>}
+        <Link href={rehabUrl(locale, "/rehab/klubovi")} className={`inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold ${selectedWorkspace?.kind === "club" || pathname === "/rehab/klubovi" ? "bg-amber-500 text-white" : "bg-gray-100 text-navy"}`}><Trophy className="h-4 w-4" />Klubovi</Link>
+      </nav>}
+      {!isClubIndex && selectedWorkspace && (
         <div className="mb-2 flex items-center justify-between gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-            Radni prostor
+            Trenutno gledate
           </span>
           <span
             className={cn(
@@ -93,7 +98,7 @@ export function RehabNavigation({
         </div>
       )}
 
-      <nav aria-label="Rehab navigacija">
+      {!isClubIndex && <nav aria-label="Rehab navigacija">
         <div className="hidden gap-1 overflow-x-auto sm:flex">
           {items.map((item) => {
             const Icon = item.icon;
@@ -109,7 +114,7 @@ export function RehabNavigation({
                 <Icon className="h-4 w-4" />
                 {item.href === "/rehab/pacijenti" && selectedWorkspace?.role === "player"
                   ? "Moj karton"
-                  : item.label}
+                  : item.href === "/rehab/pacijenti" ? selectedWorkspace?.kind === "club" ? "Igrači" : "Pacijenti" : item.label}
               </Link>
             );
           })}
@@ -156,7 +161,7 @@ export function RehabNavigation({
                   className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
                   <Users className="h-4 w-4" />
-                  Nalozi i pristupi
+                  {selectedWorkspace?.kind === "clinic" ? "Fizioterapeuti" : "Osobe sa pristupom"}
                 </Link>
                 <Link
                   href={`/${locale}/admin`}
@@ -169,7 +174,7 @@ export function RehabNavigation({
             </details>
           )}
         </div>
-      </nav>
+      </nav>}
     </div>
   );
 }

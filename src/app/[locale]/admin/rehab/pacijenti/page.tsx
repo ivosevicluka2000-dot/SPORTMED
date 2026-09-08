@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Search, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { RehabContextTabs } from "@/components/rehab/RehabContextTabs";
+import { RehabTransferPlayerForm } from "@/components/rehab/RehabTransferPlayerForm";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
 import { formatRehabDate } from "@/lib/rehab/dates";
 import type { RehabPatient } from "@/lib/rehab/types";
@@ -9,7 +11,7 @@ import {
   EmptyState,
   RehabPageHeader,
   RehabPanel,
-  WorkspaceTabs,
+  RehabAlert,
   rehabInputClass,
   rehabPatientUrl,
   rehabUrl,
@@ -22,7 +24,7 @@ export default async function RehabPatientsPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ workspace?: string; q?: string; status?: string }>;
+  searchParams: Promise<{ workspace?: string; q?: string; status?: string; error?: string; saved?: string }>;
 }) {
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
   const locale = rawLocale as Locale;
@@ -48,6 +50,22 @@ export default async function RehabPatientsPage({
   }
   const { data } = await request.limit(300);
   const rows = (data ?? []) as RehabPatient[];
+  const transferablePlayers: Array<{ id: string; name: string; workspaceId: string; clubName: string }> = [];
+  let transferLoadError = false;
+  if (access.isGlobalAdmin && workspace.kind === "club") {
+    const clubNames = new Map(access.workspaces.filter(w => w.kind === "club").map(w => [w.id, w.name]));
+    for (let offset = 0; ; offset += 500) {
+      const { data: batch, error } = await supabase.from("rehab_patients")
+        .select("id, first_name, last_name, workspace_id").eq("record_type", "player")
+        .neq("workspace_id", workspace.id).order("last_name").order("id").range(offset, offset + 499);
+      if (error) { transferLoadError = true; break; }
+      for (const p of batch ?? []) {
+        const clubName = clubNames.get(p.workspace_id);
+        if (clubName) transferablePlayers.push({ id: p.id, name: `${p.first_name} ${p.last_name}`, workspaceId: p.workspace_id, clubName });
+      }
+      if (!batch || batch.length < 500) break;
+    }
+  }
   const patientIds = rows.map((patient) => patient.id);
   const lastTherapyByPatient = new Map<string, string>();
   const nextAppointmentByPatient = new Map<string, string>();
@@ -89,7 +107,7 @@ export default async function RehabPatientsPage({
     <div>
       <RehabPageHeader
         eyebrow={workspace.name}
-        title={workspace.role === "player" ? "Moj karton" : workspace.kind === "club" ? "Igrači" : "Pacijenti"}
+        title={workspace.role === "player" ? "Moj karton" : workspace.kind === "club" ? workspace.name : "Klinika — pacijenti"}
         description={workspace.role === "player"
           ? "Vaši podaci, tok rehabilitacije i plan po danima."
           : "Kartoni, kontakt podaci, problem i početak rehabilitacije."}
@@ -104,13 +122,12 @@ export default async function RehabPatientsPage({
           ) : null
         }
       />
-      <WorkspaceTabs
-        access={access}
-        selectedId={workspace.id}
-        locale={locale}
-        href="/rehab/pacijenti"
-        query={{ q: query.q, status }}
-      />
+      <RehabContextTabs locale={locale} workspace={workspace} current="patients" isAdmin={access.isGlobalAdmin} />
+      <RehabAlert error={query.error} saved={query.saved} />
+      {access.isGlobalAdmin && workspace.kind === "club" && <details className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+        <summary className="cursor-pointer font-medium text-navy">Dodaj postojećeg igrača iz drugog kluba</summary>
+        {transferLoadError ? <p role="alert" className="mt-4 text-red-700">Spisak igrača nije učitan. Osvežite stranicu.</p> : <RehabTransferPlayerForm locale={locale} workspaceId={workspace.id} workspaceName={workspace.name} players={transferablePlayers} />}
+      </details>}
 
       {workspace.role !== "player" && (
         <RehabPanel className="mb-6">

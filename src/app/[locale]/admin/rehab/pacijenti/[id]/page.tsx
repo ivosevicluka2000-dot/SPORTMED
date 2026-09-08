@@ -40,6 +40,8 @@ import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 import { RehabCopyLastEntryButton } from "@/components/rehab/RehabCopyLastEntryButton";
 import { RehabConfirmSubmitButton } from "@/components/rehab/RehabConfirmSubmitButton";
+import { RehabAccountForm } from "@/components/rehab/RehabAccountForm";
+import { RehabMemberList } from "@/components/rehab/RehabMemberList";
 
 export const dynamic = "force-dynamic";
 
@@ -123,7 +125,7 @@ export default async function RehabPatientDetailPage({
       ? admin.from("profiles").select("id, full_name").in("id", creatorIds)
       : Promise.resolve({ data: [] as Array<{ id: string; full_name: string | null }> }),
     imagePaths.length > 0
-      ? supabase.storage.from("rehab-entry-images").createSignedUrls(imagePaths, 60 * 60)
+      ? supabase.storage.from("rehab-entry-images").createSignedUrls(imagePaths, 5 * 60)
       : Promise.resolve({ data: [] as Array<{ path: string; signedUrl: string }> }),
   ]);
   const creatorNameById = new Map(
@@ -196,6 +198,12 @@ export default async function RehabPatientDetailPage({
         }
       />
       <RehabAlert error={query.error} saved={query.saved} />
+      {access.isGlobalAdmin && workspace.kind === "club" && patient.record_type === "player" && <details className="mb-6 rounded-xl border border-gray-200 bg-white p-5" open={query.saved === "created" || query.saved === "assigned" || undefined}>
+        <summary className="cursor-pointer font-medium text-navy">Omogući igraču prijavu</summary>
+        <div className="mt-4 max-w-3xl"><RehabAccountForm locale={locale} workspaceId={workspace.id} workspaceName={workspace.name} kind="club" player={{ id: patient.id, name: `${patient.first_name} ${patient.last_name}`, email: patient.email }} />
+          <h2 className="mb-2 mt-6 font-semibold text-navy">Nalozi koji vide ovaj karton</h2><RehabMemberList locale={locale} workspace={workspace} patientId={patient.id} />
+        </div>
+      </details>}
 
       <div className={`mb-6 grid gap-3 sm:grid-cols-2 ${workspace.role === "player" ? "xl:grid-cols-3" : "xl:grid-cols-4"}`}>
         <RehabPanel className="flex items-center gap-3 p-4 md:p-4">

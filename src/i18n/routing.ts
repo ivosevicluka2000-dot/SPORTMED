@@ -127,6 +127,7 @@ export const routing = defineRouting({
     "/rehab/termini": "/rehab/termini",
     "/rehab/izvestaji": "/rehab/izvestaji",
     "/rehab/tim": "/rehab/tim",
+    "/rehab/klubovi": "/rehab/klubovi",
     "/admin/rehab": "/admin/rehab",
     "/admin/rehab/pacijenti": "/admin/rehab/pacijenti",
     "/admin/rehab/pacijenti/novi": "/admin/rehab/pacijenti/novi",
