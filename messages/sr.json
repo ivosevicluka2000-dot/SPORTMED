@@ -1317,7 +1317,31 @@
       "submit": "Pošalji link",
       "submitting": "Slanje...",
       "sent": "Ako nalog postoji, poslali smo vam e-mail sa linkom.",
-      "backToLogin": "Nazad na prijavu"
+      "backToLogin": "Nazad na prijavu",
+      "errorGeneric": "Link trenutno nije moguće poslati. Proverite email adresu i pokušajte ponovo za nekoliko minuta."
+    },
+    "newPassword": {
+      "title": "Postavi novu lozinku",
+      "loading": "Provera linka...",
+      "confirmIntro": "Kliknite na Nastavi da proverimo link iz emaila. Zatim ćete moći da unesete novu lozinku.",
+      "continue": "Nastavi",
+      "invalid": "Ovaj link nije ispravan, istekao je ili je već iskorišćen. Zatražite novi link i otvorite poslednji email koji stigne.",
+      "newLink": "Pošalji mi novi link",
+      "account": "Menjate lozinku za:",
+      "password": "Nova lozinka",
+      "confirmation": "Ponovite novu lozinku",
+      "hint": "Najmanje 8 znakova. Koristite dužu, jedinstvenu lozinku koju ne koristite na drugim sajtovima. Ne osvežavajte stranicu dok je ne sačuvate.",
+      "save": "Sačuvaj novu lozinku",
+      "saving": "Čuvanje...",
+      "saved": "Nova lozinka je sačuvana. Sada se prijavite svojim emailom i novom lozinkom. Pristupi i podaci na nalogu ostaju isti.",
+      "weak": "Izaberite jaču lozinku: najmanje 8 znakova, najviše 72 bajta (slova sa kvačicama zauzimaju više od jednog bajta).",
+      "mismatch": "Lozinke se ne poklapaju. Unesite istu lozinku u oba polja.",
+      "same": "Nova lozinka mora biti drugačija od prethodne.",
+      "network": "Provera nije uspela. Proverite internet vezu i pokušajte ponovo. Ako je link u međuvremenu iskorišćen, zatražite novi.",
+      "failed": "Promena lozinke nije potvrđena. Proverite vezu i pokušajte ponovo ili zatražite novi link.",
+      "adminLogin": "Prijava za admina",
+      "rehabLogin": "Prijava na Rehab platformu",
+      "accountLogin": "Prijava na korisnički nalog"
     },
     "dashboard": {
       "greeting": "Dobrodošli, {name}",

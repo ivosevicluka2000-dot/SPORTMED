@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { useLocale } from "next-intl";
+import { Link } from "@/i18n/routing";
 import {
   rehabSignInAction,
   type RehabLoginState,
@@ -64,9 +65,9 @@ export default function RehabLoginForm({ next }: { next?: string }) {
       >
         {pending ? "Prijavljivanje..." : "Prijavi se"}
       </button>
-      <p className="text-center text-xs leading-5 text-gray-500">
-        Ako vam je potrebna nova lozinka, obratite se glavnom administratoru.
-      </p>
+      <Link href="/nalog/oporavak-lozinke" className="block text-center text-sm text-teal underline">
+        Zaboravili ste lozinku?
+      </Link>
     </form>
   );
 }

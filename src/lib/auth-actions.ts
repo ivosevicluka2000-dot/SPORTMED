@@ -6,6 +6,8 @@ import { headers } from "next/headers";
 import { createClient } from "./supabase/server";
 import { getPathname } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
+import { createClient as createAuthClient } from "@supabase/supabase-js";
+import { RECOVERY_SITE_URL } from "@/lib/password-recovery";
 
 interface FormState {
   error?: string;
@@ -79,19 +81,22 @@ export async function requestPasswordResetAction(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState> {
-  const locale = (formData.get("locale") as Locale) || "sr";
+  const locale: Locale = formData.get("locale") === "en" ? "en" : "sr";
   const email = String(formData.get("email") ?? "").trim();
-  if (!email) return { error: "errorGeneric" };
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "errorGeneric" };
 
-  const h = await headers();
-  const origin =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
-
-  const supabase = await createClient();
-  await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}${localePath(locale, "/nalog")}`,
+  // Recovery email uses TokenHash, so it works across devices without a PKCE
+  // verifier cookie. Never derive the email destination from an untrusted Host.
+  const supabase = createAuthClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } },
+  );
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${RECOVERY_SITE_URL}${localePath(locale, "/nalog/nova-lozinka")}`,
   });
+  if (error && (error.status === 429 || !error.status || error.status >= 500)) {
+    return { error: "errorGeneric" };
+  }
   // Always return success to avoid email enumeration.
   return { success: "sent" };
 }

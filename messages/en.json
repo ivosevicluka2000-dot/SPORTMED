@@ -1317,7 +1317,31 @@
       "submit": "Send link",
       "submitting": "Sending...",
       "sent": "If an account exists, we sent you an email with a link.",
-      "backToLogin": "Back to sign in"
+      "backToLogin": "Back to sign in",
+      "errorGeneric": "We could not send the link right now. Check your email address and try again in a few minutes."
+    },
+    "newPassword": {
+      "title": "Set a new password",
+      "loading": "Checking your link...",
+      "confirmIntro": "Select Continue to check your email link. You can then enter a new password.",
+      "continue": "Continue",
+      "invalid": "This link is invalid, expired, or has already been used. Request a new link and open the most recent email.",
+      "newLink": "Send me a new link",
+      "account": "Changing password for:",
+      "password": "New password",
+      "confirmation": "Repeat your new password",
+      "hint": "At least 8 characters. Use a long, unique password you do not use elsewhere. Do not refresh this page until you save it.",
+      "save": "Save new password",
+      "saving": "Saving...",
+      "saved": "Your new password is saved. Sign in with your email and new password. Your permissions and data have not changed.",
+      "weak": "Choose a stronger password: at least 8 characters and at most 72 bytes (some characters use more than one byte).",
+      "mismatch": "The passwords do not match. Enter the same password in both fields.",
+      "same": "Your new password must be different from the previous one.",
+      "network": "Verification failed. Check your connection and try again. If the link was consumed, request a new one.",
+      "failed": "The password change was not confirmed. Check your connection and try again, or request a new link.",
+      "adminLogin": "Admin sign in",
+      "rehabLogin": "Rehab sign in",
+      "accountLogin": "Account sign in"
     },
     "dashboard": {
       "greeting": "Welcome, {name}",

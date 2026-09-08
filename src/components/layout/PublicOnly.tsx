@@ -9,7 +9,8 @@ export default function PublicOnly({ children }: { children: React.ReactNode }) 
     ? segments[1]
     : segments[0];
 
-  if (firstRouteSegment === "admin" || firstRouteSegment === "rehab") {
+  const isPasswordRecovery = pathname.endsWith("/nalog/nova-lozinka") || pathname.endsWith("/account/new-password");
+  if (firstRouteSegment === "admin" || firstRouteSegment === "rehab" || isPasswordRecovery) {
     return null;
   }
 

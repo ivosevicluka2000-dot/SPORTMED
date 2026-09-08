@@ -32,6 +32,7 @@ export default function PasswordResetForm() {
           {t("sent")}
         </p>
       )}
+      {state.error && <p className="text-sm text-red-700" role="alert">{t("errorGeneric")}</p>}
 
       <button
         type="submit"

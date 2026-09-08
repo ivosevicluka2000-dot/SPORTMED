@@ -86,6 +86,10 @@ export const routing = defineRouting({
       sr: "/nalog/oporavak-lozinke",
       en: "/account/password-reset",
     },
+    "/nalog/nova-lozinka": {
+      sr: "/nalog/nova-lozinka",
+      en: "/account/new-password",
+    },
     "/nalog/porudzbine/[orderNumber]": {
       sr: "/nalog/porudzbine/[orderNumber]",
       en: "/account/orders/[orderNumber]",
