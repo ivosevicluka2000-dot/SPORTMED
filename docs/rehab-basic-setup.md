@@ -115,3 +115,7 @@ npm run test:rehab:browser
 ```
 
 Potrebni su slobodni lokalni portovi 3100 i 54329. Na macOS test koristi instalirani Google Chrome; na drugim sistemima prethodno pokrenuti `npx playwright install chromium`. Test sam pravi privremenu kopiju aplikacije, pokreće sintetički API, proverava UI i gasi svoje procese. Ne učitava `.env.local` iz projekta. Na kraju ispisuje privremeni folder sa snimcima i PDF-ovima. Pokriveni su ceo klub, više osoba, pojedinac, iste tri opcije u klinici, ciklusi, promena jezika, mobilni prikaz i serversko odbijanje grupnog izveštaja za igrača čak i kada je onemogućena kontrola ručno uključena.
+
+### Ispravka provere identifikatora — 12. septembar 2026.
+
+Početna klinika i klub iz migracije 0004 imaju fiksne PostgreSQL UUID identifikatore bez RFC verzije i varijante. Validacija radnog prostora sada prihvata taj format (`z.guid()`), uz nepromenjene serverske provere pristupa. Time je uklonjena pogrešna poruka „Izaberite jednu ili više osoba za izveštaj” i usklađena provera izvornog kluba kod premeštanja igrača. Testni podaci sada koriste iste početne identifikatore, a browser provera obuhvata i direktnu štampu novog plana.

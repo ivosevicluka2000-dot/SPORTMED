@@ -4,7 +4,8 @@ import type { RehabPatient, RehabPlan, RehabDailyEntry } from "./types";
 
 export const reportRequestSchema = z
   .object({
-    workspaceId: z.uuid(),
+    // Seeded workspaces are PostgreSQL UUIDs without RFC version/variant bits.
+    workspaceId: z.guid(),
     scope: z.enum(["one", "selected", "all"]),
     ids: z.array(z.uuid()).max(10000),
     status: z.enum(["all", "active", "completed"]),

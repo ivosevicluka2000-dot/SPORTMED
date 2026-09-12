@@ -83,7 +83,7 @@ export async function transferRehabPlayerAction(form: FormData) {
   const workspaceId = value(form, "workspace_id");
   const access = await requireRehabWorkspace(locale, workspaceId, "manage");
   const back = (error: string) => rehabUrl(locale, "/rehab/pacijenti", { workspace: workspaceId, error });
-  const parsed = z.object({ patient: z.uuid(), source: z.uuid(), confirmed: z.literal("yes") }).safeParse({
+  const parsed = z.object({ patient: z.uuid(), source: z.guid(), confirmed: z.literal("yes") }).safeParse({
     patient: value(form, "patient_id"), source: value(form, "source_workspace_id"), confirmed: value(form, "confirm_transfer"),
   });
   if (access.workspace.kind !== "club" || !parsed.success) redirect(back("Izaberite igrača i potvrdite premeštanje u klub."));

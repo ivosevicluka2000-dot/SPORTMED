@@ -120,7 +120,7 @@ try {
       fullPage: true,
     });
     await page.goto(
-      "http://localhost:3100/en/rehab/pacijenti/30000000-0000-4000-8000-000000000002?workspace=20000000-0000-4000-8000-000000000002",
+      "http://localhost:3100/en/rehab/pacijenti/30000000-0000-4000-8000-000000000002?workspace=00000000-0000-0000-0000-000000000102",
     );
     await page.getByText("Plan by cycles", { exact: true }).waitFor();
     await page.getByText("+ Create new plan", { exact: true }).click();
@@ -168,8 +168,15 @@ try {
       path: join(outputDir, "card-cycles-en.png"),
       fullPage: true,
     });
+    const savedCardUrl = page.url();
+    const printPlanHref = await page.locator('a[href*="/planovi/"][href*="/stampa"]').first().getAttribute("href");
+    assert.ok(printPlanHref);
+    await page.goto(new URL(printPlanHref, savedCardUrl).href);
+    await page.getByRole("button", { name: "Print / save PDF", exact: true }).waitFor();
+    await page.getByRole("heading", { name: "Browser QA cycle plan", exact: true }).waitFor();
+    await page.getByText("Strength phase", { exact: true }).waitFor();
     await page.goto(
-      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=20000000-0000-4000-8000-000000000002",
+      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=00000000-0000-0000-0000-000000000102",
     );
     await page
       .getByRole("button", { name: "Preview report", exact: true })
@@ -210,7 +217,7 @@ try {
     await page.waitForURL((url) => url.pathname.startsWith("/sr/"));
     assert.equal(
       new URL(page.url()).searchParams.get("workspace"),
-      "20000000-0000-4000-8000-000000000002",
+      "00000000-0000-0000-0000-000000000102",
     );
     await page
       .getByRole("button", { name: "Prikaži izveštaj", exact: true })
@@ -234,7 +241,7 @@ try {
     // Check the one-person club flow and all three clinic scopes too.
     await page.setViewportSize({ width: 1440, height: 1050 });
     await page.goto(
-      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=20000000-0000-4000-8000-000000000002&patient=30000000-0000-4000-8000-000000000002",
+      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=00000000-0000-0000-0000-000000000102&patient=30000000-0000-4000-8000-000000000002",
     );
     await page
       .getByRole("button", { name: "Preview report", exact: true })
@@ -242,7 +249,7 @@ try {
     await page.locator(".rehab-report-document").waitFor();
     assert.equal(await page.locator(".rehab-report-person").count(), 1);
     await page.goto(
-      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=20000000-0000-4000-8000-000000000001",
+      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=00000000-0000-0000-0000-000000000101",
     );
     await page
       .getByRole("button", { name: "Preview report", exact: true })
@@ -279,7 +286,7 @@ try {
       .click();
     await playerPage.waitForURL((url) => !url.pathname.includes("login"));
     await playerPage.goto(
-      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=20000000-0000-4000-8000-000000000002",
+      "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=00000000-0000-0000-0000-000000000102",
     );
     await playerPage
       .getByRole("button", { name: "Preview report", exact: true })

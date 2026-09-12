@@ -44,8 +44,8 @@ export const ids = {
   viewer: "10000000-0000-4000-8000-000000000003",
   player: "10000000-0000-4000-8000-000000000004",
   viewerB: "10000000-0000-4000-8000-000000000005",
-  clinic: "20000000-0000-4000-8000-000000000001",
-  club: "20000000-0000-4000-8000-000000000002",
+  clinic: "00000000-0000-0000-0000-000000000101",
+  club: "00000000-0000-0000-0000-000000000102",
   clubB: "20000000-0000-4000-8000-000000000003",
   patient: "30000000-0000-4000-8000-000000000001",
   athlete: "30000000-0000-4000-8000-000000000002",
@@ -66,7 +66,7 @@ export async function seedRehabTestDb(db) {
     [ids.clubB, "qa-club-b", "QA Club B", "club"],
   ])
     await db.query(
-      "insert into rehab_workspaces(id,slug,name,kind) values($1,$2,$3,$4)",
+      "insert into rehab_workspaces(id,slug,name,kind) values($1,$2,$3,$4) on conflict(id) do update set slug=excluded.slug,name=excluded.name,kind=excluded.kind",
       [id, slug, name, kind],
     );
   for (const [id, w, kind, name] of [

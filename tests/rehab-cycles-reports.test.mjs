@@ -138,3 +138,20 @@ test("all pages includes over 1000 records even when API caps pages; never retur
     ),
   );
 });
+
+// The original migration uses fixed PostgreSQL UUIDs without RFC version bits.
+test("reports accept the original clinic and club IDs for one, several and all people", () => {
+  for (const workspaceId of [
+    "00000000-0000-0000-0000-000000000101",
+    "00000000-0000-0000-0000-000000000102",
+  ]) {
+    const base = { workspaceId, status: "all", period: "all", month: "", year: "", from: "", to: "", content: "both" };
+    const person = "30000000-0000-4000-8000-000000000001";
+    const other = "30000000-0000-4000-8000-000000000002";
+    for (const [scope, ids] of [["one", [person]], ["selected", [person, other]], ["all", []]]) {
+      assert.equal(reportRequestSchema.safeParse({ ...base, scope, ids }).success, true, `${workspaceId}: ${scope}`);
+    }
+    assert.equal(reportRequestSchema.safeParse({ ...base, scope: "selected", ids: [] }).success, false);
+    assert.equal(reportRequestSchema.safeParse({ ...base, workspaceId: "not-an-id", scope: "all", ids: [] }).success, false);
+  }
+});
