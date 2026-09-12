@@ -1,3 +1,5 @@
+import { translatedRehabMessage } from "@/lib/rehab/messages";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Building2, CheckCircle2, Trophy } from "lucide-react";
 import { getPathname, type Locale } from "@/i18n/routing";
@@ -10,6 +12,7 @@ export type RehabHref =
   | "/rehab/pacijenti/novi"
   | "/rehab/termini"
   | "/rehab/izvestaji"
+  | "/rehab/izvestaji/stampa"
   | "/rehab/tim"
   | "/rehab/klubovi";
 
@@ -160,15 +163,16 @@ export function RehabAlert({
   error?: string;
   saved?: string;
 }) {
+  const t = useTranslations("rehab");
   if (!error && !saved) return null;
   const savedMessages: Record<string, string> = {
-    created: "Nalog je kreiran i pristup je dodat.",
-    assigned: "Pristup je ažuriran. Postojeća lozinka nije menjana.",
-    removed: "Pristup je uklonjen.",
-    "club-created": "Novi klub je dodat i spreman za igrače i naloge.",
-    "plan-copied": "Plan je kopiran u izabrani karton.",
-    "image-removed": "Fotografija je uklonjena.",
-    "player-transferred": "Igrač i njegov sportski karton su premešteni. Novi klub sada ima pristup, a prethodni više nema.",
+    created: t("labelAccountCreatedAndAccessGranted"),
+    assigned: t("labelAccessUpdatedTheExistingPasswordHasNot"),
+    removed: t("labelAccessRemoved"),
+    "club-created": t("labelTheNewClubIsReadyForPlayers"),
+    "plan-copied": t("labelThePlanWasCopiedToTheSelected"),
+    "image-removed": t("labelPhotoRemoved"),
+    "player-transferred": t("labelThePlayerAndTheirSportsRecordHave"),
   };
   return (
     <div
@@ -181,7 +185,7 @@ export function RehabAlert({
       )}
     >
       {!error && <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />}
-      {error || (saved ? savedMessages[saved] : undefined) || "Sačuvano."}
+      {(error ? translatedRehabMessage(error,t) : undefined) || (saved ? savedMessages[saved] : undefined) || t("labelSaved")}
     </div>
   );
 }
@@ -209,6 +213,7 @@ export function EmptyState({ children }: { children: React.ReactNode }) {
 }
 
 export function RehabPainBadge({ value }: { value: number }) {
+  const t = useTranslations("rehab");
   return (
     <span
       className={cn(
@@ -220,7 +225,7 @@ export function RehabPainBadge({ value }: { value: number }) {
             : "bg-red-100 text-red-700"
       )}
     >
-      Bol: {value}/10
+       {t("labelPainextra4")} {value}/10
     </span>
   );
 }

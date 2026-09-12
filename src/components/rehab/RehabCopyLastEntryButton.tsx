@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 
 type EntryTemplate = {
   conditionSummary: string;
@@ -15,6 +17,7 @@ function setFormValue(form: HTMLFormElement, name: string, value: string) {
 }
 
 export function RehabCopyLastEntryButton({ entry }: { entry: EntryTemplate }) {
+  const t = useTranslations("rehab");
   return (
     <button
       type="button"
@@ -30,7 +33,6 @@ export function RehabCopyLastEntryButton({ entry }: { entry: EntryTemplate }) {
       }}
       className="rounded-md border border-teal/30 bg-white px-3 py-2 text-xs font-medium text-teal-dark hover:bg-teal-50"
     >
-      Popuni iz poslednjeg unosa
-    </button>
+       {t("labelFillFromTheLastEntry")} </button>
   );
 }

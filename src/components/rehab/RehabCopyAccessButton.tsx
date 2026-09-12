@@ -1,15 +1,18 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 import { useState } from "react";
 
 export function RehabCopyAccessButton({ email, scope, loginUrl }: { email: string; scope: string; loginUrl: string }) {
+  const t = useTranslations("rehab");
   const [result, setResult] = useState("");
-  const message = `Zdravo! Imaš pristup Rehab platformi.\nPrijava: ${loginUrl}\nEmail: ${email}\nPristup: ${scope}.\nPočetnu lozinku dobijaš zasebno. Ako već imaš nalog, koristi svoju postojeću lozinku.`;
+  const message = t("labelHelloYouHaveAccessToTheRehab", {v0: loginUrl, v1: email, v2: scope});
   return <div>
     <button type="button" className="text-sm font-medium text-teal hover:underline" onClick={async () => {
-      try { await navigator.clipboard.writeText(message); setResult("Poruka je kopirana."); }
-      catch { setResult("Kopiranje nije dostupno. Označite i kopirajte poruku ispod."); }
-    }}>Kopiraj poruku za prijavu</button>
+      try { await navigator.clipboard.writeText(message); setResult(t("labelMessageCopied")); }
+      catch { setResult(t("labelCopyingIsUnavailableSelectAndCopyThe")); }
+    }}>{t("labelCopyLoginMessage")}</button>
     {result && <p role="status" className="mt-1 text-xs text-gray-600">{result}</p>}
-    {result.startsWith("Kopiranje") && <textarea readOnly aria-label="Poruka za prijavu" value={message} rows={6} className="mt-2 w-full rounded border p-2 text-xs" />}
+    {result === t("labelCopyingIsUnavailableSelectAndCopyThe") && <textarea readOnly aria-label={t("labelLoginMessage")} value={message} rows={6} className="mt-2 w-full rounded border p-2 text-xs" />}
   </div>;
 }

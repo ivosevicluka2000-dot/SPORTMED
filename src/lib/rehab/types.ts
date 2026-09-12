@@ -70,11 +70,13 @@ export interface RehabPlan {
   workspace_id: string;
   title: string;
   start_date: string;
-  end_date: string;
+  end_date: string | null;
   goal: string | null;
   notes: string | null;
   status: "active" | "completed";
+  format: "daily" | "cycles";
   days?: RehabPlanDay[];
+  cycles?: RehabPlanCycle[];
 }
 
 export interface RehabAppointment {
@@ -90,4 +92,17 @@ export interface RehabAppointment {
   reminder_hours_before: number;
   reminder_sent_at: string | null;
   patient?: Pick<RehabPatient, "id" | "first_name" | "last_name" | "email"> | null;
+}
+
+export interface RehabPlanCycle {
+  id: string;
+  plan_id: string;
+  workspace_id: string;
+  cycle_number: number;
+  title: string;
+  goal: string | null;
+  instructions: string;
+  start_date: string | null;
+  end_date: string | null;
+  status: "planned" | "in_progress" | "completed";
 }

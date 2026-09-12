@@ -21,9 +21,10 @@ export function isValidRehabDate(value: string): boolean {
   );
 }
 
-export function formatRehabDate(value: string | Date, withTime = false): string {
+export function formatRehabDate(value: string | Date | null, withTime = false, locale = "sr"): string {
+  if (!value) return "—";
   const date = value instanceof Date ? value : new Date(value);
-  return new Intl.DateTimeFormat("sr-RS", {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "sr-RS", {
     timeZone: BELGRADE_TIME_ZONE,
     day: "2-digit",
     month: "2-digit",

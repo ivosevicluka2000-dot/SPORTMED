@@ -7,8 +7,9 @@ Modul je odvojena interna platforma na ruti `/rehab`. Nije deo javnog sajta niti
 - odvojena klinika i proizvoljan broj klubova
 - kartoni pacijenata i igrača
 - dnevni unos stanja, bola, terapije i napomene
-- rehabilitacioni plan po danima
-- prikaz plana za štampu ili čuvanje kao PDF iz browsera
+- novi rehabilitacioni planovi po ciklusima, uz očuvane izvorne dnevne planove
+- štampa planova i izveštaja za jednu, više ili sve osobe iz klinike/kluba; PDF iz browsera
+- srpski i engleski interfejs platforme i štampe
 - termini i pripremljen email podsetnik 24 sata ranije (aktivaciju proveriti posebno)
 - mesečni i godišnji brojevi, uključujući završene rehabilitacije, uz ručno unet zaključak
 - pristup admina, fizioterapeuta, predstavnika kluba i igrača
@@ -20,7 +21,7 @@ Modul je odvojena interna platforma na ruti `/rehab`. Nije deo javnog sajta niti
 Primeniti migracije redom; za ovo pojednostavljenje potrebna je i poslednja:
 
 ```text
-supabase/migrations/0004_rehab_basic.sql ... 0009_rehab_simple_management.sql
+supabase/migrations/0004_rehab_basic.sql ... 0010_rehab_cycles.sql
 ```
 
 Osnovna migracija kreira početne prostore i RLS pravila. Admin sa `profiles.role = 'admin'` vidi kliniku i sve klubove, uključujući naknadno dodate. Migracija 0009 dodaje transakciju premeštanja igrača i proverava privatne slike prema trenutnom kartonu, ne prema starom nazivu foldera. Primenjena je kroz Supabase SQL Editor 8. septembra 2026; ovaj projekat nema tabelu istorije CLI migracija, zato ne pokretati slepo sve migracije ponovo.
@@ -81,3 +82,36 @@ Proveriti `cron.job_run_details` i HTTP rezultate u `net._http_response`: uspeš
 - istorija svih izmena
 - SMS, Viber i WhatsApp poruke
 - uvoz podataka iz drugih aplikacija
+
+
+## Ciklusi i grupni izveštaji — 10. septembar 2026.
+
+Za ovu verziju je potrebna **nova migracija `0010_rehab_cycles.sql` pre puštanja aplikacije**. U ovoj izmeni ona je proverena samo u lokalnoj, izolovanoj PostgreSQL bazi; produkciona baza nije menjana. Ako su migracije zaključno sa 0009 već primenjene, primenjuje se samo 0010. Migracija ne šalje emailove i ne pokreće podsetnike.
+
+Novi plan se sastoji od ciklusa sa nazivom, opcionim ciljem, višerednim uputstvima, opcionim datumima i statusom (planiran/u toku/završen). Dodavanje, uklanjanje, promena redosleda i izmena ciklusa čuvaju se zajedno sa planom. Kraj plana je opcion i ne računa se iz broja ciklusa. Kopiranje plana briše datume ciklusa i vraća njihove statuse na „planiran”.
+
+Postojeći dnevni planovi ostaju u izvornom obliku i mogu da se štampaju. Radnja „Napravi plan po ciklusima iz ovog plana” prikazuje izvorna uputstva uz prazan obrazac ciklusa: terapeut ih raspoređuje i čuva novi plan. Original ostaje sačuvan. Evidencija obavljenih terapija i termini i dalje imaju stvarne datume.
+
+„Izaberi osobe i štampaj izveštaj” otvara izbor jedne osobe, više označenih ili svih osoba. Dostupni su filter statusa, svi datumi/mesec/godina/raspon i zbirni, pojedinačni ili oba prikaza. Izabrane osobe ostaju označene kroz pretragu i strane spiska. „Svi” uključuje ceo izabrani radni prostor, a filter statusa jasno sužava obuhvat. Pregled mora biti u celosti učitan pre štampe; greška ne proizvodi nepotpun dokument. Pojedinačni izveštaji počinju na novim stranama i prikazuju sve terapije u izabranom periodu.
+
+SR/EN u zaglavlju čuva radni prostor i URL filtere. Izbori štampe pamte se u sessionStorage za trenutni pregled; sam medicinski sadržaj se tu ne čuva. Slobodan tekst terapeuta se ne prevodi automatski. Igrač može da štampa samo svoj karton.
+
+### Lokalne provere
+
+```sh
+npm run test:rehab
+npm run build
+```
+
+Testovi uključuju PGlite PostgreSQL bazu u memoriji, stvarne migracije 0004–0007, 0009 i 0010, transakcije ciklusa, kopiranje, RLS i prenos igrača. Supabase auth/storage okruženje je minimalna lokalna testna šema; cron migracija 0008 nije deo ove provere. Testovi ne čitaju kredencijale i ne pristupaju produkciji.
+
+`tests/helpers/rehab-api-fixture.mjs` je isključivo lokalni HTTP test adapter na `127.0.0.1:54329`, sa sintetičkim podacima za proveru interfejsa. Ne koristi se u aplikaciji niti se deployuje kao ruta. Browser provere koriste zasebnu privremenu kopiju aplikacije i ovaj adapter; on ne zamenjuje RLS provere nad bazom.
+
+
+Za automatsku proveru u browseru:
+
+```sh
+npm run test:rehab:browser
+```
+
+Potrebni su slobodni lokalni portovi 3100 i 54329. Na macOS test koristi instalirani Google Chrome; na drugim sistemima prethodno pokrenuti `npx playwright install chromium`. Test sam pravi privremenu kopiju aplikacije, pokreće sintetički API, proverava UI i gasi svoje procese. Ne učitava `.env.local` iz projekta. Na kraju ispisuje privremeni folder sa snimcima i PDF-ovima. Pokriveni su ceo klub, više osoba, pojedinac, iste tri opcije u klinici, ciklusi, promena jezika, mobilni prikaz i serversko odbijanje grupnog izveštaja za igrača čak i kada je onemogućena kontrola ručno uključena.

@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 
 import { useEffect, useState, type ComponentPropsWithoutRef } from "react";
 
@@ -16,12 +18,13 @@ export function RehabForm({
   warnOnUnsaved = true,
   ...props
 }: RehabFormProps) {
+  const t = useTranslations("rehab");
   const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     if (!warnOnUnsaved || !dirty) return;
 
-    const message = "Imate nesačuvane izmene. Da li želite da napustite stranicu?";
+    const message = t("labelYouHaveUnsavedChangesDoYouWant");
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = message;
@@ -40,7 +43,7 @@ export function RehabForm({
       window.removeEventListener("beforeunload", onBeforeUnload);
       document.removeEventListener("click", onDocumentClick, true);
     };
-  }, [dirty, warnOnUnsaved]);
+  }, [dirty, warnOnUnsaved, t]);
 
   return (
     <form

@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CalendarClock, Mail } from "lucide-react";
@@ -39,6 +41,7 @@ export default async function RehabAppointmentsPage({
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ workspace?: string; error?: string; saved?: string; period?: string }>;
 }) {
+  const t = await getTranslations("rehab");
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
   const locale = rawLocale as Locale;
   const access = await getRehabAccessContext(locale);
@@ -101,8 +104,8 @@ export default async function RehabAppointmentsPage({
     <div>
       <RehabPageHeader
         eyebrow={workspace.name}
-        title="Termini"
-        description="Zakazivanje i automatski email podsetnik 24 sata pre termina. Vreme se prikazuje po vremenskoj zoni Beograda."
+        title={t("labelAppointments")}
+        description={t("labelSchedulingAndAutomaticEmailRemindersHoursBefore")}
       />
       <WorkspaceTabs
         access={access}
@@ -114,9 +117,9 @@ export default async function RehabAppointmentsPage({
 
       <div className="mb-6 inline-flex rounded-lg border border-gray-200 bg-white p-1">
         {([
-          ["all", "Svi"],
-          ["today", "Danas"],
-          ["week", "Narednih 7 dana"],
+          ["all", t("labelAll")],
+          ["today", t("labelToday")],
+          ["week", t("labelNextDays")],
         ] as const).map(([value, label]) => (
           <Link
             key={value}
@@ -134,16 +137,16 @@ export default async function RehabAppointmentsPage({
 
       {workspace.canEdit && (
         <RehabPanel className="mb-6">
-          <h2 className="mb-5 font-heading text-2xl font-semibold text-navy">Novi termin</h2>
+          <h2 className="mb-5 font-heading text-2xl font-semibold text-navy">{t("labelNewAppointment")}</h2>
           {patientRows.length === 0 ? (
-            <EmptyState>Prvo dodajte aktivnog pacijenta ili igrača.</EmptyState>
+            <EmptyState>{t("labelAddAnActivePatientOrPlayerFirst")}</EmptyState>
           ) : (
             <RehabForm action={createAppointmentAction} className="space-y-4">
               <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="workspace_id" value={workspace.id} />
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <label>
-                  <span className={rehabLabelClass}>{workspace.kind === "club" ? "Igrač" : "Pacijent"} *</span>
+                  <span className={rehabLabelClass}>{workspace.kind === "club" ? t("labelPlayer") : t("labelPatient")} *</span>
                   <select name="patient_id" required className={rehabInputClass}>
                     {patientRows.map((patient) => (
                       <option key={patient.id} value={patient.id}>
@@ -154,7 +157,7 @@ export default async function RehabAppointmentsPage({
                   </select>
                 </label>
                 <label>
-                  <span className={rehabLabelClass}>Datum i vreme *</span>
+                  <span className={rehabLabelClass}>{t("labelDateAndTime")}</span>
                   <input
                     name="starts_at"
                     type="datetime-local"
@@ -164,42 +167,40 @@ export default async function RehabAppointmentsPage({
                   />
                 </label>
                 <label>
-                  <span className={rehabLabelClass}>Trajanje</span>
+                  <span className={rehabLabelClass}>{t("labelDuration")}</span>
                   <select name="duration_minutes" defaultValue="60" className={rehabInputClass}>
-                    <option value="30">30 minuta</option>
-                    <option value="45">45 minuta</option>
-                    <option value="60">60 minuta</option>
-                    <option value="90">90 minuta</option>
+                    <option value="30">{t("labelMinutes")}</option>
+                    <option value="45">{t("labelMinutesui246")}</option>
+                    <option value="60">{t("labelMinutesui247")}</option>
+                    <option value="90">{t("labelMinutesui248")}</option>
                   </select>
                 </label>
                 <label>
-                  <span className={rehabLabelClass}>Email za podsetnik</span>
+                  <span className={rehabLabelClass}>{t("labelReminderEmail")}</span>
                   <input
                     name="reminder_email"
                     type="email"
-                    placeholder="Koristi email iz kartona"
+                    placeholder={t("labelUseTheEmailFromTheRecord")}
                     className={rehabInputClass}
                   />
                 </label>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <label>
-                  <span className={rehabLabelClass}>Terapija / razlog dolaska</span>
+                  <span className={rehabLabelClass}>{t("labelTherapyReasonForVisit")}</span>
                   <input name="therapy" maxLength={1000} className={rehabInputClass} />
                 </label>
                 <label>
-                  <span className={rehabLabelClass}>Interna napomena</span>
+                  <span className={rehabLabelClass}>{t("labelInternalNotes")}</span>
                   <input name="notes" maxLength={2000} className={rehabInputClass} />
                 </label>
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
-                  Zakaži termin
-                </RehabSubmitButton>
+                   {t("labelScheduleAppointment")} </RehabSubmitButton>
                 <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
                   <Mail className="h-3.5 w-3.5" />
-                  Ako karton nema email, termin se čuva bez podsetnika.
-                </span>
+                   {t("labelIfTheRecordHasNoEmailThe")} </span>
               </div>
             </RehabForm>
           )}
@@ -208,7 +209,7 @@ export default async function RehabAppointmentsPage({
 
       <div className="grid gap-6 xl:grid-cols-2">
         <AppointmentList
-          title="Naredni termini"
+          title={t("labelUpcomingAppointments")}
           rows={upcoming}
           locale={locale}
           workspaceId={workspace.id}
@@ -216,12 +217,12 @@ export default async function RehabAppointmentsPage({
           empty="Nema narednih termina."
         />
         <AppointmentList
-          title="Prethodni i zatvoreni"
+          title={t("labelPastAndClosed")}
           rows={recent.slice(0, 50)}
           locale={locale}
           workspaceId={workspace.id}
           canEdit={workspace.canEdit}
-          empty={period === "all" ? "Nema prethodnih termina u poslednjih 30 dana." : "Nema prethodnih ni zatvorenih termina u izabranom periodu."}
+          empty={period === "all" ? t("labelNoPastAppointmentsInTheLastDays") : t("labelNoPastOrClosedAppointmentsInThe")}
         />
       </div>
     </div>
@@ -243,6 +244,7 @@ function AppointmentList({
   canEdit: boolean;
   empty: string;
 }) {
+  const t = useTranslations("rehab");
   return (
     <RehabPanel>
       <h2 className="mb-5 font-heading text-2xl font-semibold text-navy">{title}</h2>
@@ -259,19 +261,19 @@ function AppointmentList({
                     <p className="font-semibold text-navy">
                       {appointment.patient
                         ? `${appointment.patient.first_name} ${appointment.patient.last_name}`
-                        : "Obrisan karton"}
+                        : t("labelDeletedRecord")}
                     </p>
                     <p className="text-sm text-gray-600">
-                      {formatRehabDate(appointment.starts_at, true)} · {appointment.duration_minutes} min
+                      {formatRehabDate(appointment.starts_at, true, locale)} · {appointment.duration_minutes} min
                     </p>
                     {appointment.therapy && <p className="mt-1 text-sm text-gray-500">{appointment.therapy}</p>}
                     {appointment.notes && <p className="mt-1 text-xs italic text-gray-400">{appointment.notes}</p>}
                     <p className="mt-2 text-xs text-gray-400">
                       {appointment.reminder_email
                         ? appointment.reminder_sent_at
-                          ? `Podsetnik poslat ${formatRehabDate(appointment.reminder_sent_at, true)}`
-                          : `Podsetnik: ${appointment.reminder_email}`
-                        : "Bez email podsetnika"}
+                          ? t("labelReminderSent", {v0: formatRehabDate(appointment.reminder_sent_at, true)})
+                          : t("labelReminder", {v0: appointment.reminder_email})
+                        : t("labelNoEmailReminder")}
                     </p>
                   </div>
                 </div>
@@ -282,7 +284,7 @@ function AppointmentList({
                       ? "bg-emerald-100 text-emerald-700"
                       : "bg-gray-200 text-gray-600"
                 }`}>
-                  {appointment.status === "scheduled" ? "Zakazan" : appointment.status === "completed" ? "Završen" : "Otkazan"}
+                  {appointment.status === "scheduled" ? t("labelScheduled") : appointment.status === "completed" ? t("labelCompleted") : t("labelCancelled")}
                 </span>
               </div>
               {canEdit && (
@@ -292,24 +294,24 @@ function AppointmentList({
                     <input type="hidden" name="workspace_id" value={workspaceId} />
                     <input type="hidden" name="appointment_id" value={appointment.id} />
                     {appointment.status !== "completed" && (
-                      <button name="status" value="completed" className="text-xs font-medium text-emerald-700 hover:underline">Označi završenim</button>
+                      <button name="status" value="completed" className="text-xs font-medium text-emerald-700 hover:underline">{t("labelMarkAsCompleted")}</button>
                     )}
                     {appointment.status !== "cancelled" && (
-                      <button name="status" value="cancelled" className="text-xs font-medium text-red-600 hover:underline">Otkaži</button>
+                      <button name="status" value="cancelled" className="text-xs font-medium text-red-600 hover:underline">{t("labelCancel")}</button>
                     )}
                     {appointment.status !== "scheduled" && (
-                      <button name="status" value="scheduled" className="text-xs font-medium text-sky-700 hover:underline">Vrati u zakazane</button>
+                      <button name="status" value="scheduled" className="text-xs font-medium text-sky-700 hover:underline">{t("labelMarkAsScheduled")}</button>
                     )}
                   </form>
                   <details className="mt-3">
-                    <summary className="cursor-pointer text-xs font-medium text-teal-dark">Izmeni termin</summary>
+                    <summary className="cursor-pointer text-xs font-medium text-teal-dark">{t("labelEditAppointment")}</summary>
                     <RehabForm action={updateAppointmentAction} className="mt-4 space-y-3 rounded-lg border border-gray-200 bg-white p-4">
                       <input type="hidden" name="locale" value={locale} />
                       <input type="hidden" name="workspace_id" value={workspaceId} />
                       <input type="hidden" name="appointment_id" value={appointment.id} />
                       <div className="grid gap-3 sm:grid-cols-[1fr_150px]">
                         <label>
-                          <span className={rehabLabelClass}>Datum i vreme *</span>
+                          <span className={rehabLabelClass}>{t("labelDateAndTime")}</span>
                           <input
                             name="starts_at"
                             type="datetime-local"
@@ -319,7 +321,7 @@ function AppointmentList({
                           />
                         </label>
                         <label>
-                          <span className={rehabLabelClass}>Trajanje</span>
+                          <span className={rehabLabelClass}>{t("labelDuration")}</span>
                           <input
                             name="duration_minutes"
                             type="number"
@@ -333,20 +335,19 @@ function AppointmentList({
                         </label>
                       </div>
                       <label>
-                        <span className={rehabLabelClass}>Email za podsetnik</span>
+                        <span className={rehabLabelClass}>{t("labelReminderEmail")}</span>
                         <input name="reminder_email" type="email" defaultValue={appointment.reminder_email ?? ""} className={rehabInputClass} />
                       </label>
                       <label>
-                        <span className={rehabLabelClass}>Terapija / razlog dolaska</span>
+                        <span className={rehabLabelClass}>{t("labelTherapyReasonForVisit")}</span>
                         <input name="therapy" maxLength={1000} defaultValue={appointment.therapy ?? ""} className={rehabInputClass} />
                       </label>
                       <label>
-                        <span className={rehabLabelClass}>Interna napomena</span>
+                        <span className={rehabLabelClass}>{t("labelInternalNotes")}</span>
                         <input name="notes" maxLength={2000} defaultValue={appointment.notes ?? ""} className={rehabInputClass} />
                       </label>
                       <RehabSubmitButton className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
-                        Sačuvaj izmene
-                      </RehabSubmitButton>
+                         {t("labelSaveChanges")} </RehabSubmitButton>
                     </RehabForm>
                   </details>
                 </div>

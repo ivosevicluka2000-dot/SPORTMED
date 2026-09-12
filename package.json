@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:rehab": "node --experimental-strip-types --test tests/rehab-dates.test.mjs",
+    "test:rehab:browser": "node tests/rehab-browser-qa.mjs",
+    "test:rehab": "node --experimental-strip-types --test tests/rehab-*.test.mjs",
     "generate:icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
@@ -28,12 +29,14 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "playwright": "^1.63.0",
     "sharp": "^0.35.4",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"

@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Rehab platforma | Sport Care & Med",
-  robots: { index: false, follow: false },
-};
-
-export default function RehabRootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
+import { getTranslations } from "next-intl/server";
+export async function generateMetadata({params}:{params:Promise<{locale:string}>}):Promise<Metadata>{
+  const {locale}=await params;
+  const t=await getTranslations({locale,namespace:"rehab"});
+  return {title:t("labelRehabPlatformSportCareMed"),robots:{index:false,follow:false}};
 }
+export default function RehabRootLayout({children}:{children:React.ReactNode}){return children;}

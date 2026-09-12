@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AlertTriangle, CalendarDays, ClipboardList, HeartPulse, UserRound } from "lucide-react";
@@ -27,6 +28,7 @@ export default async function RehabDashboardPage({
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ workspace?: string }>;
 }) {
+  const t = await getTranslations("rehab");
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
   const locale = rawLocale as Locale;
   const access = await getRehabAccessContext(locale);
@@ -124,25 +126,25 @@ export default async function RehabDashboardPage({
   );
 
   const stats = [
-    { label: workspace.kind === "club" ? "Aktivni igrači" : "Aktivni pacijenti", value: patients.count ?? 0, icon: UserRound },
-    { label: "Aktivni planovi", value: plans.count ?? 0, icon: ClipboardList },
-    { label: "Današnji termini", value: appointments.count ?? 0, icon: CalendarDays },
-    { label: "Bez unosa 7 dana", value: patientsNeedingAttention.length, icon: AlertTriangle },
+    { label: workspace.kind === "club" ? t("labelActivePlayers") : t("labelActivePatients"), value: patients.count ?? 0, icon: UserRound },
+    { label: t("labelActivePlans"), value: plans.count ?? 0, icon: ClipboardList },
+    { label: t("labelTodaySAppointments"), value: appointments.count ?? 0, icon: CalendarDays },
+    { label: t("labelNoEntriesForDays"), value: patientsNeedingAttention.length, icon: AlertTriangle },
   ];
 
   return (
     <div>
       <RehabPageHeader
-        eyebrow="Interni admin modul"
-        title="Evidencija rehabilitacije"
-        description="Klinika i klub su odvojeni. Prikazani su samo podaci radnog prostora koji je izabran."
+        eyebrow={t("labelInternalAdministrationModule")}
+        title={t("labelRehabilitationRecords")}
+        description={t("labelClinicAndClubRecordsAreSeparateOnly")}
         action={
           workspace.canEdit ? (
             <Link
               href={rehabUrl(locale, "/rehab/pacijenti/novi", { workspace: workspace.id })}
               className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark"
             >
-              + {workspace.kind === "club" ? "Novi igrač" : "Novi pacijent"}
+              + {workspace.kind === "club" ? t("labelNewPlayer") : t("labelNewPatient")}
             </Link>
           ) : null
         }
@@ -174,16 +176,15 @@ export default async function RehabDashboardPage({
       <div className="grid gap-6 xl:grid-cols-3">
         <RehabPanel>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-heading text-xl font-semibold text-navy">Naredni termini</h2>
+            <h2 className="font-heading text-xl font-semibold text-navy">{t("labelUpcomingAppointments")}</h2>
             <Link
               href={rehabUrl(locale, "/rehab/termini", { workspace: workspace.id })}
               className="text-sm text-teal-dark hover:underline"
             >
-              Svi termini
-            </Link>
+               {t("labelAllAppointments")} </Link>
           </div>
           {(upcomingAppointments.data ?? []).length === 0 ? (
-            <EmptyState>Nema zakazanih termina.</EmptyState>
+            <EmptyState>{t("labelNoScheduledAppointments")}</EmptyState>
           ) : (
             <div className="divide-y divide-gray-100">
               {((upcomingAppointments.data ?? []) as unknown as AppointmentRow[]).map((item) => (
@@ -198,10 +199,10 @@ export default async function RehabDashboardPage({
                         {item.patient.first_name} {item.patient.last_name}
                       </Link>
                     ) : (
-                      <p className="font-medium text-gray-800">Obrisan zapis</p>
+                      <p className="font-medium text-gray-800">{t("labelDeletedEntry")}</p>
                     )}
                     <p className="text-sm text-gray-500">
-                      {formatRehabDate(item.starts_at, true)}
+                      {formatRehabDate(item.starts_at, true, locale)}
                       {item.therapy ? ` · ${item.therapy}` : ""}
                     </p>
                   </div>
@@ -213,16 +214,15 @@ export default async function RehabDashboardPage({
 
         <RehabPanel>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-heading text-xl font-semibold text-navy">Poslednji dnevni unosi</h2>
+            <h2 className="font-heading text-xl font-semibold text-navy">{t("labelLatestDailyEntries")}</h2>
             <Link
               href={rehabUrl(locale, "/rehab/pacijenti", { workspace: workspace.id })}
               className="text-sm text-teal-dark hover:underline"
             >
-              Svi kartoni
-            </Link>
+               {t("labelAllRecords")} </Link>
           </div>
           {(recentEntries.data ?? []).length === 0 ? (
-            <EmptyState>Još nema dnevnih unosa.</EmptyState>
+            <EmptyState>{t("labelNoDailyEntriesYet")}</EmptyState>
           ) : (
             <div className="divide-y divide-gray-100">
               {((recentEntries.data ?? []) as unknown as EntryRow[]).map((item) => (
@@ -237,10 +237,10 @@ export default async function RehabDashboardPage({
                         {item.patient.first_name} {item.patient.last_name}
                       </Link>
                     ) : (
-                      <p className="font-medium text-gray-800">Obrisan zapis</p>
+                      <p className="font-medium text-gray-800">{t("labelDeletedEntry")}</p>
                     )}
                     <p className="line-clamp-2 text-sm text-gray-500">
-                      {formatRehabDate(item.recorded_on)} · {item.therapy}
+                      {formatRehabDate(item.recorded_on, false, locale)} · {item.therapy}
                     </p>
                   </div>
                 </div>
@@ -252,15 +252,15 @@ export default async function RehabDashboardPage({
         <RehabPanel>
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <h2 className="font-heading text-xl font-semibold text-navy">Potrebna pažnja</h2>
-              <p className="mt-1 text-xs text-gray-400">Bez dnevnog unosa u poslednjih 7 dana</p>
+              <h2 className="font-heading text-xl font-semibold text-navy">{t("labelNeedsAttention")}</h2>
+              <p className="mt-1 text-xs text-gray-400">{t("labelNoDailyEntryInTheLastDays")}</p>
             </div>
             <span className="rounded-full bg-amber-100 p-2 text-amber-700">
               <AlertTriangle className="h-4 w-4" />
             </span>
           </div>
           {patientsNeedingAttention.length === 0 ? (
-            <EmptyState>Svi aktivni kartoni su ažurni.</EmptyState>
+            <EmptyState>{t("labelAllActiveRecordsAreUpToDate")}</EmptyState>
           ) : (
             <div className="divide-y divide-gray-100">
               {patientsNeedingAttention.slice(0, 5).map((patient) => (
@@ -273,9 +273,9 @@ export default async function RehabDashboardPage({
                     <p className="truncate text-sm font-medium text-gray-800">
                       {patient.first_name} {patient.last_name}
                     </p>
-                    <p className="text-xs text-gray-400">U rehabilitaciji od {formatRehabDate(patient.started_on)}</p>
+                    <p className="text-xs text-gray-400">{t("labelInRehabilitationSince")} {formatRehabDate(patient.started_on, false, locale)}</p>
                   </div>
-                  <span className="shrink-0 text-xs font-medium text-amber-700">Otvori →</span>
+                  <span className="shrink-0 text-xs font-medium text-amber-700">{t("labelOpen")}</span>
                 </Link>
               ))}
               {patientsNeedingAttention.length > 5 && (
@@ -283,7 +283,7 @@ export default async function RehabDashboardPage({
                   href={rehabUrl(locale, "/rehab/pacijenti", { workspace: workspace.id })}
                   className="block pt-3 text-sm font-medium text-teal-dark hover:underline"
                 >
-                  Prikaži sve ({patientsNeedingAttention.length})
+                   {t("labelShowAll")}{patientsNeedingAttention.length})
                 </Link>
               )}
             </div>

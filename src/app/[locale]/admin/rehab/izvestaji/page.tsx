@@ -1,3 +1,6 @@
+import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { rehabUrl } from "@/components/rehab/RehabUi";
 import { CalendarCheck, CheckCircle2, ClipboardList, FileText, UserRound } from "lucide-react";
 import { redirect } from "next/navigation";
 import { savePeriodSummaryAction } from "@/app/[locale]/admin/rehab/_actions";
@@ -32,6 +35,7 @@ export default async function RehabReportsPage({
     saved?: string;
   }>;
 }) {
+  const t = await getTranslations("rehab");
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
   const locale = rawLocale as Locale;
   const access = await getRehabAccessContext(locale);
@@ -97,21 +101,22 @@ export default async function RehabReportsPage({
     ((entries.data ?? []) as Array<{ patient_id: string }>).map((entry) => entry.patient_id)
   ).size;
   const stats = [
-    { label: "Aktivni kartoni", value: activePatients.count ?? 0, icon: UserRound },
-    { label: "Završene rehabilitacije", value: completedPatients.count ?? 0, icon: CheckCircle2 },
-    { label: "Kartoni sa terapijom", value: uniquePatients, icon: FileText },
-    { label: "Dnevni unosi", value: entries.count ?? 0, icon: ClipboardList },
-    { label: "Održani / zakazani termini", value: appointments.count ?? 0, icon: CalendarCheck },
-    { label: "Novi planovi", value: plans.count ?? 0, icon: ClipboardList },
+    { label: t("labelActiveRecords"), value: activePatients.count ?? 0, icon: UserRound },
+    { label: t("labelCompletedRehabilitations"), value: completedPatients.count ?? 0, icon: CheckCircle2 },
+    { label: t("labelRecordsWithTherapy"), value: uniquePatients, icon: FileText },
+    { label: t("labelDailyEntries"), value: entries.count ?? 0, icon: ClipboardList },
+    { label: t("labelCompletedScheduledAppointments"), value: appointments.count ?? 0, icon: CalendarCheck },
+    { label: t("labelNewPlans"), value: plans.count ?? 0, icon: ClipboardList },
   ];
 
   return (
     <div>
       <RehabPageHeader
         eyebrow={workspace.name}
-        title="Mesečni i godišnji pregled"
-        description="Automatski brojevi iz evidencije i zaključak koji ostaje sačuvan uz izabrani period."
+        title={t("labelMonthlyAndAnnualOverview")}
+        description={t("labelFiguresFromTheRecordsAndASaved")}
       />
+      <Link className="mb-6 inline-block rounded-md bg-navy px-5 py-3 text-sm text-white" href={rehabUrl(locale,"/rehab/izvestaji/stampa",{workspace:workspace.id,type:periodType,period})}>{t("labelSelectPeopleAndPrintReport")}</Link>
       <WorkspaceTabs
         access={access}
         selectedId={workspace.id}
@@ -125,14 +130,14 @@ export default async function RehabReportsPage({
         <form method="get" className="grid gap-4 sm:grid-cols-[180px_220px_auto] sm:items-end">
           <input type="hidden" name="workspace" value={workspace.id} />
           <label>
-            <span className={rehabLabelClass}>Vrsta pregleda</span>
+            <span className={rehabLabelClass}>{t("labelOverviewType")}</span>
             <select name="type" defaultValue={periodType} className={rehabInputClass}>
-              <option value="month">Mesečni</option>
-              <option value="year">Godišnji</option>
+              <option value="month">{t("labelMonthly")}</option>
+              <option value="year">{t("labelAnnual")}</option>
             </select>
           </label>
           <label>
-            <span className={rehabLabelClass}>Period</span>
+            <span className={rehabLabelClass}>{t("labelPeriod")}</span>
             {periodType === "year" ? (
               <input name="period" type="number" min={2020} max={2100} defaultValue={period} className={rehabInputClass} />
             ) : (
@@ -140,8 +145,7 @@ export default async function RehabReportsPage({
             )}
           </label>
           <button className="rounded-md bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900">
-            Prikaži pregled
-          </button>
+             {t("labelShowOverview")} </button>
         </form>
       </RehabPanel>
 
@@ -160,11 +164,10 @@ export default async function RehabReportsPage({
 
       <RehabPanel>
         <h2 className="font-heading text-2xl font-semibold text-navy">
-          Zaključak za {periodType === "year" ? period : formatMonth(period)}
+           {t("labelConclusionFor")} {periodType === "year" ? period : formatMonth(period, locale)}
         </h2>
         <p className="mt-2 text-sm text-gray-500">
-          Ovde se upisuje kratak zaključak o radu, stanju pacijenata ili igrača i planu za naredni period.
-        </p>
+           {t("labelEnterABriefConclusionAboutTheWork")} </p>
         {workspace.canEdit ? (
           <RehabForm action={savePeriodSummaryAction} className="mt-5 space-y-4">
             <input type="hidden" name="locale" value={locale} />
@@ -177,15 +180,14 @@ export default async function RehabReportsPage({
               maxLength={10000}
               defaultValue={summary.data?.conclusion ?? ""}
               className={rehabInputClass}
-              placeholder="Upišite zaključak..."
+              placeholder={t("labelEnterAConclusion")}
             />
             <RehabSubmitButton className="rounded-md bg-navy px-5 py-2.5 text-sm font-medium text-white hover:bg-navy-dark">
-              Sačuvaj zaključak
-            </RehabSubmitButton>
+               {t("labelSaveConclusion")} </RehabSubmitButton>
           </RehabForm>
         ) : (
           <div className="mt-5 whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700">
-            {summary.data?.conclusion || "Zaključak još nije unet."}
+            {summary.data?.conclusion || t("labelNoConclusionHasBeenEnteredYet")}
           </div>
         )}
       </RehabPanel>
@@ -210,8 +212,8 @@ function periodBounds(type: "month" | "year", period: string) {
   };
 }
 
-function formatMonth(period: string) {
-  return new Intl.DateTimeFormat("sr-RS", { month: "long", year: "numeric" }).format(
+function formatMonth(period: string, locale: string) {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "sr-RS", { month: "long", year: "numeric" }).format(
     new Date(`${period}-15T12:00:00Z`)
   );
 }

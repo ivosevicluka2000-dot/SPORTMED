@@ -147,3 +147,15 @@
     font-size: 11pt;
   }
 }
+
+/* Long cycles and medical notes must flow across pages rather than get clipped. */
+.rehab-report-document td, .rehab-report-document p { overflow-wrap: anywhere; }
+@media print {
+  .rehab-print-page, .rehab-report-document { background: white !important; }
+  .rehab-report-person + .rehab-report-person { break-before: page; }
+  .rehab-report-document .overflow-x-auto { overflow: visible; }
+  .rehab-report-document thead { display: table-header-group; }
+  .rehab-report-document h2, .rehab-report-document h3 { break-after: avoid; }
+  .rehab-report-document p, .rehab-cycle p { orphans: 3; widows: 3; }
+  .rehab-report-document .rehab-print-sheet { max-width: none; margin: 0; padding: 0; }
+}

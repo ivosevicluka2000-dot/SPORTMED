@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Search, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -26,6 +27,7 @@ export default async function RehabPatientsPage({
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ workspace?: string; q?: string; status?: string; error?: string; saved?: string }>;
 }) {
+  const t = await getTranslations("rehab");
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
   const locale = rawLocale as Locale;
   const access = await getRehabAccessContext(locale);
@@ -107,26 +109,27 @@ export default async function RehabPatientsPage({
     <div>
       <RehabPageHeader
         eyebrow={workspace.name}
-        title={workspace.role === "player" ? "Moj karton" : workspace.kind === "club" ? workspace.name : "Klinika — pacijenti"}
+        title={workspace.role === "player" ? t("labelMyRecord") : workspace.kind === "club" ? workspace.name : t("labelClinicPatients")}
         description={workspace.role === "player"
-          ? "Vaši podaci, tok rehabilitacije i plan po danima."
-          : "Kartoni, kontakt podaci, problem i početak rehabilitacije."}
+          ? t("labelYourDetailsRehabilitationProgressAndPlansBy")
+          : t("labelRecordsContactDetailsProblemAndRehabilitationStart")}
         action={
           workspace.canEdit ? (
             <Link
               href={rehabUrl(locale, "/rehab/pacijenti/novi", { workspace: workspace.id })}
               className="rounded-md bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-dark"
             >
-              + {workspace.kind === "club" ? "Novi igrač" : "Novi pacijent"}
+              + {workspace.kind === "club" ? t("labelNewPlayer") : t("labelNewPatient")}
             </Link>
           ) : null
         }
       />
+      <Link className="mb-5 inline-block rounded-md border px-4 py-2 text-sm text-teal-dark" href={rehabUrl(locale,"/rehab/izvestaji/stampa",{workspace:workspace.id})}>{t("labelSelectPeopleAndPrintReport")}</Link>
       <RehabContextTabs locale={locale} workspace={workspace} current="patients" isAdmin={access.isGlobalAdmin} />
       <RehabAlert error={query.error} saved={query.saved} />
       {access.isGlobalAdmin && workspace.kind === "club" && <details className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
-        <summary className="cursor-pointer font-medium text-navy">Dodaj postojećeg igrača iz drugog kluba</summary>
-        {transferLoadError ? <p role="alert" className="mt-4 text-red-700">Spisak igrača nije učitan. Osvežite stranicu.</p> : <RehabTransferPlayerForm locale={locale} workspaceId={workspace.id} workspaceName={workspace.name} players={transferablePlayers} />}
+        <summary className="cursor-pointer font-medium text-navy">{t("labelAddAnExistingPlayerFromAnotherClub")}</summary>
+        {transferLoadError ? <p role="alert" className="mt-4 text-red-700">{t("labelThePlayerListCouldNotBeLoaded")}</p> : <RehabTransferPlayerForm locale={locale} workspaceId={workspace.id} workspaceName={workspace.name} players={transferablePlayers} />}
       </details>}
 
       {workspace.role !== "player" && (
@@ -134,29 +137,28 @@ export default async function RehabPatientsPage({
           <form method="get" className="grid gap-3 sm:grid-cols-[1fr_180px_auto]">
           <input type="hidden" name="workspace" value={workspace.id} />
           <label className="relative">
-            <span className="sr-only">Pretraga</span>
+            <span className="sr-only">{t("labelSearch")}</span>
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <input
               name="q"
               defaultValue={query.q ?? ""}
-              placeholder="Ime, prezime ili problem..."
+              placeholder={t("labelFirstNameLastNameOrProblem")}
               className={`${rehabInputClass} pl-9`}
             />
           </label>
           <select name="status" defaultValue={status} className={rehabInputClass}>
-            <option value="active">Aktivni</option>
-            <option value="completed">Završeni</option>
-            <option value="all">Svi</option>
+            <option value="active">{t("labelActiveui203")}</option>
+            <option value="completed">{t("labelCompletedui204")}</option>
+            <option value="all">{t("labelAll")}</option>
           </select>
           <button className="rounded-md bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900">
-            Prikaži
-          </button>
+             {t("labelShow")} </button>
           </form>
         </RehabPanel>
       )}
 
       {rows.length === 0 ? (
-        <EmptyState>Nema zapisa za izabrani filter.</EmptyState>
+        <EmptyState>{t("labelNoRecordsMatchTheSelectedFilter")}</EmptyState>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {rows.map((patient) => (
@@ -175,7 +177,7 @@ export default async function RehabPatientsPage({
                       {patient.first_name} {patient.last_name}
                     </h2>
                     <p className="text-xs text-gray-500">
-                      Od {formatRehabDate(patient.started_on)}
+                       {t("labelFrom")} {formatRehabDate(patient.started_on, false, locale)}
                     </p>
                   </div>
                 </div>
@@ -186,31 +188,31 @@ export default async function RehabPatientsPage({
                       : "bg-gray-100 text-gray-600"
                   }`}
                 >
-                  {patient.status === "active" ? "Aktivan" : "Završen"}
+                  {patient.status === "active" ? t("labelActive") : t("labelCompleted")}
                 </span>
               </div>
               <p className="line-clamp-2 min-h-10 text-sm text-gray-600">
-                {patient.problem || "Problem nije unet."}
+                {patient.problem || t("labelNoProblemEntered")}
               </p>
               <div className="mt-4 grid grid-cols-2 gap-3 border-t border-gray-100 pt-3 text-xs">
                 <div>
-                  <p className="text-gray-400">Poslednja terapija</p>
+                  <p className="text-gray-400">{t("labelLastTherapy")}</p>
                   <p className="mt-0.5 font-medium text-gray-600">
                     {lastTherapyByPatient.has(patient.id)
-                      ? formatRehabDate(lastTherapyByPatient.get(patient.id)!)
-                      : "Nema unosa"}
+                      ? formatRehabDate(lastTherapyByPatient.get(patient.id)!, false, locale)
+                      : t("labelNoEntries")}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Sledeći termin</p>
+                  <p className="text-gray-400">{t("labelNextAppointment")}</p>
                   <p className="mt-0.5 font-medium text-gray-600">
                     {nextAppointmentByPatient.has(patient.id)
-                      ? formatRehabDate(nextAppointmentByPatient.get(patient.id)!, true)
-                      : "Nema termina"}
+                      ? formatRehabDate(nextAppointmentByPatient.get(patient.id)!, true, locale)
+                      : t("labelNoAppointmentsui212")}
                   </p>
                 </div>
                 <p className="col-span-2 truncate text-gray-400">
-                  {patient.phone || patient.email || "Kontakt nije unet"}
+                  {patient.phone || patient.email || t("labelNoContactDetails")}
                 </p>
               </div>
             </Link>

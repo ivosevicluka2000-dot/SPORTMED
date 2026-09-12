@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+import { RehabLanguageSwitcher } from "@/components/rehab/RehabLanguageSwitcher";
 import { Suspense } from "react";
 import { Activity, Shield } from "lucide-react";
 import { getRehabAccessContext } from "@/lib/rehab/access";
@@ -14,16 +16,17 @@ export default async function RehabPlatformLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
+  const t = await getTranslations("rehab");
   const { locale: rawLocale } = await params;
   const locale = rawLocale as Locale;
   const access = await getRehabAccessContext(locale);
 
   if (access.workspaces.length === 0) {
     const message = access.loadError
-      ? "Rehab platforma trenutno ne može da učita podatke. Osvežite stranicu ili se obratite administratoru."
+      ? t("labelTheRehabPlatformCannotLoadDataRight")
       : access.isGlobalAdmin
-        ? "Nema podešenih Rehab radnih prostora. Proverite da li su migracije baze primenjene."
-        : "Vašem nalogu još nije dodeljen pristup klinici ili klubu. Obratite se glavnom administratoru.";
+        ? t("labelNoRehabWorkspacesAreConfiguredCheckThat")
+        : t("labelYourAccountHasNotBeenGrantedAccess");
     return (
       <main className="min-h-[65vh] bg-gray-50 px-4 py-16">
         <div className="mx-auto max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
@@ -42,7 +45,7 @@ export default async function RehabPlatformLayout({
               <Activity className="h-5 w-5" />
             </span>
             <div>
-              <p className="font-heading text-xl font-semibold text-navy">Rehab platforma</p>
+              <p className="font-heading text-xl font-semibold text-navy">{t("labelRehabPlatform")}</p>
               <p className="text-xs text-gray-500">{access.fullName}</p>
             </div>
           </div>
@@ -53,14 +56,13 @@ export default async function RehabPlatformLayout({
                 className="inline-flex items-center gap-2 rounded-md border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 <Shield className="h-4 w-4" />
-                Glavni admin
-              </Link>
+                 {t("labelMainAdministrator")} </Link>
             )}
+            <RehabLanguageSwitcher />
             <form action={rehabSignOutAction}>
               <input type="hidden" name="locale" value={locale} />
               <button className="rounded-md px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-navy">
-                Odjavi se
-              </button>
+                 {t("labelSignOut")} </button>
             </form>
           </div>
         </div>

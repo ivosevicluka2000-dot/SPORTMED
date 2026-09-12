@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 
 import { useFormStatus } from "react-dom";
 import { LoaderCircle } from "lucide-react";
@@ -10,11 +12,12 @@ type RehabSubmitButtonProps = ComponentPropsWithoutRef<"button"> & {
 
 export function RehabSubmitButton({
   children,
-  pendingLabel = "Čuvanje...",
+  pendingLabel,
   className,
   disabled,
   ...props
 }: RehabSubmitButtonProps) {
+  const t = useTranslations("rehab");
   const { pending } = useFormStatus();
 
   return (
@@ -26,7 +29,7 @@ export function RehabSubmitButton({
       {pending ? (
         <>
           <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
-          {pendingLabel}
+          {pendingLabel ?? t("labelSaving")}
         </>
       ) : (
         children

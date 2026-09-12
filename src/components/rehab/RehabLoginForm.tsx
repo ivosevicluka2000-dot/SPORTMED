@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 
 import { useActionState } from "react";
 import { useLocale } from "next-intl";
@@ -11,6 +13,7 @@ import {
 const initialState: RehabLoginState = {};
 
 export default function RehabLoginForm({ next }: { next?: string }) {
+  const t = useTranslations("rehab");
   const locale = useLocale();
   const [state, formAction, pending] = useActionState(
     rehabSignInAction,
@@ -24,8 +27,7 @@ export default function RehabLoginForm({ next }: { next?: string }) {
 
       <label className="block">
         <span className="mb-1.5 block text-sm font-medium text-gray-700">
-          Email
-        </span>
+           {t("labelEmail")} </span>
         <input
           name="email"
           type="email"
@@ -38,8 +40,7 @@ export default function RehabLoginForm({ next }: { next?: string }) {
 
       <label className="block">
         <span className="mb-1.5 block text-sm font-medium text-gray-700">
-          Lozinka
-        </span>
+           {t("labelPassword")} </span>
         <input
           name="password"
           type="password"
@@ -53,8 +54,8 @@ export default function RehabLoginForm({ next }: { next?: string }) {
       {state.error && (
         <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
           {state.error === "forbidden"
-            ? "Ovaj nalog nema pristup Rehab platformi."
-            : "Email ili lozinka nisu ispravni."}
+            ? t("labelThisAccountDoesNotHaveAccessTo")
+            : t("labelIncorrectEmailOrPassword")}
         </p>
       )}
 
@@ -63,11 +64,10 @@ export default function RehabLoginForm({ next }: { next?: string }) {
         disabled={pending}
         className="w-full rounded-md bg-navy px-5 py-3 text-sm font-medium text-white transition hover:bg-navy-dark disabled:opacity-50"
       >
-        {pending ? "Prijavljivanje..." : "Prijavi se"}
+        {pending ? t("signingIn") : t("labelSignIn")}
       </button>
       <Link href="/nalog/oporavak-lozinke" className="block text-center text-sm text-teal underline">
-        Zaboravili ste lozinku?
-      </Link>
+         {t("labelForgotYourPassword")} </Link>
     </form>
   );
 }

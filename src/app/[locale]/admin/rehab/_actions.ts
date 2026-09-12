@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { z } from "zod";
+import { cyclePlanSchema } from "@/lib/rehab/cycles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getPathname, type Locale } from "@/i18n/routing";
 import { isValidRehabDate, localBelgradeDateTimeToIso } from "@/lib/rehab/dates";
@@ -410,169 +411,55 @@ export async function updateDailyEntryAction(formData: FormData) {
   }));
 }
 
-export async function createRehabPlanAction(formData: FormData) {
+// The same atomic operation creates or edits a cycle plan.
+export async function saveRehabCyclePlanAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
   const patientId = text(formData.get("patient_id"));
+  const planId = text(formData.get("plan_id"));
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
-  const title = text(formData.get("title"));
-  const startDate = text(formData.get("start_date"));
-  const instructions = text(formData.get("instructions"))
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const goal = text(formData.get("goal"));
-  const notes = text(formData.get("notes"));
-
-  if (
-    !title ||
-    title.length > 200 ||
-    !isValidRehabDate(startDate) ||
-    instructions.length === 0 ||
-    instructions.length > 60 ||
-    instructions.some((line) => line.length > 3000) ||
-    goal.length > 1000 ||
-    notes.length > 3000
-  ) {
-    redirect(patientPath(locale, patientId, {
-      workspace: workspaceId,
-      error: instructions.length > 60
-        ? "Jedan plan može imati najviše 60 dana."
-        : "Unesite ispravan naziv, datum i najmanje jedan dan plana.",
-    }));
-  }
-
-  const end = new Date(`${startDate}T12:00:00Z`);
-  end.setUTCDate(end.getUTCDate() + instructions.length - 1);
-  const endDate = end.toISOString().slice(0, 10);
-  const { data: plan, error: planError } = await access.supabase
-    .from("rehab_plans")
-    .insert({
-      workspace_id: workspaceId,
-      patient_id: patientId,
-      title,
-      start_date: startDate,
-      end_date: endDate,
-      goal: optional(goal),
-      notes: optional(notes),
-      created_by: access.userId,
-    })
-    .select("id")
-    .single();
-
-  if (planError || !plan) {
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Plan nije sačuvan." }));
-  }
-
-  const days = instructions.map((line, index) => {
-    const planned = new Date(`${startDate}T12:00:00Z`);
-    planned.setUTCDate(planned.getUTCDate() + index);
-    return {
-      workspace_id: workspaceId,
-      plan_id: plan.id,
-      day_number: index + 1,
-      planned_date: planned.toISOString().slice(0, 10),
-      instructions: line,
-      created_by: access.userId,
-    };
+  let cycles: unknown;
+  try { cycles = JSON.parse(text(formData.get("cycles"))); } catch { cycles = null; }
+  const parsed = cyclePlanSchema.safeParse({
+    title: text(formData.get("title")), start_date: text(formData.get("start_date")),
+    end_date: text(formData.get("end_date")), goal: text(formData.get("goal")),
+    notes: text(formData.get("notes")), cycles,
   });
-  const { error: daysError } = await access.supabase.from("rehab_plan_days").insert(days);
-  if (daysError) {
-    await access.supabase.from("rehab_plans").delete().eq("id", plan.id);
-    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Dani plana nisu sačuvani." }));
+  if (!parsed.success || (planId && !z.uuid().safeParse(planId).success)) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Proverite podatke plana i ciklusa. Potreban je najmanje jedan ciklus sa nazivom i uputstvima." }));
   }
-
+  const p = parsed.data;
+  const { error } = await access.supabase.rpc("save_rehab_cycle_plan", {
+    p_workspace_id: workspaceId, p_patient_id: patientId, p_plan_id: planId || null,
+    p_title: p.title, p_start_date: p.start_date, p_end_date: p.end_date || null,
+    p_goal: optional(p.goal), p_notes: optional(p.notes), p_cycles: p.cycles,
+  });
+  if (error) {
+    console.error("[rehab] Save cycle plan:", error.code);
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Plan nije sačuvan. Osvežite stranicu i pokušajte ponovo." }));
+  }
+  revalidatePath("/[locale]/rehab", "layout");
   redirect(patientPath(locale, patientId, { workspace: workspaceId, saved: "plan" }));
 }
 
 export async function copyRehabPlanAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
-  const sourcePatientId = text(formData.get("patient_id"));
-  const sourcePlanId = text(formData.get("plan_id"));
-  const targetPatientId = text(formData.get("target_patient_id"));
+  const patientId = text(formData.get("patient_id"));
+  const targetId = text(formData.get("target_patient_id"));
+  const planId = text(formData.get("plan_id"));
   const startDate = text(formData.get("start_date"));
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
-
-  if (
-    !sourcePlanId ||
-    !targetPatientId ||
-    !isValidRehabDate(startDate)
-  ) {
-    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Podaci za kopiranje plana nisu ispravni." }));
+  if (![patientId, targetId, planId].every(id => z.uuid().safeParse(id).success) || !isValidRehabDate(startDate)) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Podaci za kopiranje plana nisu ispravni." }));
   }
-
-  const [{ data: targetPatient }, { data: sourcePlan }, { data: sourceDays }] =
-    await Promise.all([
-      access.supabase
-        .from("rehab_patients")
-        .select("id")
-        .eq("id", targetPatientId)
-        .eq("workspace_id", workspaceId)
-        .maybeSingle(),
-      access.supabase
-        .from("rehab_plans")
-        .select("title, goal, notes")
-        .eq("id", sourcePlanId)
-        .eq("patient_id", sourcePatientId)
-        .eq("workspace_id", workspaceId)
-        .maybeSingle(),
-      access.supabase
-        .from("rehab_plan_days")
-        .select("day_number, instructions")
-        .eq("plan_id", sourcePlanId)
-        .eq("workspace_id", workspaceId)
-        .order("day_number", { ascending: true }),
-    ]);
-
-  if (!targetPatient || !sourcePlan || !sourceDays?.length) {
-    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Plan ili ciljni karton nisu pronađeni." }));
-  }
-
-  const end = new Date(`${startDate}T12:00:00Z`);
-  end.setUTCDate(end.getUTCDate() + sourceDays.length - 1);
-  const { data: copiedPlan, error: planError } = await access.supabase
-    .from("rehab_plans")
-    .insert({
-      workspace_id: workspaceId,
-      patient_id: targetPatientId,
-      title: sourcePlan.title,
-      start_date: startDate,
-      end_date: end.toISOString().slice(0, 10),
-      goal: sourcePlan.goal,
-      notes: sourcePlan.notes,
-      status: "active",
-      created_by: access.userId,
-    })
-    .select("id")
-    .single();
-
-  if (planError || !copiedPlan) {
-    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Plan nije kopiran." }));
-  }
-
-  const copiedDays = sourceDays.map((day, index) => {
-    const planned = new Date(`${startDate}T12:00:00Z`);
-    planned.setUTCDate(planned.getUTCDate() + index);
-    return {
-      workspace_id: workspaceId,
-      plan_id: copiedPlan.id,
-      day_number: index + 1,
-      planned_date: planned.toISOString().slice(0, 10),
-      instructions: day.instructions,
-      created_by: access.userId,
-    };
+  const { error } = await access.supabase.rpc("copy_rehab_cycle_plan", {
+    p_workspace_id: workspaceId, p_patient_id: patientId, p_plan_id: planId,
+    p_target_patient_id: targetId, p_start_date: startDate,
   });
-  const { error: daysError } = await access.supabase
-    .from("rehab_plan_days")
-    .insert(copiedDays);
-
-  if (daysError) {
-    await access.supabase.from("rehab_plans").delete().eq("id", copiedPlan.id);
-    redirect(patientPath(locale, sourcePatientId, { workspace: workspaceId, error: "Dani kopiranog plana nisu sačuvani." }));
-  }
-
-  redirect(patientPath(locale, targetPatientId, { workspace: workspaceId, saved: "plan-copied" }));
+  if (error) redirect(patientPath(locale, patientId, { workspace: workspaceId, error: "Plan nije kopiran." }));
+  revalidatePath("/[locale]/rehab", "layout");
+  redirect(patientPath(locale, targetId, { workspace: workspaceId, saved: "plan-copied" }));
 }
 
 export async function removeDailyEntryImageAction(formData: FormData) {
@@ -699,6 +586,7 @@ export async function updatePlanDayAction(formData: FormData) {
         .select("id")
         .eq("id", day.plan_id)
         .eq("patient_id", patientId)
+        .eq("format", "daily")
         .eq("workspace_id", workspaceId)
         .maybeSingle()
     : { data: null };
