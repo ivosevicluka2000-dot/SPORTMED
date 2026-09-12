@@ -2,7 +2,7 @@
 
 Plan pripremljen 10. septembra 2026: [Detaljan plan rehabilitacione platforme](docs/rehab-cycles-and-reports-plan.md).
 
-Obuhvat: engleski interfejs klubova, planovi po ciklusima u klinici i klubovima, štampanje za jednu, više ili sve osobe u izabranom radnom prostoru. Status: implementirano i provereno; 12. septembra 2026. odobreno spajanje na `main`. Migracija 0010 pripremljena i lokalno proverena; potrebno je primeniti je u produkcionoj bazi pre korišćenja nove verzije.
+Obuhvat: engleski interfejs klubova, planovi po ciklusima u klinici i klubovima, štampanje za jednu, više ili sve osobe u izabranom radnom prostoru. Status: implementirano i provereno; 12. septembra 2026. odobreno spajanje na `main`. Migracija 0010 primenjena i proverena u produkcionoj bazi 12. septembra 2026; postojeći dnevni planovi su sačuvani.
 
 Raniji plan za prikupljanje kontakata sačuvan je ispod kao zaseban posao.
 

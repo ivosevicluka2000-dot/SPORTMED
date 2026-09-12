@@ -1,6 +1,6 @@
 # Plan: engleski za klubove, rehabilitacioni ciklusi i grupni izveštaji
 
-Datum: 10. septembar 2026. Status: implementirano i provereno; spajanje na `main` odobreno 12. septembra 2026. Migracija 0010 proverena u izolovanoj lokalnoj bazi; njena primena u produkcionoj bazi ostaje obavezan korak puštanja. Detalji rada i provera su u `docs/rehab-basic-setup.md`.
+Datum: 10. septembar 2026. Status: implementirano i provereno; spajanje na `main` odobreno 12. septembra 2026. Migracija 0010 primenjena i proverena u produkcionoj bazi 12. septembra 2026, nakon provera u izolovanoj lokalnoj bazi. Postojeći dnevni planovi su sačuvani. Detalji rada i provera su u `docs/rehab-basic-setup.md`.
 
 ## 1. Traženi rezultat
 

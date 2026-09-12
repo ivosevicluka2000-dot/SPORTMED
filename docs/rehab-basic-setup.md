@@ -86,7 +86,7 @@ Proveriti `cron.job_run_details` i HTTP rezultate u `net._http_response`: uspeš
 
 ## Ciklusi i grupni izveštaji — 10. septembar 2026.
 
-Za ovu verziju je potrebna **nova migracija `0010_rehab_cycles.sql` pre puštanja aplikacije**. U ovoj izmeni ona je proverena samo u lokalnoj, izolovanoj PostgreSQL bazi; produkciona baza nije menjana. Ako su migracije zaključno sa 0009 već primenjene, primenjuje se samo 0010. Migracija ne šalje emailove i ne pokreće podsetnike.
+**Migracija `0010_rehab_cycles.sql` primenjena je u produkcionoj bazi 12. septembra 2026. kroz Supabase SQL Editor**, u jednoj transakciji, nakon lokalnih provera. Ne pokretati je ponovo. Potvrđeni su tabela ciklusa, RLS sa četiri pravila, funkcije čuvanja/kopiranja, podrška za cikluse u prenosu igrača i dostupnost nove šeme preko REST API-ja. Oba postojeća dnevna plana i svih 20 dnevnih stavki ostali su sačuvani. Migracija ne šalje emailove i ne pokreće podsetnike.
 
 Novi plan se sastoji od ciklusa sa nazivom, opcionim ciljem, višerednim uputstvima, opcionim datumima i statusom (planiran/u toku/završen). Dodavanje, uklanjanje, promena redosleda i izmena ciklusa čuvaju se zajedno sa planom. Kraj plana je opcion i ne računa se iz broja ciklusa. Kopiranje plana briše datume ciklusa i vraća njihove statuse na „planiran”.
 
