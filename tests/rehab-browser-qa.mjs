@@ -114,6 +114,16 @@ try {
     await page.waitForURL((url) => !url.pathname.includes("login"));
     await page.goto("http://localhost:3100/en/rehab/klubovi");
     await page.getByRole("heading", { name: "QA Club", exact: true }).waitFor();
+    const logoForm = page.getByRole("heading", { name: "QA Club", exact: true }).locator("..").locator("form");
+    await logoForm.getByLabel("Club logo", { exact: true }).setInputFiles(join(repo, "public/brand/clinic-logo.png"));
+    await logoForm.getByRole("button", { name: "Save logo", exact: true }).click();
+    await logoForm.getByRole("status").filter({ hasText: "Club logo saved." }).waitFor();
+    await page.reload();
+    const uploadedLogo = page.locator('img[src*="rehab-club-logos"]').first();
+    await uploadedLogo.waitFor();
+    const clubLogoSrc = await uploadedLogo.getAttribute("src");
+    assert.ok(clubLogoSrc.includes("00000000-0000-0000-0000-000000000102/"));
+    assert.equal(await uploadedLogo.evaluate(image => image.complete && image.naturalWidth > 0), true);
     await page.waitForLoadState("networkidle");
     await page.screenshot({
       path: join(outputDir, "clubs-en.png"),
@@ -175,6 +185,7 @@ try {
     await page.getByRole("button", { name: "Print / save PDF", exact: true }).waitFor();
     await page.getByRole("heading", { name: "Browser QA cycle plan", exact: true }).waitFor();
     await page.getByText("Strength phase", { exact: true }).waitFor();
+    assert.equal(await page.locator(".rehab-print-sheet img").getAttribute("src"), clubLogoSrc);
     await page.goto(
       "http://localhost:3100/en/rehab/izvestaji/stampa?workspace=00000000-0000-0000-0000-000000000102",
     );
@@ -183,6 +194,8 @@ try {
       .click();
     await page.locator(".rehab-report-document").waitFor();
     assert.equal(await page.locator(".rehab-report-person").count(), 39);
+    assert.equal(await page.locator(`.rehab-report-document img[src="${clubLogoSrc}"]`).count(), 39);
+    assert.equal(await page.locator('.rehab-report-document img[src="/brand/clinic-logo.png"]').count(), 0);
     await page.getByLabel("Scope", { exact: true }).selectOption("selected");
     await page.getByLabel("Search people", { exact: true }).fill("Player");
     await page.getByRole("checkbox").first().check();
@@ -256,6 +269,8 @@ try {
       .click();
     await page.locator(".rehab-report-document").waitFor();
     assert.equal(await page.locator(".rehab-report-person").count(), 4);
+    assert.equal(await page.locator('.rehab-report-document img[src="/brand/clinic-logo.png"]').count(), 4);
+    assert.equal(await page.locator('.rehab-report-document img[src*="rehab-club-logos"]').count(), 0);
     await page.getByLabel("Scope", { exact: true }).selectOption("selected");
     await page.getByRole("checkbox").nth(0).check();
     await page.getByRole("checkbox").nth(1).check();

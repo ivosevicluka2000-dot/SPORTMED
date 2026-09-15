@@ -1,8 +1,7 @@
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
+import { RehabReportBrand } from "@/components/rehab/RehabReportBrand";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Trophy } from "lucide-react";
 import { PrintPlanButton } from "@/components/rehab/PrintPlanButton";
 import { RehabPainBadge, rehabPatientUrl } from "@/components/rehab/RehabUi";
 import type { Locale } from "@/i18n/routing";
@@ -111,20 +110,7 @@ export default async function PrintRehabPatientReportPage({
       <article className="rehab-print-sheet mx-auto max-w-4xl bg-white p-6 text-gray-900 sm:p-10">
         <header className="border-b-2 border-navy pb-5">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            {workspace.kind === "clinic" ? (
-              <div>
-                <Image src="/logo.png" alt="Sport Care & Med" width={190} height={37} className="h-auto w-44" priority />
-                <p className="mt-2 text-xs text-gray-500">{t("labelSportsMedicineAndRehabilitationCentreAbac")}</p>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <span className="rounded-lg bg-amber-100 p-2.5 text-amber-700"><Trophy className="h-6 w-6" /></span>
-                <div>
-                  <p className="text-lg font-semibold text-navy">{workspace.name}</p>
-                  <p className="text-xs text-gray-500">{t("labelClubRehabilitation")}</p>
-                </div>
-              </div>
-            )}
+            <RehabReportBrand workspace={workspace} />
             <div className="text-right text-xs text-gray-500">
               <p className="font-semibold uppercase tracking-[0.15em] text-teal-dark">{t("labelRehabPlatform")}</p>
               <p className="mt-1">{t("labelReportDate")} {formatRehabDate(new Date(), false, locale)}</p>

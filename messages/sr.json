@@ -1961,6 +1961,7 @@
     "dayCount": "{count, plural, one {# dan} other {# dana}}",
     "switchToEnglish": "Prebaci na engleski",
     "switchToSerbian": "Prebaci na srpski",
+    "reportLanguage": "Jezik izveštaja",
     "summaryExcerptNote": "Zbirni pregled sadrži skraćene opise. Izaberite pojedinačne izveštaje za potpuni sadržaj.",
     "planTitle": "Naziv plana",
     "start": "Početak",
@@ -2041,6 +2042,12 @@
     "plansUnavailable": "Planovi trenutno nisu dostupni. Osvežite stranicu.",
     "entryCount": "{count, plural, one {# unos} other {# unosa}}",
     "planCount": "{count, plural, one {# plan} few {# plana} other {# planova}}",
-    "showingEntries": "Prikazano je poslednjih {count} od ukupno {total} unosa."
+    "showingEntries": "Prikazano je poslednjih {count} od ukupno {total} unosa.",
+    "clubLogo": "Logo kluba",
+    "clubLogoHelp": "PNG, JPG ili WebP, do 2 MB. Prikazuje se na svim izveštajima i planovima ovog kluba.",
+    "saveClubLogo": "Sačuvaj logo",
+    "clubLogoSaved": "Logo kluba je sačuvan.",
+    "invalidClubLogo": "Izaberite ispravnu PNG, JPG ili WebP sliku do 2 MB (najviše 16 megapiksela).",
+    "clubLogoSaveError": "Logo nije sačuvan. Pokušajte ponovo."
   }
 }

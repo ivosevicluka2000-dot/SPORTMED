@@ -6,6 +6,7 @@ export interface RehabWorkspace {
   slug: string;
   name: string;
   kind: RehabWorkspaceKind;
+  logo_path?: string | null;
 }
 
 export interface RehabAccessContext {

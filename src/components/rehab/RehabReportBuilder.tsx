@@ -118,7 +118,7 @@ export function RehabReportBuilder({
         <fieldset disabled={busy} className="space-y-4">
           <div className="flex flex-wrap justify-between gap-4">
             <h2 className="text-xl font-semibold">{t("chooseReport")}</h2>
-            <RehabLanguageSwitcher />
+            <RehabLanguageSwitcher label={t("reportLanguage")} />
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="text-sm">
@@ -337,7 +337,7 @@ export function RehabReportBuilder({
       )}
       {report && (
         <>
-          <div className="rehab-print-toolbar mb-5 flex items-center gap-4">
+          <div className="rehab-print-toolbar mb-5 flex flex-wrap items-center gap-4">
             <span>{t("peopleCount", { count: report.cards.length })}</span>
             <button
               onClick={() => window.print()}
@@ -345,7 +345,7 @@ export function RehabReportBuilder({
             >
               {t("printPdf")}
             </button>
-            <RehabLanguageSwitcher />
+            <RehabLanguageSwitcher label={t("reportLanguage")} />
           </div>
           <RehabReportDocument report={report} locale={locale} />
         </>

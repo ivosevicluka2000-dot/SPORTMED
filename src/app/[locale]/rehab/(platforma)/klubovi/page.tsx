@@ -1,5 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import Image from "next/image";
+import { reportLogoUrl } from "@/lib/rehab/branding";
+import { RehabClubLogoForm } from "@/components/rehab/RehabClubLogoForm";
 import { createClubWorkspaceAction } from "@/app/[locale]/admin/rehab/_actions";
 import { getRehabAccessContext } from "@/lib/rehab/access";
 import { createClient } from "@/lib/supabase/server";
@@ -31,9 +34,11 @@ export default async function ClubsPage({ params, searchParams }: { params: Prom
       </RehabForm>
     </RehabPanel>
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{clubs.map(club => <RehabPanel key={club.id}>
+      {reportLogoUrl(club) && <Image src={reportLogoUrl(club)!} alt={club.name} width={120} height={72} unoptimized className="mb-3 h-18 w-30 object-contain object-left" />}
       <h2 className="break-words font-heading text-xl font-semibold text-navy">{club.name}</h2>
       <p className="mb-4 mt-2 text-sm text-gray-500">{club.count === null ? t("labelPlayerCountIsUnavailable") : t("labelPlayersextra83", {v0: club.count})}</p>
       <div className="flex flex-wrap gap-3"><Link className="rounded-md bg-navy px-4 py-2 text-sm text-white" href={rehabUrl(locale, "/rehab/pacijenti", { workspace: club.id })}>{t("labelOpenClub")}</Link><Link className="py-2 text-sm text-teal underline" href={rehabUrl(locale, "/rehab/tim", { workspace: club.id })}>{t("labelPeopleWithAccess")}</Link></div>
+      <RehabClubLogoForm locale={locale} workspaceId={club.id} />
     </RehabPanel>)}</div>
     {!clubs.length && <p className="text-gray-500">{t("labelNoClubsYetEnterTheFirstClub")}</p>}
   </div>;

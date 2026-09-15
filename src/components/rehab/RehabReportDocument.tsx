@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl";
 import type { RehabReport } from "@/lib/rehab/reports";
 import { formatRehabDate } from "@/lib/rehab/dates";
+import { RehabReportBrand } from "./RehabReportBrand";
 import { RehabPlanContent } from "./RehabPlanContent";
 
 function summaryExcerpt(text: string | null) {
@@ -22,7 +23,7 @@ export function RehabReportDocument({
   const date = (v: string | null) => formatRehabDate(v, false, locale);
   const heading = (
     <header className="mb-6 border-b-2 border-navy pb-4">
-      <p className="text-lg font-semibold">{report.workspace.name}</p>
+      <RehabReportBrand workspace={report.workspace} />
       <h1 className="mt-2 text-2xl font-semibold">
         {t("rehabilitationReport")}
       </h1>

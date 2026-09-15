@@ -1961,6 +1961,7 @@
     "dayCount": "{count, plural, one {# day} other {# days}}",
     "switchToEnglish": "Switch to English",
     "switchToSerbian": "Switch to Serbian",
+    "reportLanguage": "Report language",
     "summaryExcerptNote": "The summary uses shortened descriptions. Choose individual reports for the complete content.",
     "planTitle": "Plan title",
     "start": "Start",
@@ -2041,6 +2042,12 @@
     "plansUnavailable": "Plans are currently unavailable. Refresh the page.",
     "entryCount": "{count, plural, one {# entry} other {# entries}}",
     "planCount": "{count, plural, one {# plan} other {# plans}}",
-    "showingEntries": "Showing the last {count} of {total} entries."
+    "showingEntries": "Showing the last {count} of {total} entries.",
+    "clubLogo": "Club logo",
+    "clubLogoHelp": "PNG, JPG or WebP, up to 2 MB. Appears on all reports and plans for this club.",
+    "saveClubLogo": "Save logo",
+    "clubLogoSaved": "Club logo saved.",
+    "invalidClubLogo": "Choose a valid PNG, JPG or WebP image up to 2 MB (maximum 16 megapixels).",
+    "clubLogoSaveError": "The logo could not be saved. Please try again."
   }
 }

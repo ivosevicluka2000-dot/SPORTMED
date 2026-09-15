@@ -28,6 +28,7 @@ export async function createRehabTestDb() {
     "0007_rehab_qa_hardening.sql",
     "0009_rehab_simple_management.sql",
     "0010_rehab_cycles.sql",
+    "0011_rehab_report_branding.sql",
   ]) {
     await db.exec(
       await readFile(

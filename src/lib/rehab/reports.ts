@@ -40,7 +40,7 @@ export type ReportCard = Pick<
   entries: RehabDailyEntry[];
 };
 export interface RehabReport {
-  workspace: { id: string; name: string; kind: "clinic" | "club" };
+  workspace: { id: string; name: string; kind: "clinic" | "club"; logo_path?: string | null };
   preparedBy: string;
   generatedAt: string;
   from: string | null;

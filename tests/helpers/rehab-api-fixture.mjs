@@ -161,6 +161,7 @@ const tables = new Set([
   "rehab_appointments",
   "rehab_period_summaries",
 ]);
+const logos = new Map();
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://127.0.0.1:54329");
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3100");
@@ -179,6 +180,24 @@ const server = http.createServer(async (req, res) => {
     res.end(req.method === "HEAD" ? "" : JSON.stringify(body));
   };
   try {
+    const storagePrefix = "/storage/v1/object/";
+    if (url.pathname.startsWith(storagePrefix)) {
+      const path = url.pathname.slice(storagePrefix.length).replace(/^public\//, "");
+      if (!path.startsWith("rehab-club-logos/")) throw new Error("Unsupported fixture bucket");
+      if (req.method === "POST") {
+        if (fixtureUser(req).id !== ids.admin) return respond({ message: "Forbidden" }, 403);
+        const chunks = [];
+        for await (const chunk of req) chunks.push(chunk);
+        logos.set(path, Buffer.concat(chunks));
+        return respond({ Key: path }, 200);
+      }
+      if (req.method === "GET" && logos.has(path)) {
+        res.writeHead(200, { "Content-Type": "image/png" });
+        res.end(logos.get(path));
+        return;
+      }
+      return respond({ message: "Logo not found" }, 404);
+    }
     if (url.pathname === "/auth/v1/token") {
       const chunks = [];
       for await (const chunk of req) chunks.push(chunk);
@@ -272,6 +291,17 @@ const server = http.createServer(async (req, res) => {
     for (const [key, value] of url.searchParams) {
       if (["select", "order", "limit", "offset", "or"].includes(key)) continue;
       rows = rows.filter((r) => matches(r, key, value));
+    }
+    if (req.method === "PATCH" && endpoint === "rehab_workspaces") {
+      if (fixtureUser(req).id !== ids.admin) return respond({ message: "Forbidden" }, 403);
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const body = JSON.parse(Buffer.concat(chunks).toString());
+      if (Object.keys(body).some(key => key !== "logo_path")) throw new Error("Unsupported workspace field");
+      for (const row of rows) {
+        await db.query("update rehab_workspaces set logo_path=$1 where id=$2", [body.logo_path, row.id]);
+        row.logo_path = body.logo_path;
+      }
     }
     if (req.method === "DELETE") {
       if (!["rehab_appointments", "rehab_patients"].includes(endpoint)) throw new Error("Unsupported fixture delete");

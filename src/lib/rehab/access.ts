@@ -45,7 +45,7 @@ export async function getRehabAccessContext(
         .maybeSingle(),
       supabase
         .from("rehab_workspaces")
-        .select("id, slug, name, kind")
+        .select("id, slug, name, kind, logo_path")
         .order("kind", { ascending: true }),
       supabase
         .from("rehab_workspace_members")
@@ -107,7 +107,7 @@ export async function requireRehabWorkspace(
       supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
       supabase
         .from("rehab_workspaces")
-        .select("id, slug, name, kind")
+        .select("id, slug, name, kind, logo_path")
         .eq("id", workspaceId)
         .maybeSingle(),
       supabase

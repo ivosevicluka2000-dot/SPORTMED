@@ -103,6 +103,7 @@ export async function loadRehabReport(
           id: workspace.id,
           name: workspace.name,
           kind: workspace.kind,
+          logo_path: workspace.logo_path,
         },
         preparedBy: access.fullName,
         generatedAt: new Date().toISOString(),
