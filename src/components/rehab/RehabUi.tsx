@@ -166,6 +166,8 @@ export function RehabAlert({
   const t = useTranslations("rehab");
   if (!error && !saved) return null;
   const savedMessages: Record<string, string> = {
+    "appointment-deleted": t("deleteAppointmentSuccess"),
+    "record-deleted": t("deleteRecordSuccess"),
     created: t("labelAccountCreatedAndAccessGranted"),
     assigned: t("labelAccessUpdatedTheExistingPasswordHasNot"),
     removed: t("labelAccessRemoved"),

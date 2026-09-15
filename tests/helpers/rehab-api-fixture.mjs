@@ -168,7 +168,7 @@ const server = http.createServer(async (req, res) => {
     "Access-Control-Allow-Headers",
     "authorization,apikey,content-type,x-client-info,prefer,range,accept-profile,content-profile,x-supabase-api-version",
   );
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,HEAD,OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,HEAD,OPTIONS");
   if (req.method === "OPTIONS") {
     res.writeHead(204);
     res.end();
@@ -257,10 +257,25 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (!tables.has(endpoint)) throw new Error("Unsupported fixture table");
+    if (req.method === "POST" && endpoint === "rehab_appointments") {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const body = JSON.parse(Buffer.concat(chunks).toString());
+      const allowed = ["workspace_id", "patient_id", "starts_at", "duration_minutes", "therapy", "notes", "reminder_email", "reminder_hours_before", "created_by"];
+      const keys = Object.keys(body);
+      if (keys.some(key => !allowed.includes(key))) throw new Error("Unsupported appointment field");
+      const result = await db.query(`insert into rehab_appointments (${keys.join(",")}) values (${keys.map((_, i) => "$" + (i + 1)).join(",")}) returning *`, keys.map(key => body[key]));
+      respond(result.rows, 201);
+      return;
+    }
     let rows = await table(endpoint);
     for (const [key, value] of url.searchParams) {
       if (["select", "order", "limit", "offset", "or"].includes(key)) continue;
       rows = rows.filter((r) => matches(r, key, value));
+    }
+    if (req.method === "DELETE") {
+      if (!["rehab_appointments", "rehab_patients"].includes(endpoint)) throw new Error("Unsupported fixture delete");
+      for (const row of rows) await db.query(`delete from "${endpoint}" where id=$1`, [row.id]);
     }
     const order = (url.searchParams.get("order") || "")
       .split(",")

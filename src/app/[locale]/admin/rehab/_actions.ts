@@ -1,5 +1,6 @@
 "use server";
 
+import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -619,6 +620,90 @@ export async function updatePlanStatusAction(formData: FormData) {
   redirect(patientPath(locale, patientId, { workspace: workspaceId, ...(error ? { error: "Status plana nije promenjen." } : { saved: "plan-status" }) }));
 }
 
+function appointmentView(formData: FormData) {
+  const month = text(formData.get("month"));
+  const day = text(formData.get("day"));
+  const period = text(formData.get("period"));
+  return {
+    month: isValidRehabDate(`${month}-01`) ? month : undefined,
+    day: isValidRehabDate(day) ? day : undefined,
+    period: ["today", "week", "all"].includes(period) ? period : undefined,
+  };
+}
+
+export async function deleteAppointmentAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const t = await getTranslations({ locale, namespace: "rehab" });
+  const workspaceId = text(formData.get("workspace_id"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
+  const { data, error } = await access.supabase.from("rehab_appointments")
+    .delete().eq("id", text(formData.get("appointment_id")))
+    .eq("workspace_id", workspaceId).select("id").maybeSingle();
+  revalidatePath("/", "layout");
+  redirect(pathWithQuery(locale, "/rehab/termini", {
+    ...appointmentView(formData), workspace: workspaceId,
+    ...(error || !data ? { error: t("deleteAppointmentError") } : { saved: "appointment-deleted" }),
+  }));
+}
+
+export async function deleteRehabPatientAction(formData: FormData) {
+  const locale = localeFrom(formData);
+  const t = await getTranslations({ locale, namespace: "rehab" });
+  const workspaceId = text(formData.get("workspace_id"));
+  const patientId = text(formData.get("patient_id"));
+  const access = await requireRehabWorkspace(locale, workspaceId, "manage");
+  const failureUrl = patientPath(locale, patientId, { workspace: workspaceId, error: t("deleteRecordError") });
+  const { data: patient, error: patientError } = await access.supabase.from("rehab_patients")
+    .select("first_name, last_name").eq("id", patientId).eq("workspace_id", workspaceId).maybeSingle();
+  if (patientError || !patient || text(formData.get("confirm_name")) !== `${patient.first_name} ${patient.last_name}`) {
+    redirect(failureUrl);
+  }
+  // Collect every stored path before the database cascades remove the daily entries.
+  // Transferred players can still have paths under their previous workspace prefix.
+  const paths: string[] = [];
+  for (let offset = 0; ; offset += 500) {
+    const { data, error } = await access.supabase.from("rehab_daily_entries")
+      .select("id, image_paths").eq("patient_id", patientId).eq("workspace_id", workspaceId)
+      .order("id").range(offset, offset + 499);
+    if (error || !data) redirect(failureUrl);
+    for (const entry of data) {
+      for (const path of entry.image_paths ?? []) {
+        const parts = path.split("/");
+        // Never elevate a caller-controlled path into a service-role deletion.
+        if (parts.length !== 4 || parts[2] !== entry.id || parts[1] !== patientId) redirect(failureUrl);
+        paths.push(path);
+      }
+    }
+    if (data.length < 500) break;
+  }
+  // Validate the cleanup client before deleting anything. After deletion, storage RLS
+  // correctly denies access to the missing card, so cleanup uses the server client.
+  const admin = paths.length ? createAdminClient() : null;
+  const { data: deleted, error } = await access.supabase.from("rehab_patients")
+    .delete().eq("id", patientId).eq("workspace_id", workspaceId)
+    .eq("first_name", patient.first_name).eq("last_name", patient.last_name)
+    .select("id").maybeSingle();
+  if (error || !deleted) redirect(failureUrl);
+  let cleanupFailed = false;
+  if (admin) {
+    for (let offset = 0; offset < paths.length; offset += 100) {
+      const batch = paths.slice(offset, offset + 100);
+      try {
+        const { error: cleanupError } = await admin.storage.from(REHAB_IMAGE_BUCKET).remove(batch);
+        if (cleanupError) throw cleanupError;
+      } catch (cleanupError) {
+        cleanupFailed = true;
+        console.error("[rehab] Deleted record image cleanup failed", { patientId, paths: batch, error: cleanupError });
+      }
+    }
+  }
+  revalidatePath("/", "layout");
+  redirect(pathWithQuery(locale, "/rehab/pacijenti", {
+    workspace: workspaceId,
+    ...(cleanupFailed ? { error: t("deleteRecordCleanupError") } : { saved: "record-deleted" }),
+  }));
+}
+
 export async function createAppointmentAction(formData: FormData) {
   const locale = localeFrom(formData);
   const workspaceId = text(formData.get("workspace_id"));
@@ -628,7 +713,7 @@ export async function createAppointmentAction(formData: FormData) {
   try {
     startsAt = localBelgradeDateTimeToIso(text(formData.get("starts_at")));
   } catch {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Termin nije ispravno unet." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Termin nije ispravno unet." }));
   }
 
   const duration = Number(text(formData.get("duration_minutes")) || "60");
@@ -641,7 +726,7 @@ export async function createAppointmentAction(formData: FormData) {
     therapy.length > 1000 ||
     notes.length > 2000
   ) {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Podaci termina nisu ispravni." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Podaci termina nisu ispravni." }));
   }
 
   const { data: patient } = await access.supabase
@@ -651,12 +736,12 @@ export async function createAppointmentAction(formData: FormData) {
     .eq("workspace_id", workspaceId)
     .maybeSingle();
   if (!patient) {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Pacijent ili igrač nije pronađen." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Pacijent ili igrač nije pronađen." }));
   }
 
   const reminderEmail = text(formData.get("reminder_email")) || patient.email || "";
   if (reminderEmail && !z.email().safeParse(reminderEmail).success) {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Email za podsetnik nije ispravan." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Email za podsetnik nije ispravan." }));
   }
 
   const { error } = await access.supabase.from("rehab_appointments").insert({
@@ -671,7 +756,7 @@ export async function createAppointmentAction(formData: FormData) {
     created_by: access.userId,
   });
 
-  redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, ...(error ? { error: "Termin nije sačuvan." } : { saved: "1" }) }));
+  redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, ...(error ? { error: "Termin nije sačuvan." } : { saved: "1", period: undefined, month: text(formData.get("starts_at")).slice(0, 7), day: text(formData.get("starts_at")).slice(0, 10) }) }));
 }
 
 export async function updateAppointmentAction(formData: FormData) {
@@ -683,7 +768,7 @@ export async function updateAppointmentAction(formData: FormData) {
   try {
     startsAt = localBelgradeDateTimeToIso(text(formData.get("starts_at")));
   } catch {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Datum i vreme termina nisu ispravni." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Datum i vreme termina nisu ispravni." }));
   }
 
   const duration = Number(text(formData.get("duration_minutes")) || "60");
@@ -699,7 +784,7 @@ export async function updateAppointmentAction(formData: FormData) {
     therapy.length > 1000 ||
     notes.length > 2000
   ) {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Izmene termina nisu ispravne." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Izmene termina nisu ispravne." }));
   }
 
   const { error } = await access.supabase
@@ -716,8 +801,9 @@ export async function updateAppointmentAction(formData: FormData) {
     .eq("workspace_id", workspaceId);
 
   redirect(pathWithQuery(locale, "/rehab/termini", {
+    ...appointmentView(formData),
     workspace: workspaceId,
-    ...(error ? { error: "Termin nije izmenjen." } : { saved: "appointment-updated" }),
+    ...(error ? { error: "Termin nije izmenjen." } : { saved: "appointment-updated", period: undefined, month: text(formData.get("starts_at")).slice(0, 7), day: text(formData.get("starts_at")).slice(0, 10) }),
   }));
 }
 
@@ -727,7 +813,7 @@ export async function updateAppointmentStatusAction(formData: FormData) {
   const appointmentId = text(formData.get("appointment_id"));
   const rawStatus = text(formData.get("status"));
   if (!appointmentId || !["scheduled", "completed", "cancelled"].includes(rawStatus)) {
-    redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, error: "Status termina nije ispravan." }));
+    redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Status termina nije ispravan." }));
   }
   const status = rawStatus as "scheduled" | "completed" | "cancelled";
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
@@ -736,7 +822,7 @@ export async function updateAppointmentStatusAction(formData: FormData) {
     .update({ status })
     .eq("id", appointmentId)
     .eq("workspace_id", workspaceId);
-  redirect(pathWithQuery(locale, "/rehab/termini", { workspace: workspaceId, ...(error ? { error: "Status termina nije promenjen." } : { saved: "status" }) }));
+  redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, ...(error ? { error: "Status termina nije promenjen." } : { saved: "status" }) }));
 }
 
 export async function savePeriodSummaryAction(formData: FormData) {

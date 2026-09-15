@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { CalendarClock, ClipboardList, Clock3, HeartPulse, Mail, Phone, ListChecks } from "lucide-react";
 import {
   copyRehabPlanAction,
+  deleteRehabPatientAction,
   createDailyEntryAction,
   removeDailyEntryImageAction,
   updateDailyEntryAction,
@@ -196,6 +197,21 @@ export default async function RehabPatientDetailPage({
         }
       />
       <RehabAlert error={query.error} saved={query.saved} />
+      {workspace.canManage && <details className="mb-6 rounded-xl border border-red-200 bg-white p-4">
+        <summary className="cursor-pointer text-sm font-semibold text-red-700">{t("deleteRecord")}</summary>
+        <p className="mt-3 max-w-3xl text-sm text-gray-600">{t("deleteRecordDescription")}</p>
+        <form action={deleteRehabPatientAction} className="mt-4 max-w-lg space-y-3">
+          <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="workspace_id" value={workspace.id} />
+          <input type="hidden" name="patient_id" value={patient.id} />
+          <label className="block">
+            <span className={rehabLabelClass}>{t("deleteRecordTypeName", { v0: `${patient.first_name} ${patient.last_name}` })}</span>
+            <input name="confirm_name" required autoComplete="off" className={rehabInputClass} />
+          </label>
+          <RehabConfirmSubmitButton confirmMessage={t("deleteRecordConfirm", { v0: `${patient.first_name} ${patient.last_name}` })} className="rounded-md bg-red-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-800">{t("deleteRecordPermanently")}</RehabConfirmSubmitButton>
+        </form>
+      </details>}
+
       {access.isGlobalAdmin && workspace.kind === "club" && patient.record_type === "player" && <details className="mb-6 rounded-xl border border-gray-200 bg-white p-5" open={query.saved === "created" || query.saved === "assigned" || undefined}>
         <summary className="cursor-pointer font-medium text-navy">{t("labelEnablePlayerLogin")}</summary>
         <div className="mt-4 max-w-3xl"><RehabAccountForm locale={locale} workspaceId={workspace.id} workspaceName={workspace.name} kind="club" player={{ id: patient.id, name: `${patient.first_name} ${patient.last_name}`, email: patient.email }} />

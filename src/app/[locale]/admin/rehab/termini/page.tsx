@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { CalendarClock, Mail } from "lucide-react";
 import {
   createAppointmentAction,
+  deleteAppointmentAction,
   updateAppointmentAction,
   updateAppointmentStatusAction,
 } from "@/app/[locale]/admin/rehab/_actions";
@@ -12,6 +13,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getRehabAccessContext, selectRehabWorkspace } from "@/lib/rehab/access";
 import {
   dateInputValue,
+  isValidRehabDate,
   dateTimeLocalInputValue,
   formatRehabDate,
   localBelgradeDateTimeToIso,
@@ -32,6 +34,10 @@ import {
 import { RehabForm } from "@/components/rehab/RehabForm";
 import { RehabSubmitButton } from "@/components/rehab/RehabSubmitButton";
 
+import { RehabAppointmentCalendar } from "@/components/rehab/RehabAppointmentCalendar";
+import { RehabConfirmSubmitButton } from "@/components/rehab/RehabConfirmSubmitButton";
+import { rehabAppointmentDay, rehabCalendarMonth, rehabMonthBounds } from "@/lib/rehab/calendar";
+
 export const dynamic = "force-dynamic";
 
 export default async function RehabAppointmentsPage({
@@ -39,7 +45,7 @@ export default async function RehabAppointmentsPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ workspace?: string; error?: string; saved?: string; period?: string }>;
+  searchParams: Promise<{ workspace?: string; error?: string; saved?: string; period?: string; month?: string; day?: string }>;
 }) {
   const t = await getTranslations("rehab");
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
@@ -53,10 +59,12 @@ export default async function RehabAppointmentsPage({
 
   const supabase = await createClient();
   const currentDate = new Date();
-  const period = query.period === "today" || query.period === "week" ? query.period : "all";
+  const period = ["today", "week", "all"].includes(query.period ?? "") ? query.period! : "month";
   const since = new Date(currentDate);
   since.setDate(since.getDate() - 30);
   const todayKey = dateInputValue(currentDate);
+  const month = rehabCalendarMonth(query.month, todayKey);
+  const selectedDay = query.day && isValidRehabDate(query.day) && query.day.startsWith(`${month}-`) ? query.day : undefined;
   const tomorrow = new Date(`${todayKey}T12:00:00Z`);
   tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
   const weekEnd = new Date(`${todayKey}T12:00:00Z`);
@@ -68,8 +76,11 @@ export default async function RehabAppointmentsPage({
     )
     .eq("workspace_id", workspace.id)
     .order("starts_at", { ascending: true })
-    .limit(300);
-  if (period === "today") {
+    .order("id", { ascending: true });
+  if (period === "month") {
+    const bounds = rehabMonthBounds(month);
+    appointmentsQuery = appointmentsQuery.gte("starts_at", bounds.start).lt("starts_at", bounds.end);
+  } else if (period === "today") {
     appointmentsQuery = appointmentsQuery
       .gte("starts_at", localBelgradeDateTimeToIso(`${todayKey}T00:00`))
       .lt("starts_at", localBelgradeDateTimeToIso(`${dateInputValue(tomorrow)}T00:00`));
@@ -80,25 +91,35 @@ export default async function RehabAppointmentsPage({
   } else {
     appointmentsQuery = appointmentsQuery.gte("starts_at", since.toISOString());
   }
-  const [{ data: patients }, { data: appointments }] = await Promise.all([
+  const [{ data: patients }, { data: appointments, error: appointmentsError }] = await Promise.all([
     supabase
       .from("rehab_patients")
       .select("id, first_name, last_name, email, status")
       .eq("workspace_id", workspace.id)
       .eq("status", "active")
       .order("last_name", { ascending: true }),
-    appointmentsQuery,
+    (async () => {
+      const data: RehabAppointment[] = [];
+      for (let offset = 0; ; offset += 500) {
+        const result = await appointmentsQuery.range(offset, offset + 499);
+        if (result.error) return { data: [], error: result.error };
+        data.push(...(result.data as unknown as RehabAppointment[]));
+        if (result.data.length < 500) return { data, error: null };
+      }
+    })(),
   ]);
 
   const patientRows = (patients ?? []) as Array<
     Pick<RehabPatient, "id" | "first_name" | "last_name" | "email" | "status">
   >;
-  const rows = (appointments ?? []) as unknown as RehabAppointment[];
+  const calendarRows = appointments;
+  const rows = period === "month" && selectedDay ? calendarRows.filter(row => rehabAppointmentDay(row.starts_at) === selectedDay) : calendarRows;
   const now = currentDate.getTime();
   const upcoming = rows.filter((row) => new Date(row.starts_at).getTime() >= now && row.status === "scheduled");
   const recent = rows.filter((row) => !upcoming.includes(row)).reverse();
   const suggested = new Date(currentDate.getTime() + 60 * 60 * 1000);
   suggested.setMinutes(Math.ceil(suggested.getMinutes() / 15) * 15, 0, 0);
+  const suggestedStart = selectedDay ? `${selectedDay}T09:00` : month === todayKey.slice(0, 7) ? dateTimeLocalInputValue(suggested) : `${month}-01T09:00`;
 
   return (
     <div>
@@ -113,10 +134,11 @@ export default async function RehabAppointmentsPage({
         locale={locale}
         href="/rehab/termini"
       />
-      <RehabAlert error={query.error} saved={query.saved} />
+      <RehabAlert error={query.error || (appointmentsError ? t("calendarLoadError") : undefined)} saved={query.saved} />
 
-      <div className="mb-6 inline-flex rounded-lg border border-gray-200 bg-white p-1">
+      <div className="mb-6 inline-flex max-w-full flex-wrap rounded-lg border border-gray-200 bg-white p-1">
         {([
+          ["month", t("calendarTitle")],
           ["all", t("labelAll")],
           ["today", t("labelToday")],
           ["week", t("labelNextDays")],
@@ -125,7 +147,7 @@ export default async function RehabAppointmentsPage({
             key={value}
             href={rehabUrl(locale, "/rehab/termini", {
               workspace: workspace.id,
-              period: value === "all" ? undefined : value,
+              period: value === "month" ? undefined : value,
             })}
             aria-current={period === value ? "page" : undefined}
             className={`rounded-md px-3 py-2 text-sm font-medium transition ${period === value ? "bg-navy text-white" : "text-gray-600 hover:bg-gray-50"}`}
@@ -135,15 +157,21 @@ export default async function RehabAppointmentsPage({
         ))}
       </div>
 
+      {period === "month" && !appointmentsError && <RehabAppointmentCalendar month={month} today={todayKey} selectedDay={selectedDay} rows={calendarRows} locale={locale} workspaceId={workspace.id} />}
+      {period === "month" && selectedDay && <h2 className="mb-5 text-xl font-semibold text-navy">{formatRehabDate(`${selectedDay}T12:00:00Z`, false, locale)} · {t("calendarCount", { count: rows.length })}</h2>}
+
       {workspace.canEdit && (
         <RehabPanel className="mb-6">
           <h2 className="mb-5 font-heading text-2xl font-semibold text-navy">{t("labelNewAppointment")}</h2>
           {patientRows.length === 0 ? (
             <EmptyState>{t("labelAddAnActivePatientOrPlayerFirst")}</EmptyState>
           ) : (
-            <RehabForm action={createAppointmentAction} className="space-y-4">
+            <RehabForm key={`${month}-${selectedDay ?? ""}`} action={createAppointmentAction} className="space-y-4">
               <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="workspace_id" value={workspace.id} />
+              <input type="hidden" name="month" value={month} />
+              <input type="hidden" name="day" value={selectedDay ?? ""} />
+              <input type="hidden" name="period" value={period} />
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <label>
                   <span className={rehabLabelClass}>{workspace.kind === "club" ? t("labelPlayer") : t("labelPatient")} *</span>
@@ -162,7 +190,7 @@ export default async function RehabAppointmentsPage({
                     name="starts_at"
                     type="datetime-local"
                     required
-                    defaultValue={dateTimeLocalInputValue(suggested)}
+                    defaultValue={suggestedStart}
                     className={rehabInputClass}
                   />
                 </label>
@@ -214,14 +242,16 @@ export default async function RehabAppointmentsPage({
           locale={locale}
           workspaceId={workspace.id}
           canEdit={workspace.canEdit}
-          empty="Nema narednih termina."
+          view={{ month, day: selectedDay, period }}
+          empty={t("calendarNoAppointments")}
         />
         <AppointmentList
           title={t("labelPastAndClosed")}
-          rows={recent.slice(0, 50)}
+          rows={recent}
           locale={locale}
           workspaceId={workspace.id}
           canEdit={workspace.canEdit}
+          view={{ month, day: selectedDay, period }}
           empty={period === "all" ? t("labelNoPastAppointmentsInTheLastDays") : t("labelNoPastOrClosedAppointmentsInThe")}
         />
       </div>
@@ -236,6 +266,7 @@ function AppointmentList({
   workspaceId,
   canEdit,
   empty,
+  view,
 }: {
   title: string;
   rows: RehabAppointment[];
@@ -243,6 +274,7 @@ function AppointmentList({
   workspaceId: string;
   canEdit: boolean;
   empty: string;
+  view: { month: string; day?: string; period: string };
 }) {
   const t = useTranslations("rehab");
   return (
@@ -253,7 +285,7 @@ function AppointmentList({
       ) : (
         <div className="space-y-3">
           {rows.map((appointment) => (
-            <article key={appointment.id} className="rounded-lg border border-gray-100 bg-gray-50/60 p-4">
+            <article id={`appointment-${appointment.id}`} key={appointment.id} className="rounded-lg border border-gray-100 bg-gray-50/60 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 gap-3">
                   <CalendarClock className="mt-0.5 h-5 w-5 shrink-0 text-teal-dark" />
@@ -293,6 +325,7 @@ function AppointmentList({
                     <input type="hidden" name="locale" value={locale} />
                     <input type="hidden" name="workspace_id" value={workspaceId} />
                     <input type="hidden" name="appointment_id" value={appointment.id} />
+                    {Object.entries(view).map(([name, value]) => <input key={name} type="hidden" name={name} value={value ?? ""} />)}
                     {appointment.status !== "completed" && (
                       <button name="status" value="completed" className="text-xs font-medium text-emerald-700 hover:underline">{t("labelMarkAsCompleted")}</button>
                     )}
@@ -303,12 +336,20 @@ function AppointmentList({
                       <button name="status" value="scheduled" className="text-xs font-medium text-sky-700 hover:underline">{t("labelMarkAsScheduled")}</button>
                     )}
                   </form>
+                  <form action={deleteAppointmentAction} className="mt-3">
+                    <input type="hidden" name="locale" value={locale} />
+                    <input type="hidden" name="workspace_id" value={workspaceId} />
+                    <input type="hidden" name="appointment_id" value={appointment.id} />
+                    {Object.entries(view).map(([name, value]) => <input key={name} type="hidden" name={name} value={value ?? ""} />)}
+                    <RehabConfirmSubmitButton confirmMessage={t("deleteAppointmentConfirm", { v0: `${appointment.patient?.first_name ?? ""} ${appointment.patient?.last_name ?? ""} · ${formatRehabDate(appointment.starts_at, true, locale)}` })} className="rounded-md border border-red-200 px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-50">{t("deleteAppointment")}</RehabConfirmSubmitButton>
+                  </form>
                   <details className="mt-3">
                     <summary className="cursor-pointer text-xs font-medium text-teal-dark">{t("labelEditAppointment")}</summary>
                     <RehabForm action={updateAppointmentAction} className="mt-4 space-y-3 rounded-lg border border-gray-200 bg-white p-4">
                       <input type="hidden" name="locale" value={locale} />
                       <input type="hidden" name="workspace_id" value={workspaceId} />
                       <input type="hidden" name="appointment_id" value={appointment.id} />
+                    {Object.entries(view).map(([name, value]) => <input key={name} type="hidden" name={name} value={value ?? ""} />)}
                       <div className="grid gap-3 sm:grid-cols-[1fr_150px]">
                         <label>
                           <span className={rehabLabelClass}>{t("labelDateAndTime")}</span>
