@@ -468,9 +468,9 @@ export default function ContactContent() {
                 </div>
                 <div>
                   <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-1">
-                    Šabac
+                    Šabac, Srbija
                   </h3>
-                  <p className="text-navy font-medium">Srbija</p>
+                  <p className="text-navy font-medium">Vojvode Mišića 21 A</p>
                 </div>
               </div>
             </motion.div>
@@ -524,7 +524,7 @@ export default function ContactContent() {
       {/* Map */}
       <div className="h-[400px]">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45129.32548803!2d19.67!3d44.75!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475bca7d728e8dad%3A0xa3d1e92b80a3e4e0!2z0KjQsNCx0LDRhg!5e0!3m2!1ssr!2srs!4v1"
+          src="https://www.google.com/maps?q=Vojvode%20Mi%C5%A1i%C4%87a%2021%20A%2C%20%C5%A0abac%2C%20Srbija&output=embed"
           width="100%"
           height="100%"
           style={{ border: 0 }}

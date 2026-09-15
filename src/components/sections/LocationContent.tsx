@@ -63,7 +63,7 @@ export default function LocationContent() {
                   <h3 className="font-heading font-semibold text-navy mb-1">
                     {t("address")}
                   </h3>
-                  <p className="text-gray-500 text-sm">Šabac, Srbija</p>
+                  <p className="text-gray-500 text-sm">Vojvode Mišića 21 A<br />Šabac, Srbija</p>
                 </div>
               </div>
             </motion.div>
@@ -128,7 +128,7 @@ export default function LocationContent() {
                     {t("directions")}
                   </h3>
                   <a
-                    href="https://maps.google.com/?q=Šabac+Srbija"
+                    href="https://www.google.com/maps?q=Vojvode%20Mi%C5%A1i%C4%87a%2021%20A%2C%20%C5%A0abac%2C%20Srbija"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-teal hover:text-teal-dark text-sm font-medium inline-flex items-center gap-1"
@@ -149,7 +149,7 @@ export default function LocationContent() {
             className="rounded-xl overflow-hidden border border-gray-100 h-[500px] lg:h-auto"
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45129.32548803!2d19.67!3d44.75!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475bca7d728e8dad%3A0xa3d1e92b80a3e4e0!2z0KjQsNCx0LDRhg!5e0!3m2!1ssr!2srs!4v1"
+              src="https://www.google.com/maps?q=Vojvode%20Mi%C5%A1i%C4%87a%2021%20A%2C%20%C5%A0abac%2C%20Srbija&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}

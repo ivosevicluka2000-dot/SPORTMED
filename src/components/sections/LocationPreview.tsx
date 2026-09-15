@@ -33,7 +33,7 @@ export default function LocationPreview() {
               <MapPin className="w-4 h-4 text-teal mt-1 flex-shrink-0" />
               <div>
                 <p className="text-sm font-medium text-navy">{t("address")}</p>
-                <p className="text-sm text-gray-400">Šabac, Srbija</p>
+                <p className="text-sm text-gray-400">Vojvode Mišića 21 A<br />Šabac, Srbija</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
@@ -62,7 +62,7 @@ export default function LocationPreview() {
           className="rounded-xl overflow-hidden h-[400px] border border-gray-100"
         >
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d45129.32548803!2d19.67!3d44.75!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475bca7d728e8dad%3A0xa3d1e92b80a3e4e0!2z0KjQsNCx0LDRhg!5e0!3m2!1ssr!2srs!4v1"
+            src="https://www.google.com/maps?q=Vojvode%20Mi%C5%A1i%C4%87a%2021%20A%2C%20%C5%A0abac%2C%20Srbija&output=embed"
             width="100%"
             height="100%"
             style={{ border: 0 }}

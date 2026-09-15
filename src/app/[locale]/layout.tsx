@@ -43,6 +43,7 @@ const jsonLd = {
   image: "https://sportcaremed.rs/opengraph-image.png",
   address: {
     "@type": "PostalAddress",
+    streetAddress: "Vojvode Mišića 21 A",
     addressLocality: "Šabac",
     addressCountry: "RS",
   },

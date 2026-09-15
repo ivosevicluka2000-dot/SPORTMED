@@ -134,7 +134,7 @@ export default function Footer() {
             <ul className="space-y-4 text-sm text-gray-400">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-teal flex-shrink-0 mt-0.5" />
-                <span>Šabac, Srbija</span>
+                <span>Vojvode Mišića 21 A<br />Šabac, Srbija</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-teal flex-shrink-0" />
