@@ -60,18 +60,28 @@ export default async function RehabLoginPage({
   }
 
   return (
-    <section className="bg-gray-50 px-4 py-20 md:py-28">
-      <div className="mx-auto max-w-md rounded-2xl border border-gray-200 bg-white p-7 shadow-sm sm:p-9">
-        <div className="mb-8 text-center">
-          <Image src={CLINIC_REPORT_LOGO} alt="Sport Care Med" width={682} height={416}
-            unoptimized loading="eager" className="mx-auto mb-5 h-auto w-52 rounded-lg" />
-          <h1 className="font-heading text-3xl font-semibold text-navy">
-             {t("labelSportCareMed")} </h1>
-          <p className="mt-2 text-sm text-gray-500">
-             {t("labelSignInForPhysiotherapistsAndCollaborators")} </p>
+    <section className="flex min-h-svh items-center justify-center bg-[radial-gradient(ellipse_at_top,#e5edef_0%,#f5f7f8_55%,#f8fafc_100%)] px-5 py-8 sm:py-12">
+      <div className="w-full max-w-[440px]">
+        <div className="mb-4 flex justify-end">
+          <RehabLanguageSwitcher compact />
         </div>
-        <div className="mb-4 flex justify-end"><RehabLanguageSwitcher /></div>
-        <RehabLoginForm next={next} />
+        <div className="overflow-hidden rounded-3xl border border-white bg-white shadow-[0_20px_70px_-25px_rgba(45,65,73,0.25),0_2px_8px_rgba(45,65,73,0.04)]">
+          <div className="flex justify-center bg-[#4d636a] px-8 py-5 sm:py-6">
+            <Image src={CLINIC_REPORT_LOGO} alt="Sport Care Med" width={682} height={416}
+              unoptimized loading="eager" className="h-auto w-48 sm:w-52" />
+          </div>
+          <div className="px-6 pb-8 pt-7 sm:px-9 sm:pb-9 sm:pt-8">
+            <div className="mb-7">
+              <h1 className="font-sans text-[26px] font-semibold tracking-tight text-navy-dark sm:text-[28px]">
+                {t("labelSportCareMed")}
+              </h1>
+              <p className="mt-2 max-w-[300px] text-sm leading-relaxed text-gray-500">
+                {t("labelSignInForPhysiotherapistsAndCollaborators")}
+              </p>
+            </div>
+            <RehabLoginForm next={next} />
+          </div>
+        </div>
       </div>
     </section>
   );
