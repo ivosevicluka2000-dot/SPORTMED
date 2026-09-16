@@ -205,7 +205,7 @@ export default async function RehabPatientDetailPage({
           <input type="hidden" name="workspace_id" value={workspace.id} />
           <input type="hidden" name="patient_id" value={patient.id} />
           <label className="block">
-            <span className={rehabLabelClass}>{t("deleteRecordTypeName", { v0: `${patient.first_name} ${patient.last_name}` })}</span>
+            <span className="mb-1.5 block text-sm font-medium text-gray-600">{t("deleteRecordTypeName", { v0: `${patient.first_name} ${patient.last_name}` })}</span>
             <input name="confirm_name" required autoComplete="off" className={rehabInputClass} />
           </label>
           <RehabConfirmSubmitButton confirmMessage={t("deleteRecordConfirm", { v0: `${patient.first_name} ${patient.last_name}` })} className="rounded-md bg-red-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-800">{t("deleteRecordPermanently")}</RehabConfirmSubmitButton>

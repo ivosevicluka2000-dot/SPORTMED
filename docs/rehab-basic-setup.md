@@ -48,19 +48,9 @@ Admin u odredišnom klubu može izabrati `Dodaj postojećeg igrača iz drugog kl
 
 U deploy okruženju podesiti:
 
-Na poslednjoj proveri automatski posao je bio isključen; ovaj deployment ga ne uključuje. Donje stavke su uputstvo za naknadnu aktivaciju, ne potvrda da slanje radi.
+Nova integracija za potvrde, izmene, otkazivanja i podsetnike opisana je u [Email obaveštenja za termine](rehab-appointment-emails.md). Zahteva migraciju 0012 i deployment novog workera. Migracija priprema minutni Supabase Cron i ostavlja ga pauziranim do provere produkcionih podešavanja; sama izmena koda nije potvrda da je slanje aktivirano.
 
-```text
-RESEND_API_KEY=
-EMAIL_FROM=
-CRON_SECRET=
-```
-
-Satni posao sada pokreće Supabase Cron (migracija `0008_rehab_reminder_scheduler.sql`), jer Vercel Hobby ne podržava satno zakazivanje. `vercel.json` ne sadrži cron posao.
-
-U Supabase Vault podesiti `rehab_reminder_url` na produkcioni HTTPS URL sa putanjom `/api/cron/rehab-reminders`, a `rehab_cron_secret` na istu jaku nasumičnu vrednost kao Vercel `CRON_SECRET`. Tajne ne upisivati u Git. Posao `rehab-reminders-hourly` radi u 17. minutu svakog sata; podsetnik je okvirno 24 sata pre termina, uz odstupanje do jednog sata.
-
-Proveriti `cron.job_run_details` i HTTP rezultate u `net._http_response`: uspešan cron run znači da je HTTP zahtev zakazan, ne da je email isporučen. Očekivan HTTP rezultat je 200 sa `failed: 0`. Kod 401 znači da tajne nisu usklađene. Supabase baza mora biti aktivna; pauzirana baza neće pokretati posao. Email slanje i dalje koristi postojeći Resend nalog i njegova ograničenja.
+Resend koristi postojeće `RESEND_API_KEY` i `EMAIL_FROM`. Supabase Vault `rehab_cron_secret` mora odgovarati deployment promenljivoj `CRON_SECRET`, a `rehab_reminder_url` mora pokazivati na produkcioni `/api/cron/rehab-reminders`. Tajne ne upisivati u Git. `vercel.json` ne sadrži cron posao.
 
 ## 4. Provera pre objavljivanja
 

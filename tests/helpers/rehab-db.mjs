@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 export async function createRehabTestDb() {
   const db = new PGlite({ extensions: { citext } });
   await db.exec(`
-    create role anon; create role authenticated;
+    create role anon; create role authenticated; create role service_role bypassrls;
     create schema auth; create schema storage;
     create extension citext;
     create function public.uuid_generate_v4() returns uuid language sql as 'select gen_random_uuid()';
@@ -29,6 +29,7 @@ export async function createRehabTestDb() {
     "0009_rehab_simple_management.sql",
     "0010_rehab_cycles.sql",
     "0011_rehab_report_branding.sql",
+    "0012_rehab_appointment_emails.sql",
   ]) {
     await db.exec(
       await readFile(

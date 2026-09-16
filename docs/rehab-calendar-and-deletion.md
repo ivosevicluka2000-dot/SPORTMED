@@ -23,3 +23,8 @@ Ova opcija je dostupna fizioterapeutu i vlasniku u njihovom radnom prostoru, kao
 - Termini se grupišu i pretražuju prema vremenskoj zoni Europe/Belgrade. Mesečni prikaz učitava sve rezultate po stranicama, bez ranijeg ograničenja od 300 termina.
 - Brisanje podataka kartona obavlja baza u jednoj operaciji. Fotografije se zatim uklanjaju kroz Storage API. Ako uklanjanje datoteka ne uspe, korisnik dobija poruku, a server beleži ID kartona i preostale putanje uz poruku `[rehab] Deleted record image cleanup failed`. Administrator može ponoviti uklanjanje tih putanja iz privatnog bucket-a `rehab-entry-images`; pristup kroz obrisani karton više nije dozvoljen.
 - Provere: `npm run build`, `npm run test:rehab`, `node tests/rehab-calendar-browser-qa.mjs`. Browser test koristi izolovanu lokalnu bazu sa sintetičkim podacima i ne šalje mejlove.
+# Provera brisanja — 16. septembar 2026.
+
+Polje za potvrdu je prikazivalo ime velikim slovima zbog CSS-a, dok je server zahtevao potpuno jednaku veličinu slova. Ime se sada prikazuje bez te transformacije, a potvrda prihvata razlike u veličini slova, višak razmaka i Unicode NFC zapis. Celo ime i prezime su i dalje obavezni; pogrešno ime ne prolazi. Poruke sada razlikuju pogrešnu potvrdu od greške pri brisanju.
+
+Produkcioni REST test sa privremenim terapeutom i izolovanim kartonom potvrdio je dozvolu brisanja i kaskadno uklanjanje dnevnog unosa i termina. Za ovu ispravku nije potrebna dodatna migracija. Regresioni testovi su u `tests/rehab-deletion.test.mjs`.

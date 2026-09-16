@@ -45,7 +45,7 @@ export default async function RehabAppointmentsPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ workspace?: string; error?: string; saved?: string; period?: string; month?: string; day?: string }>;
+  searchParams: Promise<{ workspace?: string; error?: string; saved?: string; email?: string; period?: string; month?: string; day?: string }>;
 }) {
   const t = await getTranslations("rehab");
   const [{ locale: rawLocale }, query] = await Promise.all([params, searchParams]);
@@ -114,6 +114,22 @@ export default async function RehabAppointmentsPage({
   >;
   const calendarRows = appointments;
   const rows = period === "month" && selectedDay ? calendarRows.filter(row => rehabAppointmentDay(row.starts_at) === selectedDay) : calendarRows;
+  const emailStates = new Map<string, { status: string; event: string }>();
+  let emailStatusError = false;
+  if (workspace.canEdit && rows.length) {
+    for (let offset = 0; offset < rows.length; offset += 100) {
+      const { data, error } = await supabase.from("rehab_appointment_emails")
+        .select("appointment_id, status, event")
+        .eq("workspace_id", workspace.id)
+        .in("appointment_id", rows.slice(offset, offset + 100).map(row => row.id))
+        .neq("status", "skipped")
+        .order("created_at", { ascending: false }).limit(1000);
+      if (error) emailStatusError = true;
+      for (const email of data ?? []) {
+        if (!emailStates.has(email.appointment_id)) emailStates.set(email.appointment_id, email);
+      }
+    }
+  }
   const now = currentDate.getTime();
   const upcoming = rows.filter((row) => new Date(row.starts_at).getTime() >= now && row.status === "scheduled");
   const recent = rows.filter((row) => !upcoming.includes(row)).reverse();
@@ -135,6 +151,7 @@ export default async function RehabAppointmentsPage({
         href="/rehab/termini"
       />
       <RehabAlert error={query.error || (appointmentsError ? t("calendarLoadError") : undefined)} saved={query.saved} />
+      {(query.email === "pending" || emailStatusError) && <div role="status" className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">{t(emailStatusError ? "appointmentEmailUnavailable" : "appointmentEmailQueued")}</div>}
 
       <div className="mb-6 inline-flex max-w-full flex-wrap rounded-lg border border-gray-200 bg-white p-1">
         {([
@@ -203,15 +220,7 @@ export default async function RehabAppointmentsPage({
                     <option value="90">{t("labelMinutesui248")}</option>
                   </select>
                 </label>
-                <label>
-                  <span className={rehabLabelClass}>{t("labelReminderEmail")}</span>
-                  <input
-                    name="reminder_email"
-                    type="email"
-                    placeholder={t("labelUseTheEmailFromTheRecord")}
-                    className={rehabInputClass}
-                  />
-                </label>
+                <p className="self-center text-sm text-gray-500">{t("appointmentEmailFromRecord")}</p>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <label>
@@ -242,6 +251,7 @@ export default async function RehabAppointmentsPage({
           locale={locale}
           workspaceId={workspace.id}
           canEdit={workspace.canEdit}
+          emailStates={emailStates}
           view={{ month, day: selectedDay, period }}
           empty={t("calendarNoAppointments")}
         />
@@ -251,6 +261,7 @@ export default async function RehabAppointmentsPage({
           locale={locale}
           workspaceId={workspace.id}
           canEdit={workspace.canEdit}
+          emailStates={emailStates}
           view={{ month, day: selectedDay, period }}
           empty={period === "all" ? t("labelNoPastAppointmentsInTheLastDays") : t("labelNoPastOrClosedAppointmentsInThe")}
         />
@@ -265,6 +276,7 @@ function AppointmentList({
   locale,
   workspaceId,
   canEdit,
+  emailStates,
   empty,
   view,
 }: {
@@ -273,6 +285,7 @@ function AppointmentList({
   locale: Locale;
   workspaceId: string;
   canEdit: boolean;
+  emailStates: Map<string, { status: string; event: string }>;
   empty: string;
   view: { month: string; day?: string; period: string };
 }) {
@@ -300,13 +313,16 @@ function AppointmentList({
                     </p>
                     {appointment.therapy && <p className="mt-1 text-sm text-gray-500">{appointment.therapy}</p>}
                     {appointment.notes && <p className="mt-1 text-xs italic text-gray-400">{appointment.notes}</p>}
-                    <p className="mt-2 text-xs text-gray-400">
-                      {appointment.reminder_email
-                        ? appointment.reminder_sent_at
-                          ? t("labelReminderSent", {v0: formatRehabDate(appointment.reminder_sent_at, true)})
-                          : t("labelReminder", {v0: appointment.reminder_email})
+                    <p className="mt-2 text-xs text-gray-500">
+                      {appointment.patient?.email
+                        ? t("labelReminder", { v0: appointment.patient.email })
                         : t("labelNoEmailReminder")}
                     </p>
+                    {appointment.patient?.email && emailStates.has(appointment.id) && <p className="mt-1 text-xs text-gray-500">
+                      {emailStates.get(appointment.id)?.status === "sent" ? t("appointmentEmailSent")
+                        : emailStates.get(appointment.id)?.status === "failed" ? t("appointmentEmailFailed")
+                        : t("appointmentEmailPending")}
+                    </p>}
                   </div>
                 </div>
                 <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${
@@ -375,10 +391,7 @@ function AppointmentList({
                           />
                         </label>
                       </div>
-                      <label>
-                        <span className={rehabLabelClass}>{t("labelReminderEmail")}</span>
-                        <input name="reminder_email" type="email" defaultValue={appointment.reminder_email ?? ""} className={rehabInputClass} />
-                      </label>
+                      <p className="text-sm text-gray-500">{t("appointmentEmailFromRecord")}</p>
                       <label>
                         <span className={rehabLabelClass}>{t("labelTherapyReasonForVisit")}</span>
                         <input name="therapy" maxLength={1000} defaultValue={appointment.therapy ?? ""} className={rehabInputClass} />

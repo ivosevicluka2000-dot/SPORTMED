@@ -4,6 +4,7 @@ interface SendArgs {
   text: string;
   html?: string;
   attachments?: Array<{ filename: string; content: string }>;
+  idempotencyKey?: string;
 }
 
 export function getEmailConfigStatus() {
@@ -24,13 +25,11 @@ export function getEmailConfigStatus() {
  *   EMAIL_FROM      — verified sender, e.g. "Sport Care Med <noreply@…>"
  *   ADMIN_EMAIL     — recipient inbox for notifications
  */
-export async function sendEmail({ to, subject, text, html, attachments }: SendArgs): Promise<boolean> {
+export async function sendEmail({ to, subject, text, html, attachments, idempotencyKey }: SendArgs): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
   if (!apiKey || !from) {
     console.error("[email] not configured; would send:", {
-      to,
-      subject,
       config: getEmailConfigStatus(),
     });
     return false;
@@ -41,7 +40,9 @@ export async function sendEmail({ to, subject, text, html, attachments }: SendAr
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
       },
+      signal: AbortSignal.timeout(10_000),
       body: JSON.stringify({
         from,
         to,

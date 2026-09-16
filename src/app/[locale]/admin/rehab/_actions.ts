@@ -11,6 +11,9 @@ import { getPathname, type Locale } from "@/i18n/routing";
 import { isValidRehabDate, localBelgradeDateTimeToIso } from "@/lib/rehab/dates";
 import { requireRehabWorkspace } from "@/lib/rehab/access";
 import { requireAdmin } from "@/lib/admin-helpers";
+import { getEmailConfigStatus } from "@/lib/email";
+import { deliverAppointmentEmails } from "@/lib/rehab/appointment-email-worker";
+import { matchesRecordDeletionName } from "@/lib/rehab/deletion";
 
 function text(value: FormDataEntryValue | null): string {
   return typeof value === "string" ? value.trim() : "";
@@ -631,6 +634,24 @@ function appointmentView(formData: FormData) {
   };
 }
 
+// Called only after an authorized, successful mutation. The DB trigger durably
+// queues mail; this attempt makes delivery immediate, with cron as recovery.
+async function sendAppointmentEmailsNow(appointmentId: string, workspaceId: string, client: RehabSupabaseClient) {
+  try {
+    const { data, error } = await client.from("rehab_appointment_emails").select("id")
+      .eq("appointment_id", appointmentId).eq("workspace_id", workspaceId).eq("status", "pending").limit(1).maybeSingle();
+    if (error) throw new Error("Email queue unavailable");
+    if (!data) return undefined;
+    const config = getEmailConfigStatus();
+    if (!config.resendApiKeyConfigured || !config.emailFromConfigured) return "pending";
+    const result = await deliverAppointmentEmails(createAdminClient(), { appointmentId, workspaceId, limit: 1 });
+    return result.failed ? "pending" : undefined;
+  } catch {
+    console.error("[rehab-email] Immediate delivery unavailable; queued for cron");
+    return "pending";
+  }
+}
+
 export async function deleteAppointmentAction(formData: FormData) {
   const locale = localeFrom(formData);
   const t = await getTranslations({ locale, namespace: "rehab" });
@@ -639,9 +660,10 @@ export async function deleteAppointmentAction(formData: FormData) {
   const { data, error } = await access.supabase.from("rehab_appointments")
     .delete().eq("id", text(formData.get("appointment_id")))
     .eq("workspace_id", workspaceId).select("id").maybeSingle();
+  const email = !error && data ? await sendAppointmentEmailsNow(data.id, workspaceId, access.supabase) : undefined;
   revalidatePath("/", "layout");
   redirect(pathWithQuery(locale, "/rehab/termini", {
-    ...appointmentView(formData), workspace: workspaceId,
+    ...appointmentView(formData), workspace: workspaceId, email,
     ...(error || !data ? { error: t("deleteAppointmentError") } : { saved: "appointment-deleted" }),
   }));
 }
@@ -655,8 +677,9 @@ export async function deleteRehabPatientAction(formData: FormData) {
   const failureUrl = patientPath(locale, patientId, { workspace: workspaceId, error: t("deleteRecordError") });
   const { data: patient, error: patientError } = await access.supabase.from("rehab_patients")
     .select("first_name, last_name").eq("id", patientId).eq("workspace_id", workspaceId).maybeSingle();
-  if (patientError || !patient || text(formData.get("confirm_name")) !== `${patient.first_name} ${patient.last_name}`) {
-    redirect(failureUrl);
+  if (patientError || !patient) redirect(failureUrl);
+  if (!matchesRecordDeletionName(text(formData.get("confirm_name")), patient.first_name, patient.last_name)) {
+    redirect(patientPath(locale, patientId, { workspace: workspaceId, error: t("deleteRecordNameError") }));
   }
   // Collect every stored path before the database cascades remove the daily entries.
   // Transferred players can still have paths under their previous workspace prefix.
@@ -683,7 +706,10 @@ export async function deleteRehabPatientAction(formData: FormData) {
     .delete().eq("id", patientId).eq("workspace_id", workspaceId)
     .eq("first_name", patient.first_name).eq("last_name", patient.last_name)
     .select("id").maybeSingle();
-  if (error || !deleted) redirect(failureUrl);
+  if (error || !deleted) {
+    console.error("[rehab] Record deletion failed", { code: error?.code ?? "not_deleted" });
+    redirect(failureUrl);
+  }
   let cleanupFailed = false;
   if (admin) {
     for (let offset = 0; offset < paths.length; offset += 100) {
@@ -739,12 +765,12 @@ export async function createAppointmentAction(formData: FormData) {
     redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Pacijent ili igrač nije pronađen." }));
   }
 
-  const reminderEmail = text(formData.get("reminder_email")) || patient.email || "";
+  const reminderEmail = patient.email || "";
   if (reminderEmail && !z.email().safeParse(reminderEmail).success) {
     redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Email za podsetnik nije ispravan." }));
   }
 
-  const { error } = await access.supabase.from("rehab_appointments").insert({
+  const { data: appointment, error } = await access.supabase.from("rehab_appointments").insert({
     workspace_id: workspaceId,
     patient_id: patientId,
     starts_at: startsAt,
@@ -754,9 +780,10 @@ export async function createAppointmentAction(formData: FormData) {
     reminder_email: optional(reminderEmail),
     reminder_hours_before: 24,
     created_by: access.userId,
-  });
+  }).select("id").single();
+  const email = !error && appointment ? await sendAppointmentEmailsNow(appointment.id, workspaceId, access.supabase) : undefined;
 
-  redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, ...(error ? { error: "Termin nije sačuvan." } : { saved: "1", period: undefined, month: text(formData.get("starts_at")).slice(0, 7), day: text(formData.get("starts_at")).slice(0, 10) }) }));
+  redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, email, ...(error || !appointment ? { error: "Termin nije sačuvan." } : { saved: "1", period: undefined, month: text(formData.get("starts_at")).slice(0, 7), day: text(formData.get("starts_at")).slice(0, 10) }) }));
 }
 
 export async function updateAppointmentAction(formData: FormData) {
@@ -772,7 +799,6 @@ export async function updateAppointmentAction(formData: FormData) {
   }
 
   const duration = Number(text(formData.get("duration_minutes")) || "60");
-  const reminderEmail = text(formData.get("reminder_email"));
   const therapy = text(formData.get("therapy"));
   const notes = text(formData.get("notes"));
   if (
@@ -780,30 +806,30 @@ export async function updateAppointmentAction(formData: FormData) {
     !Number.isInteger(duration) ||
     duration < 15 ||
     duration > 240 ||
-    (reminderEmail && !z.email().safeParse(reminderEmail).success) ||
     therapy.length > 1000 ||
     notes.length > 2000
   ) {
     redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, error: "Izmene termina nisu ispravne." }));
   }
 
-  const { error } = await access.supabase
+  const { data: appointment, error } = await access.supabase
     .from("rehab_appointments")
     .update({
       starts_at: startsAt,
       duration_minutes: duration,
       therapy: optional(therapy),
       notes: optional(notes),
-      reminder_email: optional(reminderEmail),
-      reminder_sent_at: null,
     })
     .eq("id", appointmentId)
-    .eq("workspace_id", workspaceId);
+    .eq("workspace_id", workspaceId)
+    .select("id").maybeSingle();
+  const email = !error && appointment ? await sendAppointmentEmailsNow(appointment.id, workspaceId, access.supabase) : undefined;
 
   redirect(pathWithQuery(locale, "/rehab/termini", {
     ...appointmentView(formData),
     workspace: workspaceId,
-    ...(error ? { error: "Termin nije izmenjen." } : { saved: "appointment-updated", period: undefined, month: text(formData.get("starts_at")).slice(0, 7), day: text(formData.get("starts_at")).slice(0, 10) }),
+    email,
+    ...(error || !appointment ? { error: "Termin nije izmenjen." } : { saved: "appointment-updated", period: undefined, month: text(formData.get("starts_at")).slice(0, 7), day: text(formData.get("starts_at")).slice(0, 10) }),
   }));
 }
 
@@ -817,12 +843,14 @@ export async function updateAppointmentStatusAction(formData: FormData) {
   }
   const status = rawStatus as "scheduled" | "completed" | "cancelled";
   const access = await requireRehabWorkspace(locale, workspaceId, "edit");
-  const { error } = await access.supabase
+  const { data: appointment, error } = await access.supabase
     .from("rehab_appointments")
     .update({ status })
     .eq("id", appointmentId)
-    .eq("workspace_id", workspaceId);
-  redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, ...(error ? { error: "Status termina nije promenjen." } : { saved: "status" }) }));
+    .eq("workspace_id", workspaceId)
+    .select("id").maybeSingle();
+  const email = !error && appointment ? await sendAppointmentEmailsNow(appointment.id, workspaceId, access.supabase) : undefined;
+  redirect(pathWithQuery(locale, "/rehab/termini", { ...appointmentView(formData), workspace: workspaceId, email, ...(error || !appointment ? { error: "Status termina nije promenjen." } : { saved: "status" }) }));
 }
 
 export async function savePeriodSummaryAction(formData: FormData) {

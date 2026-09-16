@@ -166,6 +166,7 @@ const tables = new Set([
   "rehab_plan_cycles",
   "rehab_plan_days",
   "rehab_appointments",
+  "rehab_appointment_emails",
   "rehab_period_summaries",
 ]);
 const logos = new Map();
@@ -293,7 +294,7 @@ const server = http.createServer(async (req, res) => {
       const keys = Object.keys(body);
       if (keys.some(key => !allowed.includes(key))) throw new Error("Unsupported appointment field");
       const result = await db.query(`insert into rehab_appointments (${keys.join(",")}) values (${keys.map((_, i) => "$" + (i + 1)).join(",")}) returning *`, keys.map(key => body[key]));
-      respond(result.rows, 201);
+      respond(req.headers.accept?.includes("application/vnd.pgrst.object+json") ? result.rows[0] : result.rows, 201);
       return;
     }
     let rows = await table(endpoint);
