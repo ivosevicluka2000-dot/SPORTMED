@@ -1,12 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { sendEmail } from "../email.ts";
 import { buildAppointmentEmail, type AppointmentEmailEvent, type AppointmentEmailPayload } from "./appointment-email.ts";
+import { appointmentEmailBrand } from "./appointment-email-branding.ts";
 
 interface EmailJob {
   id: string;
   recipient: string;
+  workspace_id: string;
   event: AppointmentEmailEvent;
-  payload: AppointmentEmailPayload;
+  payload: AppointmentEmailPayload & { renderedEmailV2?: ReturnType<typeof buildAppointmentEmail> };
   attempts: number;
   claim_token: string;
 }
@@ -36,7 +38,22 @@ export async function deliverAppointmentEmails(
     if (!active) continue;
     let ok = false;
     try {
-      ok = await send({ to: job.recipient, ...buildAppointmentEmail(job.event, job.payload),
+      // Freeze the full message before sending: branding, copy and calendar links
+      // must stay identical when the same Resend idempotency key is retried.
+      let message = job.payload.renderedEmailV2;
+      if (!message) {
+        const { data: workspace, error: workspaceError } = await admin.from("rehab_workspaces")
+          .select("id, kind, logo_path").eq("id", job.workspace_id).single();
+        if (workspaceError || !workspace) throw new Error("Cannot load email branding");
+        message = buildAppointmentEmail(job.event, job.payload, appointmentEmailBrand(workspace));
+        const { data: saved, error: saveError } = await admin.from("rehab_appointment_emails")
+          .update({ payload: { ...job.payload, renderedEmailV2: message } })
+          .eq("id", job.id).eq("status", "processing").eq("claim_token", job.claim_token)
+          .select("id").maybeSingle();
+        if (saveError) throw new Error("Cannot save email content");
+        if (!saved) continue;
+      }
+      ok = await send({ to: job.recipient, ...message,
         idempotencyKey: `rehab-appointment/${job.id}` });
     } catch {
       // Leave no exception with patient data in logs. The queue retains the attempt.

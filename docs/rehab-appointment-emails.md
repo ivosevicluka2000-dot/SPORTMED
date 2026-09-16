@@ -36,3 +36,12 @@ Ako posao ne postoji, prvo podesiti scheduler iz migracije 0008 i zatim mu posta
 ## Provere
 
 `npm run test:rehab` proverava trigger-e u izolovanoj PGlite bazi, prava pristupa, preskakanje bez emaila, otkazivanje zastarelih poruka, oporavak posle prekida, ponovne pokušaje i email šablone. Resend HTTP se simulira — testovi ne šalju stvarne poruke. `npm run build` proverava produkcioni build.
+
+## HTML dizajn (17. septembar 2026.)
+
+- Kratki naslovi s datumom i vremenom, skriveni pregled poruke, bela kartica i inline stilovi u prezentacionim tabelama. Zelena označava potvrdu/podsetnik, oker izmenu, a crvena otkazivanje/uklanjanje. Tekst objašnjava događaj i bez boje ili slika.
+- Pomeranje prikazuje prethodni i novi termin. Prikazuje se početak i kraj, uključujući datum završetka za termine koji prelaze ponoć. Srpski tekst koristi latinicu.
+- Google Calendar link postoji za aktivne potvrde, ponovna zakazivanja i podsetnike. Prenosi samo naziv radnog prostora, vreme i javnu adresu, bez imena pacijenta ili kliničkih podataka. Ovo je ručno dodavanje, bez sinhronizacije; izmene i otkazivanja podsećaju korisnika da ažurira svoj kalendar.
+- Klinika koristi postojeći logo, kontakt stranicu i javnu adresu. Klub koristi isključivo svoj logo, ako ga ima, i svoj naziv; nema kontakta/adrese klinike.
+- Worker pre prvog slanja čuva kompletan sadržaj u postojećem JSON `payload.renderedEmailV2`. Ponovni pokušaj zato koristi identičan sadržaj i Resend idempotency ključ čak i ako se logo ili šablon kasnije promene. Nije potrebna nova SQL migracija. Pre objave provereno je da nema starih poruka sa započetim pokušajima u redu.
+- Provere: 34 automatizovana testa, produkcioni build, ESLint, vizuelni pregled i provera širine od 319/320 px bez horizontalnog prelivanja. Renderovanje u pregledaču ne zamenjuje proveru u svim verzijama Outlook-a i drugih email klijenata.

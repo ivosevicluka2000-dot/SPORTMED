@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createRehabTestDb, seedRehabTestDb, asUser, ids } from "./helpers/rehab-db.mjs";
-import { buildAppointmentEmail } from "../src/lib/rehab/appointment-email.ts";
+import { buildAppointmentEmail, appointmentCalendarUrl } from "../src/lib/rehab/appointment-email.ts";
 import { deliverAppointmentEmails } from "../src/lib/rehab/appointment-email-worker.ts";
 import { sendEmail } from "../src/lib/email.ts";
+import { appointmentEmailBrand } from "../src/lib/rehab/appointment-email-branding.ts";
 
 async function fixture(run) {
   const db = await createRehabTestDb();
@@ -162,15 +163,16 @@ function workerClient(job, active = true) {
   return {
     updates,
     rpc: async () => ({ data: job ? [job] : [], error: null }),
-    from: () => ({
+    from: (table) => ({
       select() { return this; }, eq() { return this; },
       maybeSingle: async () => ({ data: active ? { id: job.id } : null, error: null }),
+      single: async () => ({ data: table === "rehab_workspaces" ? { id: ids.clinic, kind: "clinic" } : null, error: null }),
       update(value) { updates.push(value); return this; },
       then(resolve) { resolve({ error: null }); },
     }),
   };
 }
-const exampleJob = { id: "job-1", recipient: "patient@example.test", event: "created", claim_token: "token", attempts: 1,
+const exampleJob = { id: "job-1", recipient: "patient@example.test", workspace_id: ids.clinic, event: "created", claim_token: "token", attempts: 1,
   payload: { patientName: "Patient", workspaceName: "Clinic", locale: "sr", startsAt: "2026-10-15T08:30:00Z", durationMinutes: 60, appointmentStatus: "scheduled" } };
 
 test("worker awaits Resend, records success and retries failures with a stable key", async () => {
@@ -179,14 +181,14 @@ test("worker awaits Resend, records success and retries failures with a stable k
   const result = await deliverAppointmentEmails(client, {}, async mail => { sent.push(mail); return true; });
   assert.equal(result.sent, 1);
   assert.equal(sent[0].idempotencyKey, "rehab-appointment/job-1");
-  assert.equal(client.updates[0].status, "sent");
+  assert.equal(client.updates.at(-1).status, "sent");
   client = workerClient(exampleJob);
   await deliverAppointmentEmails(client, {}, async () => false);
-  assert.equal(client.updates[0].status, "pending");
-  assert.ok(new Date(client.updates[0].available_at).getTime() > Date.now());
+  assert.equal(client.updates.at(-1).status, "pending");
+  assert.ok(new Date(client.updates.at(-1).available_at).getTime() > Date.now());
   client = workerClient({ ...exampleJob, attempts: 4 });
   await deliverAppointmentEmails(client, {}, async () => { throw new Error("timeout"); });
-  assert.equal(client.updates[0].status, "failed");
+  assert.equal(client.updates.at(-1).status, "failed");
   await deliverAppointmentEmails(workerClient(exampleJob, false), {}, async () => assert.fail("Superseded job sent"));
   await deliverAppointmentEmails(workerClient(null), {}, async () => assert.fail("Empty queue sent"));
 });
@@ -208,4 +210,51 @@ test("existing Resend HTTP integration sends idempotency header without changing
       if (value === undefined) delete process.env[key]; else process.env[key] = value;
     }
   }
+});
+
+
+test("designed emails show old/new times, correct calendar dates and no calendar action for inactive appointments", () => {
+  const payload = { ...exampleJob.payload, patientName: "Private Patient", startsAt: "2026-12-31T22:45:00Z", durationMinutes: 45 };
+  const brand = appointmentEmailBrand({ id: ids.clinic, kind: "clinic" });
+  const calendar = new URL(appointmentCalendarUrl(payload, brand.address));
+  assert.equal(calendar.searchParams.get("dates"), "20261231T224500Z/20261231T233000Z");
+  assert.equal(calendar.searchParams.get("ctz"), "Europe/Belgrade");
+  assert.equal(calendar.href.includes("Private"), false);
+  for (const locale of ["sr", "en"]) {
+    const active = buildAppointmentEmail("created", { ...payload, locale }, brand);
+    assert.ok(active.html.includes('role="presentation"'));
+    assert.ok(active.html.includes("calendar.google.com"));
+    assert.ok(active.text.includes("23:45–00:30"));
+    assert.ok(active.text.includes("2027"));
+    assert.ok(active.subject.includes("23:45"));
+    const moved = buildAppointmentEmail("updated", { ...payload, locale, previousStartsAt: "2026-12-30T22:45:00Z" }, brand);
+    assert.ok(moved.html.includes("text-decoration:line-through"));
+    assert.ok(!moved.html.includes("calendar.google.com"));
+    for (const event of ["cancelled", "deleted", "completed"]) {
+      assert.ok(!buildAppointmentEmail(event, { ...payload, locale }, brand).html.includes("calendar.google.com"));
+    }
+  }
+  const unsafe = buildAppointmentEmail("created", payload, { logoUrl: "javascript:alert(1)", contactUrl: "javascript:alert(1)", address: "<script>bad</script>" });
+  assert.ok(!unsafe.html.includes("javascript:"));
+  assert.ok(!unsafe.html.includes("<script>"));
+});
+
+test("club emails keep clinic location and contact out; only the club's own logo is used", () => {
+  const brand = appointmentEmailBrand({ id: ids.club, kind: "club", logo_path: `${ids.clinic}/00000000-0000-4000-8000-000000000001.png` });
+  assert.equal(brand.logoUrl, null);
+  const mail = buildAppointmentEmail("created", { ...exampleJob.payload, locale: "en", workspaceName: "QA Club" }, brand);
+  assert.ok(!mail.html.includes("Vojvode"));
+  assert.ok(!mail.html.includes("info@sportcaremed.com"));
+  assert.ok(!mail.html.includes("clinic-logo"));
+});
+
+test("retries reuse the exact rendered message persisted before the first send", async () => {
+  const first = workerClient(exampleJob);
+  let original;
+  await deliverAppointmentEmails(first, {}, async mail => { original = mail; return false; });
+  const payload = first.updates.find(update => update.payload).payload;
+  assert.ok(payload.renderedEmailV2.html.includes("clinic-logo.png"));
+  const retry = workerClient({ ...exampleJob, attempts: 2, payload });
+  await deliverAppointmentEmails(retry, {}, async mail => { assert.deepEqual(mail, original); return true; });
+  assert.equal(retry.updates.some(update => update.payload), false);
 });
