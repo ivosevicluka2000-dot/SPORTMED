@@ -7,8 +7,8 @@ export function RehabReportBrand({ workspace }: {
 }) {
   const src = reportLogoUrl(workspace);
   return <div className="break-inside-avoid">
-    {src && <Image src={src} alt={workspace.name} width={200} height={88}
-      unoptimized loading="eager" className="mb-3 h-22 w-50 object-contain object-left" />}
+    {src && <Image src={src} alt={workspace.name} width={200} height={122}
+      unoptimized loading="eager" className="mb-3 h-28 w-50 object-contain object-left" />}
     <p className="text-lg font-semibold text-navy">{workspace.name}</p>
   </div>;
 }

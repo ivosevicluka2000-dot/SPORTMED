@@ -99,6 +99,14 @@ try {
   try {
     await page.goto("http://localhost:3100/en/rehab/login");
     console.log("Login page:", page.url());
+    await page.getByRole("heading", { name: "Sport Care Med", exact: true }).waitFor();
+    assert.equal(await page.getByText("Rehab platform", { exact: true }).count(), 0);
+    assert.ok(await page.getByRole("img", { name: "Sport Care Med", exact: true }).evaluate(img => img.complete && img.naturalWidth === 682));
+    await page.screenshot({ path: join(outputDir, "login-desktop.png"), fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.screenshot({ path: join(outputDir, "login-mobile.png"), fullPage: true });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    await page.setViewportSize({ width: 1440, height: 1050 });
     await page.getByLabel("Email", { exact: true }).fill("admin@qa.invalid");
     await page
       .getByLabel("Password", { exact: true })
@@ -160,8 +168,42 @@ try {
     await page.getByText("The record and all related entries, plans and appointments have been deleted.", { exact: true }).waitFor();
     const response = await fetch(`http://127.0.0.1:54329/rest/v1/rehab_daily_entries?patient_id=eq.${patient}`);
     assert.deepEqual(await response.json(), []);
+
+    // A clinic therapist must see and submit the same confirmed deletion flow.
+    await page.context().clearCookies();
+    await page.goto(`${base}/en/rehab/login`);
+    await page.getByLabel("Email", { exact: true }).fill("therapist@qa.invalid");
+    await page.getByLabel("Password", { exact: true }).fill("test-only-password");
+    await page.getByRole("button", { name: "Sign in", exact: true }).click();
+    await page.waitForURL(url => !url.pathname.includes("login"));
+    const clinic = "00000000-0000-0000-0000-000000000101";
+    const clinicPatient = "30000000-0000-4000-8000-000000000001";
+    await page.goto(`${base}/en/rehab/izvestaji/stampa?workspace=${clinic}&patient=${clinicPatient}`);
+    await page.getByRole("button", { name: "Preview report", exact: true }).click();
+    await page.locator(".rehab-report-document").waitFor();
+    const reportLogo = page.locator('.rehab-report-document img[src="/brand/clinic-logo.png"]');
+    assert.equal(await reportLogo.count(), 1);
+    assert.ok(await reportLogo.evaluate(img => img.complete && img.naturalWidth === 682));
+    await page.emulateMedia({ media: "print" });
+    await page.screenshot({ path: join(outputDir, "clinic-report-print.png"), fullPage: true });
+    await page.emulateMedia({ media: "screen" });
+    await page.goto(`${base}/en/rehab/pacijenti/${clinicPatient}?workspace=${clinic}`);
+    assert.equal(await page.getByRole("link", { name: "Main administrator", exact: true }).count(), 0);
+    await page.getByText("Delete entire record", { exact: true }).click();
+    await page.locator('input[name="confirm_name"]').fill("Patient QA");
+    await page.screenshot({ path: join(outputDir, "therapist-record-desktop.png"), fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    await page.screenshot({ path: join(outputDir, "therapist-record-mobile.png"), fullPage: true });
+    page.once("dialog", dialog => dialog.dismiss());
+    await page.getByRole("button", { name: "Permanently delete record", exact: true }).click();
+    await page.getByRole("heading", { name: "Patient QA", exact: true }).waitFor();
+    page.once("dialog", dialog => dialog.accept());
+    await page.getByRole("button", { name: "Permanently delete record", exact: true }).click();
+    await page.waitForURL(url => url.searchParams.get("saved") === "record-deleted");
+    await page.getByText("The record and all related entries, plans and appointments have been deleted.", { exact: true }).waitFor();
     assert.deepEqual(errors, []);
-    console.log("PASS: calendar navigation, selected-day scheduling, cancel/confirm appointment deletion, SR mobile layout, full-name confirmation and record deletion");
+    console.log("PASS: branded login, clinic print logo, mobile layout, calendar, appointment deletion, admin and therapist confirmed record deletion");
   } catch (e) {
     await page.screenshot({
       path: join(outputDir, "failure.png"),

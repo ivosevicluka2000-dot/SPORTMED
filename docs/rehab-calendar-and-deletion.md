@@ -15,7 +15,7 @@
 3. Unesite prikazano ime i prezime i kliknite **Trajno obriši karton**.
 4. Potvrdite brisanje u dijalogu.
 
-Ova opcija je dostupna vlasniku radnog prostora i glavnom administratoru. Briše karton, njegove dnevne unose, fotografije, planove, termine i povezani pristup igrača. Nalog osobe i ostali kartoni se ne brišu. Brisanje se ne može poništiti; za završenu rehabilitaciju koristite status kartona.
+Ova opcija je dostupna fizioterapeutu i vlasniku u njihovom radnom prostoru, kao i glavnom administratoru. Briše karton, njegove dnevne unose, fotografije, planove, termine i povezani pristup igrača. Nalog osobe i ostali kartoni se ne brišu. Brisanje se ne može poništiti; za završenu rehabilitaciju koristite status kartona.
 
 ## Tehnička provera
 

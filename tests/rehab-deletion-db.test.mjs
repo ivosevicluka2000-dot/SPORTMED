@@ -28,3 +28,29 @@ test("record deletion is scoped and cascades through entries, plans, cycles, app
     await db.close();
   }
 });
+
+test("therapists can delete clinic records with related data, but viewers and players cannot", async () => {
+  const db = await createRehabTestDb();
+  try {
+    await seedRehabTestDb(db);
+    await asUser(db, ids.admin);
+    await db.query("insert into rehab_daily_entries(workspace_id,patient_id,recorded_on,condition_summary,therapy,created_by) values($1,$2,'2026-09-16','QA','Movement',$3)", [ids.clinic, ids.patient, ids.admin]);
+    await db.query("insert into rehab_appointments(workspace_id,patient_id,starts_at,created_by) values($1,$2,'2026-09-16T07:00Z',$3)", [ids.clinic, ids.patient, ids.admin]);
+    const plan = (await db.query("select save_rehab_cycle_plan($1,$2,null,'Therapist delete QA','2026-09-01',null,null,null,$3) id", [ids.clinic, ids.patient, JSON.stringify([{ title: "First", instructions: "Movement", status: "planned" }])])).rows[0].id;
+    for (const user of [ids.viewer, ids.player]) {
+      await asUser(db, user);
+      assert.equal((await db.query("delete from rehab_patients where id=$1 returning id", [ids.athlete])).rows.length, 0);
+    }
+    await asUser(db, ids.therapist);
+    assert.equal((await db.query("delete from rehab_patients where id=$1 returning id", [ids.athlete])).rows.length, 0);
+    assert.equal((await db.query("delete from rehab_patients where id=$1 and workspace_id=$2 returning id", [ids.patient, ids.clinic])).rows.length, 1);
+    await asUser(db, ids.admin);
+    for (const table of ["rehab_daily_entries", "rehab_plans", "rehab_appointments"]) {
+      assert.deepEqual((await db.query(`select id from ${table} where patient_id=$1`, [ids.patient])).rows, []);
+    }
+    assert.deepEqual((await db.query("select id from rehab_plan_cycles where plan_id=$1", [plan])).rows, []);
+    assert.equal((await db.query("select id from rehab_patients where id=$1", [ids.athlete])).rows.length, 1);
+  } finally {
+    await db.close();
+  }
+});

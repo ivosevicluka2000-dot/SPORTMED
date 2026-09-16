@@ -197,7 +197,7 @@ export default async function RehabPatientDetailPage({
         }
       />
       <RehabAlert error={query.error} saved={query.saved} />
-      {workspace.canManage && <details className="mb-6 rounded-xl border border-red-200 bg-white p-4">
+      {workspace.canEdit && <details className="mb-6 rounded-xl border border-red-200 bg-white p-4">
         <summary className="cursor-pointer text-sm font-semibold text-red-700">{t("deleteRecord")}</summary>
         <p className="mt-3 max-w-3xl text-sm text-gray-600">{t("deleteRecordDescription")}</p>
         <form action={deleteRehabPatientAction} className="mt-4 max-w-lg space-y-3">

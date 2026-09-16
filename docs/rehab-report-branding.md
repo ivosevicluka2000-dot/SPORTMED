@@ -1,6 +1,6 @@
 # Brendiranje izveštaja
 
-- Klinika koristi fiksni fajl `public/brand/clinic-logo.png`. Trenutno je kopija postojećeg logotipa sajta; zameniti dostavljenim logotipom klinike kada stigne.
+- Klinika koristi fiksni fajl `public/brand/clinic-logo.png`, dostavljeni logo klinike sa trkačem i srcem. Isti logo se prikazuje na prijavi i u zaglavlju rehab platforme.
 - Glavni administrator postavlja ili menja logo na stranici **Klubovi**, u kartici odgovarajućeg kluba. Prihvataju se PNG, JPG i WebP do 2 MB i 16 megapiksela.
 - Logo se prikazuje u zbirnom i pojedinačnom izveštaju, kratkom izveštaju i štampanom planu rehabilitacije. Klub bez učitanog logotipa prikazuje samo svoje ime. Nema zamenskog logotipa klinike.
 - Server proverava dozvole i dekodira sliku u PNG, uz očuvanje proporcija i providnosti. Slike se čuvaju u javnom bucketu `rehab-club-logos`; medicinske slike ostaju u postojećem privatnom bucketu.

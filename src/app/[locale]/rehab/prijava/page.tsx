@@ -1,7 +1,8 @@
 import { RehabLanguageSwitcher } from "@/components/rehab/RehabLanguageSwitcher";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { Activity } from "lucide-react";
+import Image from "next/image";
+import { CLINIC_REPORT_LOGO } from "@/lib/rehab/branding";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/i18n/routing";
 import RehabLoginForm from "@/components/rehab/RehabLoginForm";
@@ -62,13 +63,10 @@ export default async function RehabLoginPage({
     <section className="bg-gray-50 px-4 py-20 md:py-28">
       <div className="mx-auto max-w-md rounded-2xl border border-gray-200 bg-white p-7 shadow-sm sm:p-9">
         <div className="mb-8 text-center">
-          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-dark">
-            <Activity className="h-6 w-6" />
-          </span>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-teal-dark">
-             {t("labelSportCareMed")} </p>
+          <Image src={CLINIC_REPORT_LOGO} alt="Sport Care Med" width={682} height={416}
+            unoptimized loading="eager" className="mx-auto mb-5 h-auto w-52 rounded-lg" />
           <h1 className="font-heading text-3xl font-semibold text-navy">
-             {t("labelRehabPlatform")} </h1>
+             {t("labelSportCareMed")} </h1>
           <p className="mt-2 text-sm text-gray-500">
              {t("labelSignInForPhysiotherapistsAndCollaborators")} </p>
         </div>

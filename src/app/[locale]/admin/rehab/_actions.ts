@@ -651,7 +651,7 @@ export async function deleteRehabPatientAction(formData: FormData) {
   const t = await getTranslations({ locale, namespace: "rehab" });
   const workspaceId = text(formData.get("workspace_id"));
   const patientId = text(formData.get("patient_id"));
-  const access = await requireRehabWorkspace(locale, workspaceId, "manage");
+  const access = await requireRehabWorkspace(locale, workspaceId, "edit");
   const failureUrl = patientPath(locale, patientId, { workspace: workspaceId, error: t("deleteRecordError") });
   const { data: patient, error: patientError } = await access.supabase.from("rehab_patients")
     .select("first_name, last_name").eq("id", patientId).eq("workspace_id", workspaceId).maybeSingle();

@@ -1,7 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { RehabLanguageSwitcher } from "@/components/rehab/RehabLanguageSwitcher";
 import { Suspense } from "react";
-import { Activity, Shield } from "lucide-react";
+import { Shield } from "lucide-react";
+import Image from "next/image";
+import { CLINIC_REPORT_LOGO } from "@/lib/rehab/branding";
 import { getRehabAccessContext } from "@/lib/rehab/access";
 import { Link, type Locale } from "@/i18n/routing";
 import { rehabSignOutAction } from "@/lib/rehab/auth-actions";
@@ -41,9 +43,8 @@ export default async function RehabPlatformLayout({
       <header className="rehab-platform-chrome border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-[1500px] flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-dark">
-              <Activity className="h-5 w-5" />
-            </span>
+            <Image src={CLINIC_REPORT_LOGO} alt="Sport Care Med" width={682} height={416}
+              unoptimized loading="eager" className="h-auto w-28 shrink-0 rounded-md" />
             <div>
               <p className="font-heading text-xl font-semibold text-navy">{t("labelRehabPlatform")}</p>
               <p className="text-xs text-gray-500">{access.fullName}</p>

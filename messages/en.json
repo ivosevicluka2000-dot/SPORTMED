@@ -1868,7 +1868,7 @@
     "labelAccountHasNoAccess": "Account has no access",
     "labelTheSignedInAccountHasNotBeen": "The signed-in account has not been added to the Rehab team.",
     "labelSignOutAndTryAnotherAccount": "Sign out and try another account",
-    "labelSportCareMed": "Sport Care & Med",
+    "labelSportCareMed": "Sport Care Med",
     "labelSignInForPhysiotherapistsAndCollaborators": "Sign in for physiotherapists and collaborators",
     "labelThisPersonCanViewAllPlayersAt": "This person can view all players at {v0}, including players added later. Access is view only.",
     "labelHelloYouHaveAccessToTheRehab": "Hello! You have access to the Rehab platform.\nSign in: {v0}\nEmail: {v1}\nAccess: {v2}.\nYour initial password is provided separately. If you already have an account, use your existing password.",

@@ -109,6 +109,13 @@ function fixtureUser(req) {
         "base64url",
       ).toString(),
     );
+    if (payload.sub === ids.therapist)
+      return {
+        ...user,
+        id: ids.therapist,
+        email: "therapist@qa.invalid",
+        user_metadata: { full_name: "QA Therapist" },
+      };
     if (payload.sub === ids.player)
       return {
         ...user,
@@ -203,7 +210,9 @@ const server = http.createServer(async (req, res) => {
       for await (const chunk of req) chunks.push(chunk);
       const body = JSON.parse(Buffer.concat(chunks).toString());
       const signedUser =
-        body.email === "player@qa.invalid"
+        body.email === "therapist@qa.invalid"
+          ? { ...user, id: ids.therapist, email: body.email, user_metadata: { full_name: "QA Therapist" } }
+          : body.email === "player@qa.invalid"
           ? {
               ...user,
               id: ids.player,
