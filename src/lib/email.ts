@@ -48,7 +48,7 @@ export async function sendEmail({ to, subject, text, html, attachments, idempote
         to,
         subject,
         text,
-        html: html ?? `<pre style="font-family:monospace">${escapeHtml(text)}</pre>`,
+        html: html ?? emailLayout({ title: subject, content: `<p style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere">${escapeHtml(text)}</p>` }),
         ...(attachments && attachments.length > 0 ? { attachments } : {}),
       }),
     });
@@ -74,6 +74,31 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+// Table-based shell with inline styles for desktop and mobile email clients.
+// Callers escape dynamic values before passing the trusted HTML content.
+function emailLayout({ title, content, locale = "en", preheader = title }: {
+  title: string;
+  content: string;
+  locale?: "sr" | "en";
+  preheader?: string;
+}): string {
+  return `<!doctype html>
+<html lang="${locale}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${escapeHtml(title)}</title></head>
+<body style="margin:0;padding:0;background:#eef1f2;color:#3e4f55;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%">
+<div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all">${escapeHtml(preheader)}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef1f2"><tr><td align="center" style="padding:28px 12px">
+<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px">
+<tr><td bgcolor="#4f636a" style="padding:24px;border-radius:16px 16px 0 0;border-bottom:4px solid #9ecde8"><p style="margin:0;color:#ffffff;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:34px">Sport Care <span style="color:#bfdfee">&amp;</span> Med</p></td></tr>
+<tr><td bgcolor="#ffffff" style="padding:28px 24px;border-radius:0 0 16px 16px;font-size:15px;line-height:25px;overflow-wrap:anywhere">
+<h1 style="margin:0 0 24px;color:#4f636a;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:36px;font-weight:normal">${escapeHtml(title)}</h1>
+${content}
+</td></tr>
+<tr><td align="center" style="padding:20px 12px;color:#64748b;font-size:12px;line-height:20px">Sport Care &amp; Med<br>Vojvode Mišića 21 A, Šabac<br><a href="mailto:info@sportcaremed.com" style="color:#4f636a;text-decoration:underline">info@sportcaremed.com</a> &nbsp;·&nbsp; <a href="tel:+381691982215" style="color:#4f636a;text-decoration:none">+381 69 1982215</a></td></tr>
+</table><!--[if mso]></td></tr></table><![endif]-->
+</td></tr></table></body></html>`;
 }
 
 export interface RehabAppointmentReminderInput {
@@ -106,16 +131,13 @@ export async function sendRehabAppointmentReminder(
     `${formatted}.\n\n` +
     `Ako niste u mogućnosti da dođete, molimo vas da nas obavestite.\n\n` +
     `Sport Care & Med`;
-  const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#1e293b;background:#f8fafc;padding:24px">
-  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:28px">
-    <p style="margin:0 0 18px;color:#64748b;font-size:13px;text-transform:uppercase;letter-spacing:.08em">Podsetnik za termin</p>
-    <h2 style="margin:0 0 14px;color:#4f636a">Poštovani ${safeName},</h2>
+  const html = emailLayout({ title: "Podsetnik za termin", locale: "sr", content: `
+    <p style="margin:0 0 14px;color:#4f636a">Poštovani ${safeName},</p>
     <p style="line-height:1.6">Podsećamo vas da imate zakazan termin u <strong>${safeWorkspace}</strong>.</p>
     <div style="margin:20px 0;padding:16px;border-left:4px solid #9ecde8;background:#f1f8fc;font-size:18px;font-weight:600;color:#334155">${safeDate}</div>
     <p style="line-height:1.6;color:#475569">Ako niste u mogućnosti da dođete, molimo vas da nas obavestite.</p>
     <p style="margin-top:24px;color:#64748b">Sport Care & Med</p>
-  </div>
-</body></html>`;
+  ` });
 
   return sendEmail({ to: input.to, subject, text, html });
 }
@@ -230,12 +252,10 @@ export async function sendOrderConfirmation(
           )} ${t.rsd}</td></tr>`
         : "";
 
-    const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222;background:#fafafa;padding:24px">
-  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:8px;padding:24px">
-    <h2 style="margin:0 0 12px">Sport Care Med</h2>
+    const html = emailLayout({ title: lang === "en" ? "Order confirmation" : "Potvrda porudžbine", locale: lang, preheader: t.subject(order.orderNumber), content: `
     <p>${escapeHtml(t.greeting(customerName))}</p>
     <p>${t.intro}</p>
-    <p><strong>${t.orderNumber}:</strong> ${escapeHtml(order.orderNumber)}<br/>
+    <p style="padding:16px;background:#f1f8fc;border-left:4px solid #9ecde8"><strong>${t.orderNumber}:</strong> ${escapeHtml(order.orderNumber)}<br/>
        <strong>${t.status}:</strong> ${escapeHtml(order.status)}<br/>
        <strong>${t.paymentMethod}:</strong> ${payLabel}</p>
     <h3 style="margin:16px 0 8px">${t.items}</h3>
@@ -244,11 +264,10 @@ export async function sendOrderConfirmation(
       <tr><td style="padding:4px 8px">${t.subtotal}</td><td style="padding:4px 8px;text-align:right">${fmt(order.subtotal)} ${t.rsd}</td></tr>
       ${discountRow}
       <tr><td style="padding:4px 8px">${t.shipping}</td><td style="padding:4px 8px;text-align:right">${fmt(order.shippingCost)} ${t.rsd}</td></tr>
-      <tr><td style="padding:8px;font-weight:bold;border-top:2px solid #222">${t.total}</td><td style="padding:8px;text-align:right;font-weight:bold;border-top:2px solid #222">${fmt(order.totalAmount)} ${t.rsd}</td></tr>
+      <tr><td style="padding:12px 8px;font-weight:bold;border-top:2px solid #9ecde8;background:#f1f8fc">${t.total}</td><td style="padding:12px 8px;text-align:right;font-weight:bold;border-top:2px solid #9ecde8;background:#f1f8fc">${fmt(order.totalAmount)} ${t.rsd}</td></tr>
     </table>
     <p style="margin-top:24px;color:#666">${t.footer}</p>
-  </div>
-</body></html>`;
+    ` });
 
     const text =
       `${t.greeting(customerName)}\n\n${t.intro}\n\n` +
@@ -459,19 +478,17 @@ export async function sendLeadNotificationEmail(input: LeadNotificationInput): P
     const rows = details
       .map(
         ([label, value]) =>
-          `<tr><th style="vertical-align:top;text-align:left;padding:8px;border-bottom:1px solid #eee;color:#555;width:160px">${escapeHtml(
+          `<tr><th scope="row" style="vertical-align:top;text-align:left;padding:10px 8px;border-bottom:1px solid #e2e8f0;color:#4f636a;width:32%;background:#f1f8fc">${escapeHtml(
             label
-          )}</th><td style="padding:8px;border-bottom:1px solid #eee;white-space:pre-wrap">${escapeHtml(
+          )}</th><td style="padding:10px 8px;border-bottom:1px solid #e2e8f0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word">${escapeHtml(
             value
           )}</td></tr>`
       )
       .join("");
-    const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222;background:#fafafa;padding:24px">
-  <div style="max-width:680px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:8px;padding:24px">
-    <h2 style="margin:0 0 16px">New Sport Care Med lead</h2>
-    <table style="width:100%;border-collapse:collapse;font-size:14px">${rows}</table>
-  </div>
-</body></html>`;
+    const html = emailLayout({ title: "New inquiry", preheader: `${sourceLabel} — ${input.name}`, content: `
+    <p style="margin:0 0 20px;color:#64748b">${escapeHtml(sourceLabel)}</p>
+    <table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:14px;line-height:22px">${rows}</table>
+    ` });
 
     return await sendEmail({
       to: adminEmail,
@@ -529,23 +546,21 @@ export async function sendProtocolEmail(args: {
       `${t.greeting(name)}\n\n${intro}${descriptionTextBlock}${linkBlock}\n\n${t.note}\n\n${t.footer}`;
 
     const descriptionHtmlBlock = description
-      ? `<blockquote style="margin:16px 0;padding:12px 16px;border-left:3px solid #0098b4;background:#f5fbfc;color:#444;font-style:italic"><div style="font-size:12px;color:#888;font-style:normal;margin-bottom:4px">${escapeHtml(t.toldUs)}</div>${escapeHtml(description)}</blockquote>`
+      ? `<blockquote style="margin:20px 0;padding:16px;border-left:4px solid #9ecde8;background:#f1f8fc;color:#4f636a;font-style:italic;white-space:pre-wrap"><div style="font-size:12px;color:#64748b;font-style:normal;margin-bottom:4px">${escapeHtml(t.toldUs)}</div>${escapeHtml(description)}</blockquote>`
       : "";
     const linkHtmlBlock = pdfBase64
-      ? `<p style="color:#666;font-size:13px;margin:16px 0">${escapeHtml(t.backupLink)} <a href="${escapeHtml(pdfUrl)}" style="color:#0098b4">${escapeHtml(label)} PDF</a></p>`
-      : `<p style="margin:24px 0"><a href="${escapeHtml(pdfUrl)}" style="display:inline-block;background:#0098b4;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600">${escapeHtml(t.cta)} — ${escapeHtml(label)}</a></p>`;
+      ? `<p style="color:#64748b;font-size:13px;margin:20px 0">${escapeHtml(t.backupLink)} <a href="${escapeHtml(pdfUrl)}" style="color:#4f636a;text-decoration:underline">${escapeHtml(label)} PDF</a></p>`
+      : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0"><tr><td align="center" bgcolor="#4f636a" style="border-radius:8px;mso-padding-alt:14px 20px"><a href="${escapeHtml(pdfUrl)}" style="display:block;color:#fff;text-decoration:none;padding:14px 20px;font-weight:bold">${escapeHtml(t.cta)} — ${escapeHtml(label)}</a></td></tr></table>`;
 
-    const html = `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222;background:#fafafa;padding:24px">
-  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:8px;padding:24px">
-    <h2 style="margin:0 0 12px">Sport Care Med</h2>
+    const html = emailLayout({ title: lang === "en" ? "Your recovery protocol" : "Vaš protokol oporavka", locale: lang, preheader: subject, content: `
+    <p style="margin:0 0 20px;padding:12px 16px;background:#f1f8fc;color:#4f636a;font-weight:bold;border-radius:8px">PDF &nbsp;·&nbsp; ${escapeHtml(label)}</p>
     <p>${escapeHtml(t.greeting(name))}</p>
     <p>${escapeHtml(intro)}</p>
     ${descriptionHtmlBlock}
     ${linkHtmlBlock}
     <p style="color:#555;font-size:13px">${escapeHtml(t.note)}</p>
     <p style="margin-top:24px;color:#666">${escapeHtml(t.footer)}</p>
-  </div>
-</body></html>`;
+    ` });
 
     return await sendEmail({
       to: args.to,

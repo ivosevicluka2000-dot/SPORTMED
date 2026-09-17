@@ -112,7 +112,7 @@ export const treatmentImages: Record<TreatmentSlug, string> = {
     "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=1200",
   "masaza": "/treatments/masaza.jpeg",
   "recovery-terapije": "/treatments/recovery-terapije.jpeg",
-  "presoterapija": "/treatments/presoterapija.jpeg",
+  "presoterapija": "/treatments/presoterapija-reboots.jpeg",
   "tretman-masaznim-pistoljem": "/treatments/tretman-masaznim-pistoljem.jpeg",
   "testiranje-merenja": "/treatments/testiranje-merenja.jpeg",
 };
@@ -128,7 +128,7 @@ export const treatmentHeroImages: Partial<Record<TreatmentSlug, string>> = {
   "dijagnostika": treatmentImages.dijagnostika,
   "masaza": "/treatments/masaza.jpeg",
   "recovery-terapije": "/treatments/recovery-terapije.jpeg",
-  "presoterapija": "/treatments/presoterapija.jpeg",
+  "presoterapija": "/treatments/presoterapija-reboots.jpeg",
   "tretman-masaznim-pistoljem": "/treatments/tretman-masaznim-pistoljem.jpeg",
   "testiranje-merenja": "/treatments/testiranje-merenja.jpeg",
 };
