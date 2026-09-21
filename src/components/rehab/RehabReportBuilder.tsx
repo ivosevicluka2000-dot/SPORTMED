@@ -8,6 +8,7 @@ import type {
   ReportRequest,
 } from "@/lib/rehab/reports";
 import { reportRequestSchema } from "@/lib/rehab/reports";
+import { rehabReportCsv, rehabReportCsvFilename } from "@/lib/rehab/report-csv";
 import { dateInputValue } from "@/lib/rehab/dates";
 import { RehabReportDocument } from "./RehabReportDocument";
 import { rehabInputClass } from "./RehabUi";
@@ -344,6 +345,26 @@ export function RehabReportBuilder({
               className="rounded-md bg-navy px-5 py-3 text-white"
             >
               {t("printPdf")}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const blob = new Blob([rehabReportCsv(report, locale, t)], {
+                  type: "text/csv;charset=utf-8;",
+                });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = rehabReportCsvFilename(report, locale);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                // Let the browser start reading the download before releasing it.
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              }}
+              className="rounded-md border border-navy px-5 py-3 text-navy"
+            >
+              {t("downloadSummaryCsv")}
             </button>
             <RehabLanguageSwitcher label={t("reportLanguage")} />
           </div>

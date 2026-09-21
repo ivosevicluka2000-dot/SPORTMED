@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
-import { mkdir, writeFile, cp, mkdtemp, symlink, rm } from "node:fs/promises";
+import { mkdir, readFile, writeFile, cp, mkdtemp, symlink, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -223,6 +223,14 @@ try {
       format: "A4",
       printBackground: true,
     });
+    assert.equal(await page.locator(".rehab-report-document").getByRole("heading", { name: "Rehabilitation report", exact: true }).count(), 3);
+    const enDownloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Download summary table (CSV)", exact: true }).click();
+    const enDownload = await enDownloadPromise;
+    assert.ok(enDownload.suggestedFilename().endsWith("-en.csv"));
+    const enCsv = await readFile(await enDownload.path(), "utf8");
+    assert.ok(enCsv.startsWith('\uFEFF"Player","Problem / injury","Current status"'));
+    assert.equal(enCsv.trimEnd().split("\r\n").length, 3);
     await page
       .getByRole("button", { name: "Switch to Serbian" })
       .first()
@@ -237,6 +245,15 @@ try {
       .click();
     await page.locator(".rehab-report-document").waitFor();
     assert.equal(await page.locator(".rehab-report-person").count(), 3);
+    assert.equal(await page.locator(".rehab-report-document").getByRole("heading", { name: "Izveštaj rehabilitacije", exact: true }).count(), 3);
+    assert.equal(await page.locator(".rehab-report-document").getByRole("heading", { name: "Rehabilitation report", exact: true }).count(), 0);
+    const srDownloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Preuzmi zbirnu tabelu (CSV)", exact: true }).click();
+    const srDownload = await srDownloadPromise;
+    assert.ok(srDownload.suggestedFilename().endsWith("-sr.csv"));
+    const srCsv = await readFile(await srDownload.path(), "utf8");
+    assert.ok(srCsv.startsWith('\uFEFF"Igrač","Problem / povreda","Trenutni status"'));
+    assert.equal(srCsv.trimEnd().split("\r\n").length, 3);
     await page.pdf({
       path: join(outputDir, "report-sr.pdf"),
       format: "A4",

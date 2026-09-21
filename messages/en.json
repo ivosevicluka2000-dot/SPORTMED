@@ -2046,6 +2046,8 @@
     "loadingReport": "Loading report...",
     "previewReport": "Preview report",
     "printPdf": "Print / save PDF",
+    "downloadSummaryCsv": "Download summary table (CSV)",
+    "lastTherapyDate": "Last therapy date in the period",
     "plansUnavailable": "Plans are currently unavailable. Refresh the page.",
     "entryCount": "{count, plural, one {# entry} other {# entries}}",
     "planCount": "{count, plural, one {# plan} other {# plans}}",

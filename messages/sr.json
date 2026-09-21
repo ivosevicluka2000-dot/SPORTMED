@@ -2046,6 +2046,8 @@
     "loadingReport": "Učitavanje izveštaja...",
     "previewReport": "Prikaži izveštaj",
     "printPdf": "Štampaj / sačuvaj PDF",
+    "downloadSummaryCsv": "Preuzmi zbirnu tabelu (CSV)",
+    "lastTherapyDate": "Datum poslednje terapije u periodu",
     "plansUnavailable": "Planovi trenutno nisu dostupni. Osvežite stranicu.",
     "entryCount": "{count, plural, one {# unos} other {# unosa}}",
     "planCount": "{count, plural, one {# plan} few {# plana} other {# planova}}",
