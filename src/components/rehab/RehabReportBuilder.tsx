@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { loadRehabReport } from "@/lib/rehab/report-actions";
 import type {
@@ -8,7 +8,6 @@ import type {
   ReportRequest,
 } from "@/lib/rehab/reports";
 import { reportRequestSchema } from "@/lib/rehab/reports";
-import { rehabReportCsv, rehabReportCsvFilename } from "@/lib/rehab/report-csv";
 import { dateInputValue } from "@/lib/rehab/dates";
 import { RehabReportDocument } from "./RehabReportDocument";
 import { rehabInputClass } from "./RehabUi";
@@ -58,6 +57,8 @@ export function RehabReportBuilder({
   const [report, setReport] = useState<RehabReport | null>(null);
   const [error, setError] = useState("");
   const [busy, startTransition] = useTransition();
+  const [exporting, setExporting] = useState(false);
+  const exportInFlight = useRef(false);
   const storageKey = `rehab-report-selection:${workspaceId}:${initialPatientId ?? "all"}:${initialPeriod ?? "all"}`;
   useEffect(() => {
     if (playerOnly) return;
@@ -116,7 +117,7 @@ export function RehabReportBuilder({
           });
         }}
       >
-        <fieldset disabled={busy} className="space-y-4">
+        <fieldset disabled={busy || exporting} className="space-y-4">
           <div className="flex flex-wrap justify-between gap-4">
             <h2 className="text-xl font-semibold">{t("chooseReport")}</h2>
             <RehabLanguageSwitcher label={t("reportLanguage")} />
@@ -348,23 +349,41 @@ export function RehabReportBuilder({
             </button>
             <button
               type="button"
-              onClick={() => {
-                const blob = new Blob([rehabReportCsv(report, locale, t)], {
-                  type: "text/csv;charset=utf-8;",
-                });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = rehabReportCsvFilename(report, locale);
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                // Let the browser start reading the download before releasing it.
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              disabled={exporting}
+              aria-busy={exporting}
+              onClick={async () => {
+                if (exportInFlight.current) return;
+                exportInFlight.current = true;
+                setExporting(true);
+                setError("");
+                try {
+                  const { rehabReportXlsx, rehabReportXlsxFilename } = await import("@/lib/rehab/report-xlsx");
+                  const bytes = await rehabReportXlsx(report, locale, t);
+                  const blob = new Blob([bytes], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  try {
+                    link.href = url;
+                    link.download = rehabReportXlsxFilename(report, locale);
+                    document.body.appendChild(link);
+                    link.click();
+                  } finally {
+                    link.remove();
+                    // Let the browser start reading before releasing the download.
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  }
+                } catch {
+                  setError("excelExportError");
+                } finally {
+                  exportInFlight.current = false;
+                  setExporting(false);
+                }
               }}
-              className="rounded-md border border-navy px-5 py-3 text-navy"
+              className="rounded-md border border-navy px-5 py-3 text-navy disabled:cursor-wait disabled:opacity-50"
             >
-              {t("downloadSummaryCsv")}
+              {exporting ? t("preparingExcel") : t("downloadSummaryExcel")}
             </button>
             <RehabLanguageSwitcher label={t("reportLanguage")} />
           </div>

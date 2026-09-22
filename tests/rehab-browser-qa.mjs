@@ -1,6 +1,7 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
-import { mkdir, readFile, writeFile, cp, mkdtemp, symlink, rm } from "node:fs/promises";
+import ExcelJS from "exceljs";
+import { mkdir, writeFile, cp, mkdtemp, symlink, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -225,12 +226,28 @@ try {
     });
     assert.equal(await page.locator(".rehab-report-document").getByRole("heading", { name: "Rehabilitation report", exact: true }).count(), 3);
     const enDownloadPromise = page.waitForEvent("download");
-    await page.getByRole("button", { name: "Download summary table (CSV)", exact: true }).click();
+    await page.getByRole("button", { name: "Download Excel summary", exact: true }).click();
     const enDownload = await enDownloadPromise;
-    assert.ok(enDownload.suggestedFilename().endsWith("-en.csv"));
-    const enCsv = await readFile(await enDownload.path(), "utf8");
-    assert.ok(enCsv.startsWith('\uFEFF"Player","Problem / injury","Current status"'));
-    assert.equal(enCsv.trimEnd().split("\r\n").length, 3);
+    assert.ok(enDownload.suggestedFilename().endsWith("-en.xlsx"));
+    await enDownload.saveAs(join(outputDir, enDownload.suggestedFilename()));
+    const enWorkbook = new ExcelJS.Workbook();
+    await enWorkbook.xlsx.readFile(await enDownload.path());
+    assert.equal(enWorkbook.getWorksheet("Summary").getCell("A6").value, "Player");
+    assert.equal(enWorkbook.getWorksheet("Summary").rowCount, 8);
+    // A download failure is visible, then the same button can successfully retry.
+    await page.evaluate(() => {
+      const original = URL.createObjectURL;
+      URL.createObjectURL = () => {
+        URL.createObjectURL = original;
+        throw new Error("Synthetic download failure");
+      };
+    });
+    await page.getByRole("button", { name: "Download Excel summary", exact: true }).click();
+    await page.getByRole("alert").filter({ hasText: "The Excel file could not be prepared." }).waitFor();
+    const retryDownloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Download Excel summary", exact: true }).click();
+    await retryDownloadPromise;
+    await page.getByRole("alert").filter({ hasText: "The Excel file could not be prepared." }).waitFor({ state: "hidden" });
     await page
       .getByRole("button", { name: "Switch to Serbian" })
       .first()
@@ -248,12 +265,14 @@ try {
     assert.equal(await page.locator(".rehab-report-document").getByRole("heading", { name: "Izveštaj rehabilitacije", exact: true }).count(), 3);
     assert.equal(await page.locator(".rehab-report-document").getByRole("heading", { name: "Rehabilitation report", exact: true }).count(), 0);
     const srDownloadPromise = page.waitForEvent("download");
-    await page.getByRole("button", { name: "Preuzmi zbirnu tabelu (CSV)", exact: true }).click();
+    await page.getByRole("button", { name: "Preuzmi Excel tabelu", exact: true }).click();
     const srDownload = await srDownloadPromise;
-    assert.ok(srDownload.suggestedFilename().endsWith("-sr.csv"));
-    const srCsv = await readFile(await srDownload.path(), "utf8");
-    assert.ok(srCsv.startsWith('\uFEFF"Igrač","Problem / povreda","Trenutni status"'));
-    assert.equal(srCsv.trimEnd().split("\r\n").length, 3);
+    assert.ok(srDownload.suggestedFilename().endsWith("-sr.xlsx"));
+    await srDownload.saveAs(join(outputDir, srDownload.suggestedFilename()));
+    const srWorkbook = new ExcelJS.Workbook();
+    await srWorkbook.xlsx.readFile(await srDownload.path());
+    assert.equal(srWorkbook.getWorksheet("Pregled").getCell("A6").value, "Igrač");
+    assert.equal(srWorkbook.getWorksheet("Pregled").rowCount, 8);
     await page.pdf({
       path: join(outputDir, "report-sr.pdf"),
       format: "A4",
